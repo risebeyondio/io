@@ -26,8 +26,8 @@ Bill Cheswick - chroot - firts conainerized and isolated environment within linu
 
 |
 
-linux namespaces and control groups / Cgroups
-=============================================
+linux namespaces
+================
 
 |
 
@@ -59,6 +59,11 @@ namespaces
    exit
    sudo iptables -L
    
+|
+
+control groups / Cgroups
+========================
+
 |
 
 Cgroups - Control Groups 
