@@ -12,7 +12,8 @@ io
 ----------------------------
 containers and microservices
 ----------------------------
-https://github.com/risebeyondio/io/blob/master/containers-microservices/namespaces-control-groups.rst
+
+|
 
 - `namespaces and control groups <https://github.com/risebeyondio/io/blob/master/containers-microservices/namespaces-control-groups.rst>`_
 
