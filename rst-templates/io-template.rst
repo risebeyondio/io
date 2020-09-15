@@ -3,7 +3,7 @@ dummy
 
 |
 
-`home <https://github.com/risebeyondio/io>`_
+`home <https://github.com/risebeyondio>`_
 
 |
 
