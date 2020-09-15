@@ -82,6 +82,15 @@ docker images
 images
    based around COW concept - Copy On Write - whenever changing a file the file is first being copied before any modifications, and changes are performed on the new file
 
+| 
+
+references
+==========
+
 |
-   
+
+- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
+|
+
 contents_
