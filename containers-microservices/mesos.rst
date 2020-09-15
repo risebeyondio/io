@@ -3,7 +3,7 @@ apache mesos
 
 |
 
-`home <https://github.com/risebeyondio>`_
+`home <https://github.com/risebeyondio/io>`_
 
 |
 
@@ -30,10 +30,10 @@ The Mesos kernel runs on every machine and provides applications (e.g., Hadoop, 
    - Native support for launching containers with Docker and AppC images.
 
 - Pluggable isolation
-   - First class isolation support for CPU, memory, disk, ports, GPU, and modules for custom resource isolation.
+   - First-class isolation support for CPU, memory, disk, ports, GPU, and modules for custom resource isolation.
 
-- Two level scheduling
-   - Support for running cloud native and legacy applications in the same cluster with pluggable scheduling policies.
+- Two-level scheduling
+   - Support for running cloud-native and legacy applications in the same cluster with pluggable scheduling policies.
 
 - APIs
    - HTTP APIs for developing new distributed applications, for operating the cluster, and for monitoring.
@@ -41,7 +41,7 @@ The Mesos kernel runs on every machine and provides applications (e.g., Hadoop, 
 - Web UI
     - Built-in Web UI for viewing cluster state and navigating container sandboxes.
 
-- Cross Platform
+- Cross-Platform
    - Runs on Linux, OSX and Windows. 
 
    - Cloud provider agnostic.
