@@ -74,6 +74,15 @@ sample lxc config
    lxc remote list
    lxc image list
 
+| 
+
+references
+==========
+
 |
-   
+
+- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
+|
+
 contents_
