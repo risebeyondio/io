@@ -3,7 +3,7 @@ kubernetes
 
 |
 
-`home <https://github.com/risebeyondio>`_
+`home <https://github.com/risebeyondio/io>`_
 
 |
 
@@ -56,7 +56,7 @@ sample cluster config
    # docker install - specific version not latest
    sudo apt-get install -y docker-ce=18.06.1~ce~3-0~ubuntu
    
-   # lock docker package version - prevent auto updates 
+   # lock docker package version - prevent auto-updates 
    sudo apt-mark hold docker-ce
 
 2. kubeadm, kubelet, kubectl
@@ -78,7 +78,7 @@ sample cluster config
    # docker install - specific version not latest
    sudo apt-get install -y docker-ce=18.06.1~ce~3-0~ubuntu
    
-   # lock docker package version - prevent auto updates 
+   # lock docker package version - prevent auto-updates 
    sudo apt-mark hold docker-ce
    
 |
