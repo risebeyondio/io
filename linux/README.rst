@@ -14,11 +14,20 @@ dummy
 |
 
 dummy
-======
+=====
 
 |
 
 content
+
+|
+
+references
+==========
+
+|
+
+- `references <https://github.com/risebeyondio/io/blob/master/references/README.rst>`_
 
 |
 
