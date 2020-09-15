@@ -2,18 +2,15 @@
 ---------------------------------
 
 |
-|
 
 `home <https://github.com/risebeyondio/io>`_
 
-|
 |
 
 .. comment --> depth describes headings level inclusion
 .. contents:: contents
    :depth: 10
 
-|
 |
 
 some history 
@@ -77,7 +74,6 @@ Cgroups - Control Groups
    
    control groups' subsystems (such as blkio, cpu, cpuacct, cpuset, devices, freezer,memory, net_cls, net_prio) specify way user space and containers interact with kernel space.
 
-|
 |
    
 contents_
