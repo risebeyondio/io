@@ -19,10 +19,10 @@ hypervisors
 |
 
 type 1
-   runs directly on the system hardware / on the server not on the host operating system - bare metal hypervisor
+   runs directly on the system hardware / on the server, not on the host operating system - bare-metal hypervisor
 
 type 2
-   runs on host operating system that provides virtualization services - software based hypervisor
+   runs on a host operating system that provides virtualization services - software-based hypervisor
 
 |
 
@@ -32,7 +32,7 @@ linux containers - lxc
 |
 
 containers basics
-   containers run on same shared linux kernel, which helps to to launch them quickly
+   containers run on same shared linux kernel, which helps to launch them quickly
    
    examples
       - Host Ubuntu server that can run RHEL based containers 
