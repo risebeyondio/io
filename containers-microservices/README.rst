@@ -18,3 +18,5 @@ containers and microservices
 - `kubernetes <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes.rst>`_
 
 - `apache mesos <https://github.com/risebeyondio/io/blob/master/containers-microservices/mesos.rst>`_
+
+- `references <https://github.com/risebeyondio/io/blob/master/references/README.rst>`_
