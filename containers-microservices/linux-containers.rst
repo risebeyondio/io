@@ -56,7 +56,7 @@ containers basics
 |
 
 sample lxc config
-==========================
+=================
 
 |
 
