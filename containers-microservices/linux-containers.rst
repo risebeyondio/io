@@ -35,7 +35,6 @@ containers basics
    containers run on same shared linux kernel, which helps to to launch them quickly
    
    examples
-
       - Host Ubuntu server that can run RHEL based containers 
       - Host RHEL server that can run Alpine based containers
 
