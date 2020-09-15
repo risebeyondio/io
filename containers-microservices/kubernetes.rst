@@ -81,6 +81,15 @@ sample cluster config
    # lock docker package version - prevent auto-updates 
    sudo apt-mark hold docker-ce
    
+| 
+
+references
+==========
+
+|
+
+- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
 |
 
 contents_
