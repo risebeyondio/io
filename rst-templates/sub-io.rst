@@ -22,9 +22,6 @@ content
 
 |
 
-|
-
-==========
 references
 ==========
 
@@ -32,5 +29,6 @@ references
 
 - `references <https://github.com/risebeyondio/io/blob/master/references/README.rst>`_
 
+|
 
 contents_
