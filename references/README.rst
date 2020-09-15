@@ -19,7 +19,7 @@ references
 |
 
 -----------------------
-io / technology content
+io - technology content
 -----------------------
 
 |
