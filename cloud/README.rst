@@ -3,8 +3,23 @@ dummy
 
 |
 
-`home <https://github.com/risebeyondio>`_
+`home <https://github.com/risebeyondio/io>`_
 
 |
 
-- `dummy <https://github.com/risebeyondio/io/blob/master/containers-microservices/dummy.rst>`_
+.. comment --> depth describes headings level inclusion
+.. contents:: contents
+   :depth: 10
+
+|
+
+dummy
+======
+
+|
+
+content
+
+|
+
+contents_
