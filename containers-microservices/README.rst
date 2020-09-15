@@ -11,7 +11,7 @@ io / containers and microservices
 
 - `namespaces, control groups <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/namespaces-control-groups.rst>`_
 
-- `lxc / lxd <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/lxc.rst>`_     
+- `linux containers - lxc <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/linux-containers.rst>`_     
 
 - `docker <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/docker.rst>`_
 
