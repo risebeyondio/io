@@ -12,17 +12,19 @@ io
 ----------------------------
 containers and microservices
 ----------------------------
-- `namespaces, control groups <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/namespaces-control-groups.rst>`_
+https://github.com/risebeyondio/io/blob/master/containers-microservices/namespaces-control-groups.rst
 
-- `lxc / lxd <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/lxc.rst>`_     
+- `namespaces and control groups <https://github.com/risebeyondio/io/blob/master/containers-microservices/namespaces-control-groups.rst>`_
 
-- `docker <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/docker.rst>`_
+- `linux containers / lxc <https://github.com/risebeyondio/io/blob/master/containers-microservices/linux-containers.rst>`_     
 
-- `docker swarm <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/swarm.rst>`_
+- `docker <https://github.com/risebeyondio/io/blob/master/containers-microservices/docker.rst>`_     
 
-- `kubernetes <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/kubernetes.rst>`_
+- `docker swarm <https://github.com/risebeyondio/io/blob/master/containers-microservices/docker-swarm.rst>`_
 
-- `apache mesos <https://github.com/szczepanski/containers/blob/master/tech/containers-microservices/mesos.rst>`_
+- `kubernetes <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes.rst>`_
+
+- `apache mesos <https://github.com/risebeyondio/io/blob/master/containers-microservices/mesos.rst>`_
 
 |
 
