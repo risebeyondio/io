@@ -46,6 +46,15 @@ The Mesos kernel runs on every machine and provides applications (e.g., Hadoop, 
 
    - Cloud provider agnostic.
 
+| 
+
+references
+==========
+
+|
+
+- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
 |
 
 contents_
