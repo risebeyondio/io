@@ -37,7 +37,13 @@ sample cluster config
 
 - architecture - master and 2 nodes - host OS - ubuntu
 
-1. container runtime - docker on all 3 nodes
+1. install container runtime
+
+|
+
+*in this sample docker on all 3 nodes*
+
+|
 
 .. code-block:: bash
    
@@ -59,7 +65,13 @@ sample cluster config
    # lock docker package version - prevent auto-updates 
    sudo apt-mark hold docker-ce
 
-2. kubeadm, kubelet, kubectl
+2. install kubeadm, kubelet, kubectl 
+
+|
+
+*3 kubernetes necessary komponents*
+
+|
 
 .. code-block:: bash
    
