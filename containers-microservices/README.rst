@@ -19,4 +19,11 @@ containers and microservices
 
 - `apache mesos <https://github.com/risebeyondio/io/blob/master/containers-microservices/mesos.rst>`_
 
+|
+
+references
+==========
+
+|
+
 - `references <https://github.com/risebeyondio/io/blob/master/references/README.rst>`_
