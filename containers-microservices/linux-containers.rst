@@ -56,12 +56,13 @@ containers basics
 |
 
 sample lxc config
-=================
+==========================
 
 |
 
 .. code-block:: bash
-
+   # host machine OS - ubuntu
+   
    sudo apt install lxd lxd-client
    sudo lxd init
    lxc list
