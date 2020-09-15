@@ -63,6 +63,15 @@ brief config steps
    
    if at any time one of the worker nodes fails, shutdown; etc, the swarm manager will spin new worker node to match running state to the desired state number of nodes that supposed to be running
     
+| 
+
+references
+==========
+
+|
+
+- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
 |
 
 contents_
