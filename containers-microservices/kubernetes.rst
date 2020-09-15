@@ -73,7 +73,7 @@ sample cluster config
 
 |
 
-*3 kubernetes necessary components*
+* three kubernetes necessary components*
 
 |
 
@@ -91,7 +91,7 @@ sample cluster config
    # after adding new repos
    sudo apt-get update
    
-   # 3 components install - here specific version not latest
+   # three components install - here specific version not latest
    sudo apt-get install -y kubelet=1.15.7-00 kubeadm=1.15.7-00 kubectl=1.15.7-00   
    
    # lock the 3 packages version - prevent auto-updates 
