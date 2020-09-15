@@ -19,9 +19,9 @@ docker
 |
 
 basics
-   it is esentially an application wrapper around linux containers - LXCs
+   it is essentially an application wrapper around linux containers - LXCs
    
-   builds application and all its dependencies into a single object - container
+   builds the application and all its dependencies into a single object - container
    
    consists of:
    
@@ -53,7 +53,7 @@ functionalities
 docker installation steps
    - install linux packages - prereqs
    
-   -  configure repository from docker to pull lates docker comunity or enterprise edition, sample centos command (docker-ce or docker-ee)
+   -  configure repository from docker to pull latest docker community or enterprise edition, sample centos command (docker-ce or docker-ee)
    
    ``sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo``
    
