@@ -1,12 +1,10 @@
-io / containers and microservices
-=================================
+containers and microservices
+----------------------------
 
 |
-|
 
-`home <https://github.com/szczepanski/wiki>`_
+`home <https://github.com/risebeyondio>`_
 
-|
 |
 
 - `namespaces and control groups <https://github.com/risebeyondio/io/blob/master/containers-microservices/namespaces-control-groups.rst>`_
@@ -20,5 +18,3 @@ io / containers and microservices
 - `kubernetes <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes.rst>`_
 
 - `apache mesos <https://github.com/risebeyondio/io/blob/master/containers-microservices/mesos.rst>`_
-
-|
