@@ -26,7 +26,7 @@ type 2
 
 |
 
-linux containers lxc / lxd (lexi)
+linux containers - lxc
 =================================
 
 |
@@ -55,8 +55,8 @@ containers basics
 
 |
 
-linux containers - lxc
-======================
+sample lxc config
+=================
 
 |
 
