@@ -10,12 +10,15 @@ dummy
 - `dummy <https://github.com/risebeyondio/io/blob/master/containers-microservices/dummy.rst>`_
 
 
-|
+| 
 
-----------
 references
-----------
+==========
 
 |
 
-- `references <https://github.com/risebeyondio/io/blob/master/references/README.rst>`_
+- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
+|
+
+contents_
