@@ -3,7 +3,7 @@ containers and microservices
 
 |
 
-`home <https://github.com/risebeyondio>`_
+`home <https://github.com/risebeyondio/io>`_
 
 |
 
