@@ -73,7 +73,7 @@ sample cluster config
 
 |
 
-* three kubernetes necessary components*
+*three kubernetes necessary components*
 
 |
 
