@@ -76,4 +76,13 @@ Cgroups - Control Groups
 
 | 
 
+references
+==========
+
+|
+
+- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
+|
+
 contents_
