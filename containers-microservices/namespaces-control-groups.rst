@@ -4,7 +4,7 @@
 |
 |
 
-`home <https://github.com/risebeyondio/io/README.rst>`_
+`home <https://github.com/risebeyondio/io>`_
 
 |
 |
