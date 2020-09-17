@@ -1,5 +1,6 @@
-**reStructuredText cheatsheet**
-----
+***************************
+reStructuredText cheatsheet
+***************************
 
 |
 |
