@@ -1,5 +1,8 @@
+|
+
 kubernetes
-----------
+
+----
 
 |
 
@@ -14,7 +17,7 @@ kubernetes
 |
 
 basics
-======
+------
 
 basics
    - container orchestration / automation tool supporting
@@ -29,9 +32,9 @@ kubernetes clusters
    
 |
 
----------------------
+*********************
 sample cluster config
----------------------
+*********************
 
 |
 
@@ -114,7 +117,7 @@ sample cluster config
 | 
 
 Certified Kubernetes Administrator - CKA
-========================================
+----------------------------------------
 
 |
 
@@ -123,7 +126,7 @@ Certified Kubernetes Administrator - CKA
 |
 
 references
-==========
+----------
 
 |
 
