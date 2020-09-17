@@ -134,7 +134,7 @@ sample cluster config
    
 | 
 
-3. network config with Flannel
+4. network config with Flannel
 
 |
 
@@ -147,8 +147,8 @@ sample cluster config
 
 |
 
-Certified Kubernetes Administrator - CKA
-----------------------------------------
+Certified Kubernetes Administrator - CKA Prep
+---------------------------------------------
 
 |
 
