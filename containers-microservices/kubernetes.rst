@@ -113,6 +113,15 @@ sample cluster config
 
 | 
 
+Certified Kubernetes Administrator - CKA
+========================================
+
+|
+
+
+
+|
+
 references
 ==========
 
