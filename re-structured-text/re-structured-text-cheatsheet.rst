@@ -1,9 +1,9 @@
+|
 
 **title - reStructuredText cheatsheet**
 
 ----
 
-|
 |
 
 `home <https://github.com/risebeyondio/io>`_
