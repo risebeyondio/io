@@ -1,5 +1,6 @@
 
-reStructuredText cheatsheet
+**title - reStructuredText cheatsheet**
+
 ----
 
 |
@@ -17,27 +18,27 @@ reStructuredText cheatsheet
 |
 |
 
-Title
+H1
 -----
 
 
-H1
+H2
 ==
 
 ****
-H2
-****
-
 H3
-####
+****
 
 H4
+####
+
+H5
 ****
 
-H4B
+H5A
 ****
 
-H3B
+H4A
 ####
 
 
