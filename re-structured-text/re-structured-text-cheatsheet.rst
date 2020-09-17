@@ -1,6 +1,6 @@
 |
 
-**title - reStructuredText cheatsheet**
+**the title - reStructuredText cheatsheet**
 
 ----
 
