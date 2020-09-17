@@ -27,7 +27,7 @@ references
 
 |
 
-- `references <https://github.com/risebeyondio/io/blob/master/references/README.rst>`_
+- `references <https://github.com/risebeyondio/rise/blob/master/references>`_
 
 |
 
