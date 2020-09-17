@@ -2,11 +2,9 @@ io
 ==
 
 |
-|
 
 `home <https://github.com/risebeyondio>`_
 
-|
 |
 
 ----------------------------
