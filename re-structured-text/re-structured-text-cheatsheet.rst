@@ -1,6 +1,5 @@
 
 reStructuredText cheatsheet
-
 ----
 
 |
