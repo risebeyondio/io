@@ -1,6 +1,6 @@
 |
 
-kubernetes
+kubernetes and CKA certificate prep
 
 ----
 
@@ -76,7 +76,7 @@ sample cluster config
 
 |
 
-*three kubernetes necessary components*
+*three kubernetes necessary components to be insalled on all nodes - master and 2 workers*
 
 |
 
@@ -111,10 +111,41 @@ sample cluster config
 
 .. code-block:: bash
    
-   # init the cluster
+   # master - init the cluster (might take few minutes to complete)
    sudo kubeadm init --pod-network-cidr=10.244.0.0/16
-
+   
+   # master - copy three command from init command output
+   mkdir -p $HOME/.kube
+   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   
+   # master - verify cluster operation
+   # master - check if k8 API Server and Client Version info are in the output 
+   kubectl version
+   
+   # copy from kubectl version command output (master) the kubeadm join command and run in sudo on the two worker nodes
+   # worker nodes 1 and 2
+   # make sure command have no line breaks and
+   # the output confirms that the node has joined the cluster
+   sudo kubeadm join $some_ip:6443 --token $some_token --discovery-token-ca-cert-hash $some_hash
+   
+   # master - verify that nodes have koined the cluster  
+   kubectl get nodes
+   
 | 
+
+3. network config with Flannel
+
+|
+
+*On all three nodes, run the following:*
+
+.. code-block:: bash
+   
+   echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
+   sudo sysctl -p
+
+|
 
 Certified Kubernetes Administrator - CKA
 ----------------------------------------
