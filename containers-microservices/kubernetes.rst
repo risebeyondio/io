@@ -42,11 +42,13 @@ pod
    all objects in k8 are being linked to certain namespaces
    
 basic pod commands
-   list pods `kubectl get pods`   
+   list pods ``kubectl get pods``   
+
+   list pods in specific namespace ``kubectl get pods -n kube-system``   
+
+   more information on specific pod ``kubectl describe pod nginx``
    
-   more information on specific pod `kubectl describe pod nginx`
-   
-   delete pod `kubectl delete pod nginx`
+   delete pod ``kubectl delete pod nginx``
    
 
 kubernetes clusters
