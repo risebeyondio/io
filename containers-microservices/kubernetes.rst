@@ -138,32 +138,34 @@ sample cluster config
 
 |
 
-https://coreos.com/flannel/docs/latest/.
+https://coreos.com/flannel/docs/latest
 
 |
 
 .. code-block:: bash
    
-   # all three nodes*
+   # all three nodes
+   # ammend sysctl.conf permanently so it remains persistent after reboot
    echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
+   
+   # all three nodes - apply the change to sysctl.conf instantly
    sudo sysctl -p
    
-   # master - flannel install
+   # master only - flannel install
    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml
 
-   # verify that all the nodes now have a status of ready 
+   # master - verify that all the nodes now have a status of ready 
    (it might take few moments before nodes enter ready state)
    kubectl get nodes
    
    # verify flannel pods operation
-   # three pods should have flannel in the name ant status of running
+   # three pods should have flannel in the name and status of running
    kubectl get pods -n kube-system
-   
    
 |
 
-Certified Kubernetes Administrator - CKA Prep
----------------------------------------------
+Certified Kubernetes Administrator - CKA
+----------------------------------------
 
 |
 
