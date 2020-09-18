@@ -1,6 +1,6 @@
 |
 
-kubernetes and CKA certificate prep
+kubernetes and CKA study
 
 ----
 
@@ -134,7 +134,7 @@ sample cluster config
    
 | 
 
-4. network config with Flannel
+4. network config with Flannel network plugin
 
 |
 
