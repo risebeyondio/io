@@ -64,6 +64,10 @@ clustered architecture and nodes
 
 nodes
    servers that run the mentioned workload - containers
+   
+   to list nodes use ``kubectl get nodes``
+   
+   to get more information about a specific node ``kubectl describe node $node_name`` 
 
 |
 
