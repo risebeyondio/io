@@ -50,6 +50,32 @@ basic pod commands
    
    delete pod ``kubectl delete pod nginx``
    
+|
+
+clustering and nodes
+====================
+
+|
+
+clustered architecture and nodes
+   architecture of multiple servers able to run the workload - containers
+
+|
+
+nodes
+   servers that run the mentioned workload - containers
+
+|
+
+control servers - master nodes
+   manage and control the cluster
+   
+   host to kubernetes API
+   
+   usually seperate from worker nodes that run application in the cluster
+   
+
+|
 
 kubernetes clusters
 ===================
