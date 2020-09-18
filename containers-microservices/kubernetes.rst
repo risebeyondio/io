@@ -81,14 +81,17 @@ control servers - master nodes
 
 |
 
-kubernetes clusters
-===================
-   
+networking in kubernetes
+========================
+
 |
 
-*********************
-sample cluster config
-*********************
+content
+
+|
+
+simple cluster config
+=====================
 
 |
 
