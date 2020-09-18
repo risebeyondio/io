@@ -1,6 +1,6 @@
 |
 
-kubernetes and CKA study
+kubernetes k8 and CKA
 
 ----
 
@@ -26,6 +26,20 @@ basics
       - scaling up and down
 
 |
+
+pods
+====
+
+pod
+   the smallest building blocs of the k8 cluster, model
+   
+   contains one or more containers, storage resources and unique IP address in the K8 cluster network
+   
+   k8 schedules pods to run on servers in the cluster
+   
+   when a pod is scheduled, the server will run containers that are part of that pod
+   
+   
 
 kubernetes clusters
 ===================
