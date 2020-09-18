@@ -39,6 +39,14 @@ pod
    
    when a pod is scheduled, the server will run containers that are part of that pod
    
+   all objects in k8 are being linked to certain namespaces
+   
+basic pod commands
+   list pods `kubectl get pods`   
+   
+   more information on specific pod `kubectl describe pod nginx`
+   
+   delete pod `kubectl delete pod nginx`
    
 
 kubernetes clusters
