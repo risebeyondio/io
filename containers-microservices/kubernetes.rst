@@ -71,7 +71,7 @@ nodes
 
 |
 
-control servers - master nodes
+master nodes - control servers
    manage and control the cluster
    
    host to kubernetes API
@@ -86,7 +86,18 @@ networking in kubernetes
 
 |
 
-content
+virtual cluster network
+   a single virtual network that spans across entire cluster
+   
+   binds into a single virtual network nodes and their pods
+   
+   every pod in the cluster has an unique IP address within the vitual network
+   
+   each pod can communicate with any other pod in the cluster, even if it the ether pod is running on a different node 
+
+|
+
+to get IP addresses of pod use -output wide flag ``kubectl get pods -o wide``
 
 |
 
