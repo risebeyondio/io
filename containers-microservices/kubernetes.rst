@@ -1,6 +1,6 @@
 |
 
-kubernetes k8 and CKA
+kubernetes - k8 and CKA
 
 ----
 
@@ -98,6 +98,16 @@ virtual cluster network
    to get IP addresses of pod use -output wide flag ``kubectl get pods -o wide``
    
    test the virtual network connectivity in the cluster by issuing command from one pod to run on a pod running on different node ``kubectl exec busybox -- curl $nginx_pod_ip``
+
+|
+
+architecture components
+=======================
+
+|
+
+to get the list of backend system pods use namespace kube-system ``kubectl get pods -n kube-system``
+
 
 |
 
