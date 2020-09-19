@@ -94,10 +94,10 @@ virtual cluster network
    every pod in the cluster has an unique IP address within the vitual network
    
    each pod can communicate with any other pod in the cluster, even if it the ether pod is running on a different node 
-
-|
-
-to get IP addresses of pod use -output wide flag ``kubectl get pods -o wide``
+   
+   to get IP addresses of pod use -output wide flag ``kubectl get pods -o wide``
+   
+   test the virtual network connectivity in the cluster by issuing command from one pod to run on a pod running on different node ``kubectl exec busybox -- curl $nginx_pod_ip``
 
 |
 
