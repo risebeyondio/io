@@ -109,7 +109,7 @@ architecture components
 control plane components
    control and manage cluster
    
-   backend system pods can be seen within kube-system namespace``kubectl get pods -n kube-system``
+   backend system pods can be seen within kube-system namespace ``kubectl get pods -n kube-system``
       
    - etcd - master node - sychronised and distributed data store for the cluster state
    
