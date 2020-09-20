@@ -148,6 +148,8 @@ simple deployment config
 
 |
 
+*to create deployment of 2 pods replicas running nginx containers, execute the below*
+
 .. code-block:: yaml
    
    cat <<EOF | kubectl create -f -
@@ -173,6 +175,12 @@ simple deployment config
            ports:
            - containerPort: 80
    EOF
+
+|
+
+- list deployment ``kubectl get deployments``
+- get more information about a deployment ``kubectl describe deployment nginx-deployment``
+- list pods ``kubectl get pods``
 
 |
 
