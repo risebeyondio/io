@@ -106,9 +106,23 @@ architecture components
 
 |
 
-to get the list of backend system pods use namespace kube-system ``kubectl get pods -n kube-system``
-
-
+control plane components
+   control and manage cluster
+   
+   backend system pods can be seen within kube-system namespace``kubectl get pods -n kube-system``
+      
+   - etcd - master node - sychronised and distributed data store for the cluster state
+   
+   - cube REST API server - master node
+   
+   - cube controlller manager - master node- bundles several back end components into one package
+   
+   - cube scheduler - master node - schedules pods to run on specific nodes
+   
+   - kubelet - each node - agant that executes containers on each node, it is a service than can be verified by running ``sudo systemctl status kubelet`` 
+   
+   - kube-proxy - each node- deals with between nodes network communication by adding firewall routing rules
+   
 |
 
 simple cluster config
@@ -242,7 +256,7 @@ https://coreos.com/flannel/docs/latest
    
 |
 
-Certified Kubernetes Administrator - CKA
+certified kubernetes administrator - cka
 ----------------------------------------
 
 |
