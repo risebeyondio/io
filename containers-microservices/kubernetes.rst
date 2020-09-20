@@ -140,48 +140,16 @@ deployments
    - rolling updates - ability to change deployment container image to newer version, the deployments will gradually replace old containers with the new one, incremental changes and zero downtime updates 
    
    - self healing - if for any reason a pod fails or gets accidentally destroyed, new pod will be spin up to replace it
-   
-|
-
-simple deployment config
-========================
 
 |
 
-*to create deployment of 2 pods replicas running nginx containers, execute the below*
-
-.. code-block:: yaml
-   
-   cat <<EOF | kubectl create -f -
-   apiVersion: apps/v1
-   kind: Deployment
-   metadata:
-     name: nginx-deployment
-     labels:
-       app: nginx
-   spec:
-     replicas: 2
-     selector:
-       matchLabels:
-         app: nginx
-     template:
-       metadata:
-         labels:
-           app: nginx
-       spec:
-         containers:
-         - name: nginx
-           image: nginx:1.15.4
-           ports:
-           - containerPort: 80
-   EOF
+services
+========
 
 |
 
-- list deployment ``kubectl get deployments``
-- get more information about a deployment ``kubectl describe deployment nginx-deployment``
-- list pods ``kubectl get pods``
-
+services
+   content
 |
 
 simple cluster config
@@ -313,6 +281,47 @@ https://coreos.com/flannel/docs/latest
    # three pods should have flannel in the name and status of running
    kubectl get pods -n kube-system
    
+|
+
+simple deployment config
+========================
+
+|
+
+*to create deployment of 2 replica pods running nginx containers, execute the below*
+
+.. code-block:: yaml
+   
+   cat <<EOF | kubectl create -f -
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: nginx-deployment
+     labels:
+       app: nginx
+   spec:
+     replicas: 2
+     selector:
+       matchLabels:
+         app: nginx
+     template:
+       metadata:
+         labels:
+           app: nginx
+       spec:
+         containers:
+         - name: nginx
+           image: nginx:1.15.4
+           ports:
+           - containerPort: 80
+   EOF
+
+|
+
+- list deployment ``kubectl get deployments``
+- get more information about a deployment ``kubectl describe deployment nginx-deployment``
+- list pods ``kubectl get pods``
+
 |
 
 certified kubernetes administrator - cka
