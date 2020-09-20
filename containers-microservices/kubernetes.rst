@@ -1,6 +1,6 @@
 |
 
-**kubernetes - k8 and CKA**
+**kubernetes and cka**
 
 ----
 
@@ -123,6 +123,57 @@ control plane components
    
    - kube-proxy - each node- deals with between nodes network communication by adding firewall routing rules
    
+|
+
+deployments
+===========
+
+|
+
+deployments
+   way to automate management of pods
+   
+   - desired state - can be specified for a set of pods, cluster will work to maintain the state
+   
+   - scaling - number of replicas needed can be specified, deployments will add or remove replicas to meet the requirement 
+   
+   - rolling updates - ability to change deployment container image to newer version, the deployments will gradually replace old containers with the new one, incremental changes and zero downtime updates 
+   
+   - self healing - if for any reason a pod fails or gets accidentally destroyed, new pod will be spin up to replace it
+   
+|
+
+simple deployment config
+========================
+
+|
+
+.. code-block:: yaml
+   
+   cat <<EOF | kubectl create -f -
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: nginx-deployment
+     labels:
+       app: nginx
+   spec:
+     replicas: 2
+     selector:
+       matchLabels:
+         app: nginx
+     template:
+       metadata:
+         labels:
+           app: nginx
+       spec:
+         containers:
+         - name: nginx
+           image: nginx:1.15.4
+           ports:
+           - containerPort: 80
+   EOF
+
 |
 
 simple cluster config
