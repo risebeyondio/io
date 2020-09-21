@@ -7,10 +7,11 @@ everything as sustainable code - EaSC
 ----
 
 
+saving hardware resources
+  ideas
 
-
-- independent scalability - microservices concept
-  specific service is under increased load only that single service can be scaled up or down instad of scaling the entire application
+  - independent scalability - microservices concept
+    specific service is under increased load only that single service can be scaled up or down instead of scaling the entire application - saving resources
   
 - no vendor lock
 - open source
