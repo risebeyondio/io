@@ -35,13 +35,13 @@ pod
    
    contains one or more containers, storage resources and unique IP address in the K8 cluster network
    
-   k8 schedules pods to run on servers in the cluster
+   kubernetes schedules pods to run on servers in the cluster
    
    when a pod is scheduled, the server will run containers that are part of that pod
    
    all objects in k8 are being linked to certain namespaces
    
-basic pod commands
+basic kubernetes commands
    list pods ``kubectl get pods``   
 
    list pods in specific namespace ``kubectl get pods -n kube-system``   
@@ -49,6 +49,8 @@ basic pod commands
    more information on specific pod ``kubectl describe pod nginx``
    
    delete pod ``kubectl delete pod nginx``
+   
+   create new namespace ``kubectl create namespace myNameSpace``
    
 |
 
@@ -391,10 +393,41 @@ list cluster services ``kubectl get service`` or ``kubectl get svc``
 
 |
 
-with NodePort service (externally exposed port), access it via port 30080 on any of the cluster's servers 
+with NodePort service (externally exposed port), access it via port 30080 on any of the cluster's servers  ``curl localhost:30080``
 
-| ``curl localhost:30080``
+|
 
+sample microserviced application deployment
+===========================================
+
+|
+
+*this sample application is based on instana application*
+
+- https://github.com/instana/robot-shop
+
+|
+
+steps 
+.. code-block:: bash
+   
+   # delete prevous services assigned to port 30080
+   kubectl delete svc nginx-service
+   
+   # 
+   cd ~/
+   git clone https://github.com/instana/robot-shop.git
+   
+   # Create a namespace, deploy the application objects into the namespace using the  cloned descriptors
+   kubectl create namespace robot-shop
+   kubectl -n robot-shop create -f ~/robot-shop/K8s/descriptors/
+   
+   # list pods within the namespace, flag -w(atch) enable live updates in the state of pods; activity
+   kubectl get pods -n robot-shop -w
+   
+   # use server public IP to verify the operation of the application
+   http://$kube_server_public_ip:30080
+     
 |
 
 certified kubernetes administrator - cka
@@ -415,4 +448,4 @@ references
 
 |
 
-- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+`references <https://github.com/risebeyondio/rise/tree/master/references>`_
