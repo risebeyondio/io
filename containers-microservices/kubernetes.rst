@@ -496,7 +496,7 @@ worker node(s)
    :alt: alternate text
    
    application run on kubernetes
-   -----------------------------
+   =============================
 
 |
 
