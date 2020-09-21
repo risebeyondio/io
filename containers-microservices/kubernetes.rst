@@ -188,8 +188,8 @@ microservices
 
 |
 
-simple cluster config
-=====================
+cluster config
+==============
 
 |
 
@@ -319,8 +319,8 @@ https://coreos.com/flannel/docs/latest
    
 |
 
-simple deployment config
-========================
+deployment config
+==================
 
 |
 
@@ -360,8 +360,8 @@ simple deployment config
 
 |
 
-simple service config
-========================
+service config
+==============
 
 |
 
