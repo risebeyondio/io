@@ -151,14 +151,35 @@ services
 services
    solve the problem of replica pods being frequently destroyed and (re)created, scaled up and down
 
-   abstraction layer on top of set of replica pods
+   abstraction / load balancer layer on top of set of replica pods
    
-   allows dynamic access to the replica pods
+   allow dynamic access to the replica pods
    
-   instead of accessing pods directly the service sitting on top of the replica pods are being utilised
+   instead of accessing pods directly the service sitting on top of the replica pods is to be utilised
    
    uninterrupted access to replica pods that are currrently in operation
+
+|
+
+microservices
+=============
+
+|
+
+microservices
+   small and independent services designed to work together to form entire application
    
+   services such as customer data, product data, authantication, search are all independetn from each other but aligned to work together as one application - decoupled and loosely coupled 
+   
+   benefits
+   
+   - scalability 
+   
+|
+
+monolithic architecture
+   all parts of application are combined into one large executable - oposite to microserviced architecture
+
 |
 
 simple cluster config
