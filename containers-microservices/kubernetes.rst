@@ -435,12 +435,22 @@ certified kubernetes administrator - cka
 
 |
 
-next steps
-----------
+architecture
+============
 
 |
 
-https://app.linuxacademy.com/search?query=%20Google%20Kubernetes%20Engine%20Deep%20Dive
+content
+
+|
+
+next 
+----
+
+|
+
+- https://app.linuxacademy.com/search?query=kubernetes%20the%20hard%20way
+- https://app.linuxacademy.com/search?query=%20Google%20Kubernetes%20Engine%20Deep%20Dive
 
 |
 
