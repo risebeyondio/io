@@ -493,7 +493,7 @@ Picture here
 |
 
 
-.. figure:: ../../../../rise/media/kubernetes_application_run.png
+.. figure:: ../../../../rise/blob/master/media/kubernetes_application_run.png
    :scale: 50 %
    :height: 100px
    :width: 200 px
