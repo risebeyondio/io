@@ -166,19 +166,25 @@ microservices
 
 |
 
-microservices
-   small and independent services designed to work together to form entire application
-   
-   services such as customer data, product data, authantication, search are all independetn from each other but aligned to work together as one application - decoupled and loosely coupled 
-   
-   benefits
-   
-   - scalability 
+monolithic architecture
+   all parts of application are combined into one large executable - oposite to microserviced architecture
    
 |
 
-monolithic architecture
-   all parts of application are combined into one large executable - oposite to microserviced architecture
+microservices
+   small and independent services designed to work together to form entire application
+   
+   services such as customer data, product data, authantication, search are all independent from each other but aligned to work together as one application - decoupled and loosely coupled 
+   
+   benefits
+   
+   - independent scalability - individual microservices are independently scalable, if specific service is under increased load only that single service can be scaled up or down instad of scaling the entire application
+   
+   - cleaner code - changes to a particular part of application will not affect functioning  of other application components
+   
+   - reliability - issues in one part of application are less likely to cause problems in other parts of the application
+   
+   - variety of tools - differnt services can be constructed using wide range of tools, languages or frameworks - best tool for each job
 
 |
 
