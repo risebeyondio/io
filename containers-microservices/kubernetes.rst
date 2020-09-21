@@ -493,7 +493,6 @@ kubernetes application
 |
 
 .. image:: ../../../../rise/blob/master/media/kubernetes_application_run.png
-   
    :scale:
    :align: center
    :width: 150px
