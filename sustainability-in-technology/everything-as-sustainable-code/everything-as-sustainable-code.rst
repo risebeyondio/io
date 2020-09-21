@@ -10,6 +10,8 @@ everything as sustainable code - EaSC
 
 
 - independent scalability - microservices concept
+  specific service is under increased load only that single service can be scaled up or down instad of scaling the entire application
+  
 - no vendor lock
 - open source
 
