@@ -157,7 +157,7 @@ simple cluster config
 
 |
 
-*architecture - master and 2 nodes - host OS - ubuntu*
+*architecture - master and 2 worker nodes - host OS - ubuntu*
 
 |
 
@@ -165,7 +165,7 @@ simple cluster config
 
 |
 
-*in this sample docker on all 3 nodes*
+*here docker on all 3 nodes*
 
 |
 
