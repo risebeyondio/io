@@ -149,7 +149,16 @@ services
 |
 
 services
-   content
+   solve the problem of replica pods being frequently destroyed and (re)created 
+
+   abstraction layer on top of set of replica pods
+   
+   allows dynamic access to the replica pods
+   
+   instead of accessing pods directly the service sitting on top of the replica pods are being utilised
+   
+   uninterrupted access to replica pods that are currrently in operation
+   
 |
 
 simple cluster config
