@@ -492,11 +492,15 @@ kubernetes application
 
 |
 
-.. image:: ../../../../rise/blob/master/media/kubernetes_application_run.png
+.. figure:: ../../../../rise/blob/master/media/kubernetes_application_run.png
+   :scale: 50%
    :align: center
    :width: 150px
    :height: 150px
    :alt: alternate text
+   
+   kubernetes application operation
+
 
 |
 
