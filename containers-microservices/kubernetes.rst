@@ -488,12 +488,13 @@ worker node(s)
    
 |
 
-Picture here
+kubernetes application  
 
 |
 
-
-.. figure:: ../../../../rise/blob/master/media/kubernetes_application_run.png
+.. image:: ../../../../rise/blob/master/media/kubernetes_application_run.png
+   
+   :scale:
    :align: center
    :width: 150px
    :height: 150px
