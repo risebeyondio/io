@@ -459,7 +459,7 @@ master / worker architecture
 |
 
 master node - control plane 
-   components
+   four components
    
    - api server - communication hub for all cluster components
    
@@ -475,10 +475,42 @@ master node - control plane
    
    master initiate and follows instuctions in line with specifications to deploy pods and their containers
    
-worker nodes
+worker node(s)
+   runs, monitor and provide services needed for un application
    
+   three coponents
+   
+   - kubelet - runs and manages containers on the node, communicates with api server
+   
+   - kube-proxy / service proxy - traffic load balancing among application components
+   
+   - container runtime - program running containers (docker, rkt, containerd) 
    
 |
+
+cli
+===
+
+|
+
+.. code-block:: shell
+   
+   kubectl get nodes
+
+   kubectl get pods --all-namespaces
+
+   # detailed - wide output
+   kubectl get pods --all-namespaces -o wide 
+   
+   # list namespaces
+   kubectl get namespaces
+   
+   # pod details
+   kubectl describe pod $podName
+
+   # pod deletion
+   kubectl delete pod $podName
+
 
 next 
 ----
