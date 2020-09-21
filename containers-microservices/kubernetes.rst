@@ -495,7 +495,8 @@ worker node(s)
    :height: 150px
    :alt: alternate text
    
-   **application run on kubernetes**
+   application run on kubernetes
+   -----------------------------
 
 |
 
