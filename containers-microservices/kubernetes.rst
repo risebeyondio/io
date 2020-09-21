@@ -494,7 +494,7 @@ Picture here
 
 
 .. figure:: ../../../../rise/blob/master/media/kubernetes_application_run.png
-   :scale: 10 %
+   :scale: 2 %
    :alt: alternate text
    :align: right
 
