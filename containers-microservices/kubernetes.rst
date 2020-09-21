@@ -488,10 +488,6 @@ worker node(s)
    
 |
 
-kubernetes application  
-
-|
-
 .. figure:: ../../../../rise/blob/master/media/kubernetes_application_run.png
    :scale: 50%
    :align: center
@@ -499,8 +495,7 @@ kubernetes application
    :height: 150px
    :alt: alternate text
    
-   kubernetes application operation
-
+   **application run on kubernetes**
 
 |
 
