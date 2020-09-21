@@ -436,7 +436,7 @@ certified kubernetes administrator - cka
 |
 
 next steps
-==========
+----------
 
 |
 
