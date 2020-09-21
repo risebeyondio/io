@@ -16,3 +16,5 @@ everything as sustainable code - EaSC
 
 https://green.wikia.org/wiki/Sustainable_code_development
 
+https://www.infoq.com/news/2010/03/code-quality-cost-mapping/
+
