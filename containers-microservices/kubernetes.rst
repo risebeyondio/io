@@ -408,7 +408,7 @@ sample microserviced application deployment
 
 |
 
-.. code-block:: perl
+.. code-block:: shell
    
    # delete prevous services assigned to port 30080
    kubectl delete svc nginx-service
