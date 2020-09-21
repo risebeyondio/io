@@ -435,6 +435,15 @@ certified kubernetes administrator - cka
 
 |
 
+next steps
+==========
+
+|
+
+https://linuxacademy.com/cp/modules/view/id/249?redirect_uri=https://app.linuxacademy.com/search?query=%20Google%20Kubernetes%20Engine%20Deep%20Dive
+
+|
+
 content
 
 |
