@@ -408,7 +408,6 @@ sample microserviced application deployment
 
 |
 
-steps 
 .. code-block:: bash
    
    # delete prevous services assigned to port 30080
