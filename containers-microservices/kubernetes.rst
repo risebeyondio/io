@@ -489,13 +489,13 @@ worker node(s)
 |
 
 .. figure:: ../../../../rise/blob/master/media/kubernetes_application_run.png
+   **application run on kubernetes**
    :scale: 50%
    :align: center
    :width: 150px
    :height: 150px
    :alt: alternate text
    
-   - **application run on kubernetes**
    
 
 |
