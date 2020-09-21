@@ -149,7 +149,7 @@ services
 |
 
 services
-   solve the problem of replica pods being frequently destroyed and (re)created 
+   solve the problem of replica pods being frequently destroyed and (re)created, scaled up and down
 
    abstraction layer on top of set of replica pods
    
@@ -330,6 +330,43 @@ simple deployment config
 - list deployment ``kubectl get deployments``
 - get more information about a deployment ``kubectl describe deployment nginx-deployment``
 - list pods ``kubectl get pods``
+
+|
+
+simple service config
+========================
+
+|
+
+*to create simple NodePort service abstracting 2 replica pods running nginx containers, execute the below*
+
+.. code-block:: yaml
+   
+   cat << EOF | kubectl create -f -
+   kind: Service
+   apiVersion: v1
+   metadata:
+     name: nginx-service
+   spec:
+     selector:
+       app: nginx
+     ports:
+     - protocol: TCP
+       port: 80
+       targetPort: 80
+       nodePort: 30080
+     type: NodePort
+   EOF
+
+|
+
+list cluster services ``kubectl get service`` or ``kubectl get svc``
+
+|
+
+with NodePort service (externally exposed port), access it via port 30080 on any of the cluster's servers 
+
+| ``curl localhost:30080``
 
 |
 
