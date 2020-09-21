@@ -488,9 +488,16 @@ worker node(s)
    
 |
 
-.. figure:: ./media/kubernetes_application_run.jpg
+Picture here
+
+|
+
+
+.. figure:: ./rise/media/kubernetes_application_run.jpg
    :scale: 50 %
    :alt: 
+
+|
 
 cli
 ===
