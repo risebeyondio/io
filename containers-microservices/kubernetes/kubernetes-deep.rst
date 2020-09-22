@@ -71,7 +71,7 @@ worker node(s)
 |
 
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes_application_run.png
-   :scale: 25
+   :scale: 10
    :width: 954px
    :height: 950px
    :align: center
