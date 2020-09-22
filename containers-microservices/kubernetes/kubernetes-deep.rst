@@ -80,6 +80,55 @@ worker node(s)
    
 |
 
+api primitives
+--------------
+
+|
+
+api server
+   the only component that talks with etcd datastore
+   
+   all other components communicate with etcd and each other through api server only
+   
+   ``kebectl`` command can be used to create, updtate, delete and get api objects 
+
+   all objects like pods or services are persistent enteties being represented by declarative intent - desired state
+   
+   api version and software version are not directly related
+   
+|
+
+spec - desired state - declarative intent - yaml
+   all indentation in yaml is achieved by 2 spaces not tabs
+   
+   if at any time specific object status does not match the object's spec, the cluster master / control plane will work on corrections to make the match
+   
+   to create object based on existing spec yaml file run ``kubectl create -f nginx-spec-file.yaml``
+   
+   ``kubectl`` command converts any yaml format into json as api request body must contain json 
+   
+   show specific deployment in yaml ``kubectl get deployment myDeployment -o yaml``
+   
+   objects always have a matadata, at minimum name and uid
+   
+   object name - user given and uid - cluster given, must be unique for a particular kind of objects, no two pods named identically 
+   
+   name - up to 253 characters, can contain dashes and periods `- .`
+   
+   spec's conteiner value specifies
+   
+   - container image
+   
+   - volumes
+   
+   - exposed ports
+   
+   labels - to be applied to better orginize objects, key-value pairs that can be attached to objects during creation or after,  if multiple - no keys duplication on a single bject, 
+   
+   label selector can be used to filter through the cluster objects ``kubectl get pods --show-labels``
+
+|
+
 cli
 ---
 
@@ -94,6 +143,9 @@ cli
    # detailed - wide output
    kubectl get pods --all-namespaces -o wide 
    
+   # list pods with label information
+   kubectl get pods --show-labels
+   
    # list namespaces
    kubectl get namespaces
    
@@ -102,6 +154,16 @@ cli
 
    # pod deletion
    kubectl delete pod $podName
+   
+   # check cluster  system components status
+   kubectl get componentstatus
+   
+   # create object based on existing spec yaml file
+   kubectl create -f nginx-spec-file.yaml
+   
+   # show specific deployment in yaml output 
+   kubectl get deployment myDeployment -o yaml
+   
 
 
 next 
