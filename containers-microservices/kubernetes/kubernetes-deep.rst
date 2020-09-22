@@ -177,7 +177,15 @@ sample service spec, associated with label selector - app
        app: nginx
 
                              
+|
 
+*services and replica pods, [ref. linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-services.png
+   :align: center
+   :alt: services and replica pods
 
 cli
 ---
