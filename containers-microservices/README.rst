@@ -26,4 +26,4 @@ references
 
 |
 
-- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+`references <https://github.com/risebeyondio/rise/tree/master/references>`_
