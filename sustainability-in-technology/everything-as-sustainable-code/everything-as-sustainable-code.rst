@@ -6,6 +6,7 @@ everything as sustainable code - EaSC
 
 ----
 
+|
 
 saving hardware resources
   ideas
@@ -16,6 +17,12 @@ saving hardware resources
 - no vendor lock
 - open source
 
+|
+
+read
+----
+
+https://sustainability.google/commitments/#
 
 https://green.wikia.org/wiki/Sustainable_code_development
 
