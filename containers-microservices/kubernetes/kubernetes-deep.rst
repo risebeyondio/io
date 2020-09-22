@@ -236,7 +236,7 @@ build
 custom solution
    - from scratch - manually
    
-   - own network fabric configuration without flannel or other tools
+   - own network fabric configuration without flannel or other network overlay
    
    - build own images in private registry
    
@@ -265,13 +265,20 @@ cluster configuration
 
 |
 
+*master and 2 worker nodes - OS - ubuntu* 
+
+|
+
 .. code-block:: shell
    
+      # all nodes
+      
+      
       # get docker gpg key
       curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
-      #add the docker repository
-      sudo add-apt-repository    "deb [arch=amd64] https://download.docker.com/linuxubuntu $(lsb_release -cs) stable"
+      #add docker repository
+      sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linuxubuntu $(lsb_release -cs) stable"
 
       # get kubernetes gpg key
       curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -296,16 +303,22 @@ cluster configuration
       # enable iptables instantly
       sudo sysctl -p
 
-      # initialize  cluster - only on the master only
+
+      # master only
+
+
+      # initialize  cluster
       sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 
-      # set up local kubeconfig - master only
+      # set up local kubeconfig
       mkdir -p $HOME/.kube
       sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
       sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-      # apply Calico CNI network overlay - master only
+      # apply Calico CNI network overlay
       kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+
+      # workers only
 
       # join worker nodes to cluster
       sudo kubeadm join [your unique string from the kubeadm init command]
