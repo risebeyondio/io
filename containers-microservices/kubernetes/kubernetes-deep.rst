@@ -28,7 +28,7 @@ master / worker architecture
    
    within a worker node a **pod** resides that contains one or more containers that run an application
    
-   abstraction from infrastructure - difference can not be seen if application deployment is involvig single node or few thousand nodes cluster - to the user it seems that all is run one single giant machine
+   abstraction from infrastructure - the difference can not be seen if application deployment is involving a single node or few thousand nodes cluster - to the user, it seems that all is run one single giant machine
    
    kubernetes takes care of
    
@@ -45,22 +45,22 @@ master node - control plane
    
    - api server - communication hub for all cluster components
    
-   - scheduler - assigns an application to a worker node, decides which node is to run a pod based on resource requiremants, hardware constraints, etc 
+   - scheduler - assigns an application to a worker node, decides which node is to run a pod, based on resource requirements, hardware constraints, etc 
    
-   - controller manager - maintenance and handling of cluster, failed nodes, replication, desired state
+   - controller manager - maintenance and handling of a cluster, failed nodes, replication, desired state
    
-   - etcd - data store storing cluster configuration, recommended to have etcd backed up in case of cluster failures
+   - etcd - datastore storing cluster configuration, recommended having etcd backed up in case of cluster failures
    
-   master can never contain pods or run un application components
+   a master can never contain pods or run un application components
    
-   it is recommended to have a master node replication for high availibility
+   it is recommended to have a master node replication for high availability
    
-   master initiate and follows instuctions in line with specifications to deploy pods and their containers
+   the master initiates and follows instructions in line with specifications to deploy pods and their containers
    
 worker node(s)
    runs, monitor and provide services needed for un application
    
-   three coponents
+   three components
    
    - kubelet - runs and manages containers on the node, communicates with api server
    
