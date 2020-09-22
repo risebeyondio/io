@@ -77,7 +77,7 @@ master nodes - control servers
    
    host to kubernetes API
    
-   usually seperate from worker nodes that run application in the cluster
+   usually separate from worker nodes that run an application in the cluster
    
 
 |
@@ -88,17 +88,17 @@ networking in kubernetes
 |
 
 virtual cluster network
-   a single virtual network that spans across entire cluster
+   a single virtual network that spans across the entire cluster
    
-   binds into a single virtual network nodes and their pods
+   binds into single virtual network nodes and their pods
    
-   every pod in the cluster has an unique IP address within the vitual network
+   every pod in the cluster has a unique IP address within the virtual network
    
    each pod can communicate with any other pod in the cluster, even if it the ether pod is running on a different node 
    
    to get IP addresses of pod use -output wide flag ``kubectl get pods -o wide``
    
-   test the virtual network connectivity in the cluster by issuing command from one pod to run on a pod running on different node ``kubectl exec busybox -- curl $nginx_pod_ip``
+   test the virtual network connectivity in the cluster by issuing the command from one pod to run on a pod running on different node ``kubectl exec busybox -- curl $nginx_pod_ip``
 
 |
 
@@ -108,19 +108,19 @@ architecture components
 |
 
 control plane components
-   control and manage cluster
+   control and manage a cluster
    
    backend system pods can be seen within kube-system namespace ``kubectl get pods -n kube-system``
       
-   - etcd - master node - sychronised and distributed data store for the cluster state
+   - etcd - master node - synchronised and distributed data store for the cluster state
    
    - cube REST API server - master node
    
-   - cube controlller manager - master node- bundles several back end components into one package
+   - cube controller manager - master node- bundles several back end components into one package
    
    - cube scheduler - master node - schedules pods to run on specific nodes
    
-   - kubelet - each node - agant that executes containers on each node, it is a service than can be verified by running ``sudo systemctl status kubelet`` 
+   - kubelet - each node - agent that executes containers on each node, it is a service that can be verified by running ``sudo systemctl status kubelet`` 
    
    - kube-proxy - each node- deals with between nodes network communication by adding firewall routing rules
    
@@ -132,15 +132,15 @@ deployments
 |
 
 deployments
-   way to automate management of pods
+   way to automate the management of pods
    
-   - desired state - can be specified for a set of pods, cluster will work to maintain the state
+   - desired state - can be specified for a set of pods, the cluster will work to maintain the state
    
    - scaling - number of replicas needed can be specified, deployments will add or remove replicas to meet the requirement 
    
-   - rolling updates - ability to change deployment container image to newer version, the deployments will gradually replace old containers with the new one, incremental changes and zero downtime updates 
+   - rolling updates - the ability to change deployment container image to a newer version, the deployments will gradually replace old containers with the new one, incremental changes and zero downtime updates 
    
-   - self healing - if for any reason a pod fails or gets accidentally destroyed, new pod will be spin up to replace it
+   - self-healing - if for any reason a pod fails or gets accidentally destroyed, a new pod will be spin up to replace it
 
 |
 
@@ -152,13 +152,13 @@ services
 services
    solve the problem of replica pods being frequently destroyed and (re)created, scaled up and down
 
-   abstraction / load balancer layer on top of set of replica pods
+   abstraction / load balancer layer on top of a set of replica pods
    
    allow dynamic access to the replica pods
    
    instead of accessing pods directly the service sitting on top of the replica pods is to be utilised
    
-   uninterrupted access to replica pods that are currrently in operation
+   uninterrupted access to replica pods that are currently in operation
 
 |
 
@@ -168,24 +168,25 @@ microservices
 |
 
 monolithic architecture
-   all parts of application are combined into one large executable - oposite to microserviced architecture
+   all parts of an application are combined into one large executable - opposite to microserviced architecture
    
 |
 
 microservices
    small and independent services designed to work together to form entire application
    
-   services such as customer data, product data, authantication, search are all independent from each other but aligned to work together as one application - decoupled and loosely coupled 
+   services such as customer data, product data, authentication, search are all independent from each other but aligned to work together as one application - decoupled and loosely coupled 
    
    benefits
    
-   - independent scalability - individual microservices are independently scalable, if specific service is under increased load only that single service can be scaled up or down instad of scaling the entire application
+   - independent scalability - individual microservices are independently scalable
+if specific service is under increased load only that single service can be scaled up or down instead of scaling the entire application
    
-   - cleaner code - changes to a particular part of application will not affect functioning  of other application components
+   - cleaner code - changes to a particular part of the application will not affect the functioning  of other application components
    
-   - reliability - issues in one part of application are less likely to cause problems in other parts of the application
+   - reliability - issues in one part of the application are less likely to cause problems in other parts of the application
    
-   - variety of tools - differnt services can be constructed using wide range of tools, languages or frameworks - best tool for each job
+   - a variety of tools - different services can be constructed using a wide range of tools, languages or frameworks - best tool for each job
 
 |
 
@@ -232,7 +233,7 @@ cluster config
 
 |
 
-*three kubernetes necessary components to be insalled on all nodes - master and 2 workers*
+*three kubernetes necessary components to be installed on all nodes - master and 2 workers*
 
 |
 
@@ -285,7 +286,7 @@ cluster config
    # the output confirms that the node has joined the cluster
    sudo kubeadm join $some_ip:6443 --token $some_token --discovery-token-ca-cert-hash $some_hash
    
-   # master - verify that nodes have koined the cluster  
+   # master - verify that nodes have joined the cluster  
    kubectl get nodes
    
 | 
@@ -325,7 +326,7 @@ deployment config
 
 |
 
-*to create deployment of 2 replica pods running nginx containers, execute the below*
+*to create a deployment of 2 replica pods running nginx containers, execute the below*
 
 .. code-block:: yaml
    
@@ -409,7 +410,7 @@ sample microserviced application deployment
 
 .. code-block:: shell
    
-   # delete prevous services assigned to port 30080
+   # delete previous services assigned to port 30080
    kubectl delete svc nginx-service
    
    # 
