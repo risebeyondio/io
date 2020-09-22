@@ -70,7 +70,7 @@ worker node(s)
    
 |
 
-*application runing on kubernetes, [ref. linuxacademy.com]*
+*application runing on kubernetes [ref. linuxacademy.com]*
 
 |
 
@@ -142,8 +142,8 @@ filtering with field selectors
 
 |
 
-service and network
--------------------
+services
+--------
 
 |
 
@@ -152,8 +152,15 @@ service
    
    service has one consisten IP address and port, whereas pods can be created, destroyed frequently and changing IP addresses
    
-   if old pod failes, gets destroyed, the service decides how to route traffic to an new pod
+   if an old pod failes, gets destroyed, the service decides how to route traffic to a new pod
+   
+   to start service from existing spec file run ``kubectl create -f $myService.yaml``
+   
+   to verify run ``kubectl get services``
+or ``kubectl get services $myService.yaml``
 
+   in case of nginx, service can be verified with ``curl localhost:30080``
+   
 |
 
 sample service spec, associated with label selector - app
@@ -175,17 +182,38 @@ sample service spec, associated with label selector - app
        nodePort: 30080
      selector:
        app: nginx
-
-                             
+       
 |
 
-*services and replica pods, [ref. linuxacademy.com]*
+*services and replica pods [ref. linuxacademy.com]*
 
 |
 
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-services.png
    :align: center
    :alt: services and replica pods
+   
+|
+
+kube-proxy
+----------
+
+|
+
+kube-proxy
+   handles traffic associated witha service or other cluster component / object by creating iptables rules
+   
+|
+
+*initialization of new service in a cluster [ref. linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-kube-proxy.png
+   :align: center
+   :alt: initialization of new service in a cluster
+   
+|
 
 cli
 ---
