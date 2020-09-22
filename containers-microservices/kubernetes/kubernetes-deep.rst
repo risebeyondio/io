@@ -70,12 +70,14 @@ worker node(s)
    
 |
 
+*application runing on kubernetes, [ref. linuxacademy.com]*
+
+|
+
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes_application_run.png
    :align: center
    :alt: application runing on kubernetes
    
-   **application runing on kubernetes**
-
 |
 
 cli
