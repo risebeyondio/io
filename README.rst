@@ -21,7 +21,7 @@ containers and microservices
 
 - `docker swarm <https://github.com/risebeyondio/io/blob/master/containers-microservices/docker-swarm.rst>`_
 
-- `kubernetes and cka <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes.rst>`_
+- `kubernetes <https://github.com/risebeyondio/io/tree/master/containers-microservices/kubernetes>`_
 
 - `apache mesos <https://github.com/risebeyondio/io/blob/master/containers-microservices/mesos.rst>`_
 
