@@ -328,6 +328,10 @@ cluster configuration
 
 |
 
+high availability
+=================
+
+|
 
 cli
 ---
@@ -396,6 +400,10 @@ cli
    
    # execute a command from specific pod
    kubectl exec $podName -- curl $nodeIpaddress:80
+   
+   # list pods in default namespace with a custom view
+   kubectl get pods -o custom-columns=POD:metadata.name,NODE:spec.nodeName --sort-by spec.nodeName -n kube-system
+   
    
 
 next 
