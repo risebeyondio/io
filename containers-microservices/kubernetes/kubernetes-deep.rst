@@ -80,8 +80,8 @@ worker node(s)
    
 |
 
-api primitives
---------------
+api
+---
 
 |
 
@@ -123,9 +123,31 @@ spec - desired state - declarative intent - yaml
    
    - exposed ports
    
-   labels - to be applied to better orginize objects, key-value pairs that can be attached to objects during creation or after,  if multiple - no keys duplication on a single bject, 
+   labels - to be applied to better orginize objects, key-value pairs that can be attached to objects during creation or after,  if multiple - no keys duplication on a single object, 
+   
+   to apply new label (here env) to specific pod use ``kubectl label pods $podName env=prod`` 
    
    label selector can be used to filter through the cluster objects ``kubectl get pods --show-labels``
+   
+   annotations can be also added to object metadata value, as in example ``kubectl annotate deployment $deploymentName myCorp/annotation=`piotr`
+   
+filtering with field selectors
+   ``kubectl get pods --field-selector status.phase=Running``
+   
+   ``kubectl get services --field-selector metadata.namespace=default``
+   
+   ``kubectl get pods --field-selector status.phase=Running,metadata.namespace=default``
+   
+   ``kubectl get pods --field-selector status.phase!=Running,metadata.namespace!=default``
+
+|
+
+service and network
+-------------------
+
+|
+
+
 
 |
 
@@ -146,6 +168,18 @@ cli
    # list pods with label information
    kubectl get pods --show-labels
    
+   # apply new label (here env) to specific pod
+   kubectl label pods $podName env=prod
+   
+   # list pods while showing certain lable
+   kubectl get pods -L env
+   
+   # field selectors filtering 
+   kubectl get pods --field-selector status.phase=Running
+   kubectl get services --field-selector metadata.namespace=default
+   kubectl get pods --field-selector status.phase=Running,metadata.namespace=default
+   kubectl get pods --field-selector status.phase!=Running,metadata.namespace!=default
+
    # list namespaces
    kubectl get namespaces
    
