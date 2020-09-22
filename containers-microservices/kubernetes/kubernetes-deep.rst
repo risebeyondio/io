@@ -70,7 +70,7 @@ worker node(s)
    
 |
 
-.. figure:: ../../../../rise/blob/master/media/kubernetes_application_run.png
+.. figure:: risebeyondio/rise/blob/master/media/kubernetes_application_run.png
    :scale: 50%
    :align: center
    :width: 150px
