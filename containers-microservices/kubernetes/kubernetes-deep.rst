@@ -129,7 +129,7 @@ spec - desired state - declarative intent - yaml
    
    label selector can be used to filter through the cluster objects ``kubectl get pods --show-labels``
    
-   annotations can be also added to object metadata value, as in example ``kubectl annotate deployment $deploymentName myCorp/annotation=`piotr`
+   annotations can be also added to object metadata value, as in example ``kubectl annotate deployment $deploymentName myCorp/annotation='piotr'``
    
 filtering with field selectors
    ``kubectl get pods --field-selector status.phase=Running``
@@ -147,9 +147,37 @@ service and network
 
 |
 
-
+service
+   dynamically access a group of replicated pods
+   
+   service has one consisten IP address and port, whereas pods can be created, destroyed frequently and changing IP addresses
+   
+   if old pod failes, gets destroyed, the service decides how to route traffic to an new pod
 
 |
+
+sample service spec, associated with label selector - app
+
+|
+
+.. code-block:: yaml
+   
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: nginx-nodeport
+   spec:
+     type: NodePort
+     ports:
+     - protocol: TCP
+       port: 80
+       targetPort: 80
+       nodePort: 30080
+     selector:
+       app: nginx
+
+                             
+
 
 cli
 ---
