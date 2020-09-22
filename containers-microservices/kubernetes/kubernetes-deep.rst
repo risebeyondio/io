@@ -70,7 +70,7 @@ worker node(s)
    
 |
 
-*application runing on kubernetes [ref. linuxacademy.com]*
+*application runing on kubernetes [source linuxacademy.com]*
 
 |
 
@@ -187,7 +187,7 @@ sample service spec, associated with label selector - app
        
 |
 
-*services and replica pods [ref. linuxacademy.com]*
+*services and replica pods [source linuxacademy.com]*
 
 |
 
@@ -207,13 +207,56 @@ kube-proxy
    
 |
 
-*initialization of new service in a cluster [ref. linuxacademy.com]*
+*initialization of new service in a cluster [source linuxacademy.com]*
 
 |
 
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-kube-proxy.png
    :align: center
    :alt: initialization of new service in a cluster
+   
+|
+
+cluster build
+-------------
+
+|
+
+build
+   can be done on
+   
+   - physical / bare metal
+   
+   or 
+   
+   - cloud server
+
+|
+
+custom solution
+   - from scratch - manually
+   
+   - own network fabric configuration without flannel or other tools
+   
+   - build own images in private registry
+   
+   - secure cluster communication - https
+   
+   - kubelet is the only component that has to run on the system not as a pod as it is responsible to run everything else as pods 
+
+|
+
+pre-build
+   - minikube
+   quickiest and simplest - for single node local testing
+   
+   - minishift
+   
+   - microK8s
+   
+   - ubuntu on lxd
+   
+   - GCP, AWS,other
    
 |
 
@@ -224,8 +267,26 @@ cli
 
 .. code-block:: shell
    
-   kubectl get nodes
+   # cluster info
+   cubectl cluster-info
+   
+   # cluster config
+   cubectl config view
+   
+    # nodes and pods info
+   cubectl describe nodes
+   cubectl describe pods
+   
+   # list all available resources in a cluster
+   cubectl api-resources -o wide   
 
+   # list services
+   kubectl get services --all-namespaces
+   
+   # list nodes
+   kubectl get nodes
+   
+   # list pods
    kubectl get pods --all-namespaces
 
    # detailed - wide output
