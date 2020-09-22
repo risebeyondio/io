@@ -150,7 +150,9 @@ services
 service
    dynamically access a group of replicated pods
    
-   service has one consisten IP address and port, whereas pods can be created, destroyed frequently and changing IP addresses
+   each service has one consistent IP address and port pair whereas pods can be created, destroyed frequently and changing IP addresses
+   
+   service IP address is virtual - not associated with physical NIC
    
    if an old pod failes, gets destroyed, the service decides how to route traffic to a new pod
    
@@ -262,7 +264,9 @@ cli
    # show specific deployment in yaml output 
    kubectl get deployment myDeployment -o yaml
    
-
+   # execute a command from specific pod
+   kubectl exec $podName -- curl $nodeIpaddress:80
+   
 
 next 
 ----
