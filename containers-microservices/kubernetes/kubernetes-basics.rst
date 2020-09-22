@@ -1,6 +1,6 @@
 |
 
-**kubernetes and cka**
+**kubernetes basics**
 
 ----
 
@@ -28,7 +28,7 @@ basics
 |
 
 pods
-====
+----
 
 pod
    the smallest building blocs of the k8 cluster, model
@@ -55,8 +55,7 @@ basic kubernetes commands
 |
 
 clustering and nodes
-====================
-
+--------------------
 |
 
 clustered architecture and nodes
@@ -84,7 +83,7 @@ master nodes - control servers
 |
 
 networking in kubernetes
-========================
+------------------------
 
 |
 
@@ -104,7 +103,7 @@ virtual cluster network
 |
 
 architecture components
-=======================
+-----------------------
 
 |
 
@@ -128,7 +127,7 @@ control plane components
 |
 
 deployments
-===========
+-----------
 
 |
 
@@ -146,7 +145,7 @@ deployments
 |
 
 services
-========
+--------
 
 |
 
@@ -164,7 +163,7 @@ services
 |
 
 microservices
-=============
+-------------
 
 |
 
@@ -191,7 +190,7 @@ microservices
 |
 
 cluster config
-==============
+--------------
 
 |
 
@@ -322,7 +321,7 @@ https://coreos.com/flannel/docs/latest
 |
 
 deployment config
-==================
+-----------------
 
 |
 
@@ -363,7 +362,7 @@ deployment config
 |
 
 service config
-==============
+--------------
 
 |
 
@@ -398,7 +397,7 @@ with NodePort service (externally exposed port), access it via port 30080 on any
 |
 
 sample microserviced application deployment
-===========================================
+-------------------------------------------
 
 |
 
