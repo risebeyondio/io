@@ -71,16 +71,10 @@ worker node(s)
 |
 
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes_application_run.png
-   :scale: 10
-   :width: 954px
-   :height: 950px
    :align: center
-   :alt: alternate text
+   :alt: application runing on kubernetes
    
-   **application run on kubernetes**
-
-   
-   
+   **application runing on kubernetes**
 
 |
 
