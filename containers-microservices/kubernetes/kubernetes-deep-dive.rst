@@ -404,11 +404,36 @@ stacked topology
       - enable and start etcd service
       
       - once above steps are completed, progress to install other kubernetes components
+
+|      
+
+stacked etcd topology - kubeadm configuration
+   - create a file - kubeadm-config.yaml
    
+.. code-block:: yaml
+
+   apiVersion: kubeadm.k8s.io/v1beta2
+   kind: ClusterConfiguration
+   kubernetesVersion: stable
+   controlPlaneEndpoint: "LOAD_BALANCER_DNS:LOAD_BALANCER_PORT"
+   etcd:
+       external:
+           endpoints:
+           - https://ETCD_0_IP:2379
+           - https://ETCD_1_IP:2379
+           - https://ETCD_2_IP:2379
+           caFile: /etc/kubernetes/pki/etcd/ca.crt
+           certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
+           keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key   
+   
+   - run ``kubeadm init --config=kubeadm-config.yaml``
+   
+   - watch pods being created ``kubectl get pods -n kube-system -w``
+
 |
    
 external topology
-   etcd is external to kubernetes cluster and involves raft consensus algorithm
+   etcd is external to kubernetes cluster
 
 |
 
