@@ -343,8 +343,9 @@ high availability
 
 |
 
+*******************************
 ha, leader elections, endpoints
-===============================
+*******************************
 
 |
 
@@ -379,8 +380,9 @@ leader elect mechanism and endpoint resource
 
 |
 
+*******************************
 etcd replication
-================
+*******************************
 
 |
 
