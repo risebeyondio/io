@@ -426,6 +426,8 @@ stacked etcd topology - kubeadm configuration
            certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
            keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key   
    
+   |
+   
    - run ``kubeadm init --config=kubeadm-config.yaml``
    
    - watch pods being created ``kubectl get pods -n kube-system -w``
