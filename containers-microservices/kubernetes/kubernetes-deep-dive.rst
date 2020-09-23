@@ -395,7 +395,7 @@ etcd replication
 
 |
 
-*etcd replication [source linuxacademy.com] *
+*etcd replication [source linuxacademy.com]*
 
 |
 
