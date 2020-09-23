@@ -365,7 +365,7 @@ high availability
 
 |
 
-leader elect mechanism and endpoints
+leader elect mechanism and endpoint resource
    manages which replicated coponent is in active and which in standby
 
    elected component becomes a leader and is set as acitive component
@@ -385,14 +385,44 @@ etcd replication
 |
 
 etcd replication
-   due to ditributed nature of etcd, its replication must be achieved as
-   
-   - stacked topology
-   
-   or 
-   
-   - external topology
+   due to distributed aspect of etcd, its replication must be achieved as stacked or external topology
 
+|
+
+stacked topology
+   each master node creates local etcd member, this member talks anly with api server of this / own node
+   
+   installation of stacked topology
+      - download, extract and move etcd binaries to ``/usr/local/bin``
+      
+      - create 2 directories ``/etc/etcd`` and ``/var/lib/etcd``
+      
+      - create systemd unit file for etcd
+      
+      - enable and start etcd service
+      
+      - once above steps are completed, progress to install other kubernetes components
+   
+|
+   
+external topology
+   etcd is external to kubernetes cluster and involves raft consensus algorithm
+
+|
+
+raft consensus algorithm
+   used by etcd election process
+
+   requires majority to progress to the other state
+
+   more than half of nodes need to take part in the state change
+
+   to have a majority, number of etcd instances must be odd (with onlly 2 etcd instances, no transition can happen as majority is not possible)
+
+   having exactly 2 etcd instances is worse than having a single one - no consensus and state transition possible 
+   
+   even in large entrprise deployments maximum of 7 etcd instances is enough 
+      
 |
 
 *etcd replication [source linuxacademy.com]*
@@ -476,7 +506,10 @@ cli
    # list pods in default namespace with a custom view
    kubectl get pods -o custom-columns=POD:metadata.name,NODE:spec.nodeName --sort-by spec.nodeName -n kube-system
    
+   # check endpoint resource - leader
+   kubectl get endpoints kube-scheduler -n kube-system -o yaml
    
+|
 
 next 
 ----
