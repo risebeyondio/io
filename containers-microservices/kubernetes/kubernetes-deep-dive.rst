@@ -424,13 +424,11 @@ stacked etcd topology - kubeadm configuration
            - https://ETCD_2_IP:2379
            caFile: /etc/kubernetes/pki/etcd/ca.crt
            certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
-           keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key   
+           keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key      
    
-   |
-   
-   - run ``kubeadm init --config=kubeadm-config.yaml``
-   
-   - watch pods being created ``kubectl get pods -n kube-system -w``
+- run ``kubeadm init --config=kubeadm-config.yaml``
+
+- watch pods being created ``kubectl get pods -n kube-system -w``
 
 |
    
