@@ -173,8 +173,7 @@ service
    
    to start service from existing spec file run ``kubectl create -f $myService.yaml``
    
-   to verify run ``kubectl get services``
-or ``kubectl get services $myService.yaml``
+   to verify run ``kubectl get services`` or ``kubectl get services $myService.yaml``
 
    in case of nginx, service can be verified with ``curl localhost:30080``
    
@@ -506,7 +505,13 @@ secure cluster communications
 
 |
 
+*api access security [source linuxacademy.com]*
 
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-api-security.png
+   :align: center
+   :alt: api access security
 
 |
 
