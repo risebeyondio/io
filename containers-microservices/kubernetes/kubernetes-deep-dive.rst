@@ -459,6 +459,14 @@ raft consensus algorithm
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-etcd-ha.png
    :align: center
    :alt: etcd replication
+|
+
+secure cluster communications
+=============================
+
+|
+
+
 
 |
 
