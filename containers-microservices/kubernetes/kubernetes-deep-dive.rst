@@ -500,8 +500,8 @@ contents_
 
 |
 
-secure cluster communications
-=============================
+secure cluster api communications
+=================================
 
 |
 
@@ -515,10 +515,20 @@ secure cluster communications
 
 |
 
+all requests origin from either
+   - a client / user
+   
+   or 
+   
+   - a pod
+
+|
+
 api communication break down
    - request issued via ``kubectl`` command or a pod itself gets translated into api POST request that hits api server
    
    - the request goes through 3 stages
+   
    each stage contains number of plugins that are called by the api server one by one 
    
       - authentication - who
@@ -527,7 +537,7 @@ api communication break down
       
          - authentication method is to be determined by http header or the certificate 
          
-         - once found, the request feeds user id and groups it the client belongs to back to api server
+         - once found, the request feeds user id and groups the user / client belongs to back to api server
       
       - authorization - what
       
@@ -544,7 +554,15 @@ api communication break down
    - new state is stored in etcd
    
    - final result is returned
-   
+
+|
+
+self signed certificates can be used to pass authentication phase and seen by running ``cat .kube/config | more`` 
+
+|
+
+role based access control
+   used in requests issued by users (not pods) to prevent unauthorized users changing the state of cluster
 
 contents_
 
@@ -624,6 +642,9 @@ cli
    # check endpoint resource - leader
    kubectl get endpoints kube-scheduler -n kube-system -o yaml
    
+   # check (self signed) certificate
+   cat .kube/config | more
+
 |
 
 contents_
