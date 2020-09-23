@@ -77,11 +77,20 @@ worker node(s)
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes_application_run.png
    :align: center
    :alt: application runing on kubernetes
-   
+
+|
+
+contents_
+
 |
 
 api
 ---
+
+|
+
+kubectl
+   is a tool that translates cli commands to api calls being send to api server
 
 |
 
@@ -139,6 +148,10 @@ filtering with field selectors
    ``kubectl get pods --field-selector status.phase=Running,metadata.namespace=default``
    
    ``kubectl get pods --field-selector status.phase!=Running,metadata.namespace!=default``
+
+|
+
+contents_
 
 |
 
@@ -217,6 +230,10 @@ kube-proxy
    
 |
 
+contents_
+
+|
+
 cluster build
 -------------
 
@@ -258,6 +275,10 @@ pre-build
    
    - GCP, AWS,other
    
+|
+
+contents_
+
 |
 
 cluster configuration
@@ -328,6 +349,10 @@ cluster configuration
 
 |
 
+contents_
+
+|
+
 high availability
 =================
 
@@ -340,6 +365,10 @@ high availability
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-ha.png
    :align: center
    :alt: kubernetes high availability
+
+|
+
+contents_
 
 |
 
@@ -377,6 +406,10 @@ leader elect mechanism and endpoint resource
       needs to be created to enable leader election functionality
 
    to verify status of scheduler endpoint run ``kubectl get endpoints kube-scheduler -n kube-system -o yaml``
+
+|
+
+contents_
 
 |
 
@@ -459,6 +492,11 @@ raft consensus algorithm
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-etcd-ha.png
    :align: center
    :alt: etcd replication
+
+|
+
+contents_
+
 |
 
 secure cluster communications
@@ -467,6 +505,10 @@ secure cluster communications
 |
 
 
+
+|
+
+contents_
 
 |
 
@@ -546,6 +588,10 @@ cli
    
 |
 
+contents_
+
+|
+
 next 
 ----
 
@@ -553,10 +599,6 @@ next
 
 - https://app.linuxacademy.com/search?query=kubernetes%20the%20hard%20way
 - https://app.linuxacademy.com/search?query=%20Google%20Kubernetes%20Engine%20Deep%20Dive
-
-|
-
-content
 
 |
 
