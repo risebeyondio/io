@@ -343,10 +343,15 @@ high availability
 
 |
 
+ha, leader elections, endpoints
+===============================
+
+|
+
 high availability
    each master / control plane node component can be replicated
    
-   some components has to stay in stand-by state to avoid conflicts with other replicated components
+   some components have to stay in standby state to avoid conflicts with other replicated components
    
    - scheduler
    
@@ -356,21 +361,49 @@ high availability
    
    if these two coponents were both replicated and worked in tandem they could start competing and create resource dupicates, etc.
    
-   only a single scheduler and control manager can be active at a time
+   only a single scheduler and control manager can be active at a time and this is managed by leader election mechanism
+
+|
+
+leader elect mechanism and endpoints
+   manages which replicated coponent is in active and which in standby
+
+   elected component becomes a leader and is set as acitive component
+
+   active component is set to true by default
+
+   endpoint resource
+      needs to be created to enable leader election functionality
+
+   to verify status of scheduler endpoint run ``kubectl get endpoints kube-scheduler -n kube-system -o yaml``
+
+|
+
+etcd replication
+================
+
+|
+
+etcd replication
+   due to ditributed nature of etcd, its replication must be achieved as
    
-   leader elect option
-      manages which coponent is in active and which in stand-by
+   - stacked topology
    
-      elected component becomes a leader and is set as acitive component
+   or 
    
-      active component is set to true by default
-   
-      end point resource needs to be created to enable leader election functionality
-   
-      to verify status of scheduler end point run ``kubectl get endpoints kube-scheduler -n kube-system -o yaml``
-   
-   
-   
+   - external topology
+
+|
+
+*etcd replication [source linuxacademy.com] *
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-etcd-ha.png
+   :align: center
+   :alt: etcd replication
+
+|
 
 cli
 ---
