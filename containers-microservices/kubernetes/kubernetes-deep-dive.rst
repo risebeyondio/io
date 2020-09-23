@@ -99,6 +99,8 @@ api server
    
    all other components communicate with etcd and each other through api server only
    
+   provides create, read, update, delete CRUD interface for querying and modifying the cluster state over a restful api
+   
    ``kebectl`` command can be used to create, updtate, delete and get api objects 
 
    all objects like pods or services are persistent enteties being represented by declarative intent - desired state
