@@ -333,6 +333,19 @@ high availability
 
 |
 
+*high availability*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-ha.png
+   :align: center
+   :alt: kubernetes high availability
+
+|
+
+high availability
+   not all components should be replicated and in active state
+
 cli
 ---
 
