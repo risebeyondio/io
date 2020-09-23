@@ -333,7 +333,7 @@ high availability
 
 |
 
-*high availability*
+*high availability in kubernetes [source linuxacademy.com] *
 
 |
 
@@ -344,7 +344,33 @@ high availability
 |
 
 high availability
-   not all components should be replicated and in active state
+   each master / control plane node component can be replicated
+   
+   some components has to stay in stand-by state to avoid conflicts with other replicated components
+   
+   - scheduler
+   
+   - control manager
+   
+   both of above actively observe cluster state and apply actions when it changes
+   
+   if these two coponents were both replicated and worked in tandem they could start competing and create resource dupicates, etc.
+   
+   only a single scheduler and control manager can be active at a time
+   
+   leader elect option
+      manages which coponent is in active and which in stand-by
+   
+      elected component becomes a leader and is set as acitive component
+   
+      active component is set to true by default
+   
+      end point resource needs to be created to enable leader election functionality
+   
+      to verify status of scheduler end point run ``kubectl get endpoints kube-scheduler -n kube-system -o yaml``
+   
+   
+   
 
 cli
 ---
