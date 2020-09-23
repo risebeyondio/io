@@ -9,7 +9,7 @@ kubernetes
 
 - `basics <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes/kubernetes-basics.rst>`_
 
-- `deep dive <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes/kubernetes-deep.rst>`_     
+- `deep dive <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes/kubernetes-deep-dive.rst>`_     
 
 
 
