@@ -782,6 +782,70 @@ contents_
 
 |
 
+back up and restore
+===================
+
+|
+
+cluster back up
+   useful especially if there is single etcd instance only, development cluster with no replicas, etc.
+   
+   due to the importance of etcd (persistent datastore for all cluster updates), it is recommended to run periodic etcd snapshots, even if the etcd persistent datastore is replicated with consensus algorithm or etcd topology is external to the cluster
+
+|
+
+etcdctl
+   if cluster is created with kubeadm it comes with etcdctl tool
+   
+   enables back up of etcd datastore in single command
+   
+   it is recommended to keep the snapshot in secure failure proofed location
+   
+   restoring from the snapshot will initialize entirely new cluster
+
+|
+
+etcdctl back up steps
+   - get etcd binaries ``wget https://github.com/etcd-io/etcd/releases/download/v3.3.12/etcd-v3.3.12-linux-amd64.tar.gz``
+   
+   - unzip the file ``tar xvf etcd-v3.3.12-linux-amd64.tar.gz``
+   
+   - move files to ``/usr/local/bin``  ``sudo mv etcd-v3.3.12-linux-amd64/etcd* /usr/local/bin``
+   
+   - take snapshot of etcd datstore and additionally save certificate files in a single etcdctl command ``sudo ETCDCTL_API=3 etcdctl snapshot save snapshot.db --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key``
+   
+   - verify the snapshot ``ETCDCTL_API=3 etcdctl --write-out=table snapshot status snapshot.db``
+   
+   - verify if certificates have been copied ``ls /etc/kubernetes/pki/etcd/``
+   
+   - archive contents of the etcd directory ``sudo tar -zcvf etcd.tar.gz /etc/kubernetes/pki/etcd``
+   
+   - Copy zipped file to other server ``scp etcd.tar.gz userName@x.x.x.x:~/``
+
+|
+
+etcdctl cluster restore from snapshot
+   whether one or all nodes are lost, restoring must be done using same snapshot
+   
+   restoring overwrires member id and cluster id
+   
+   impossible to identify with original cluster
+   
+   restore creates completely new cluster and then it replaces etcd key spaces from the back up
+   
+   if a node is lost or decommissioned, the new node has to have identical ip address as the original one to be successfully restored
+   
+   restoring process involves 
+      - new etcd data directories for each mode in the cluster
+      
+      - specyfing initial cluster ip addresses, token and peer urls
+      
+      - starting etcd with new data directories set up correctly 
+
+contents_
+
+|
+
 cli
 ---
 
