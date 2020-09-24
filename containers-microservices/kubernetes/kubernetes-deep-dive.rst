@@ -529,25 +529,25 @@ api communication break down
    
    - the request goes through 3 stages, each contains number of plugins that are called by the api server one by one 
       - authentication - who
-         - api server calls plugins until it determins ``who`` is sending the request
+         - api server calls plugins until it determins who is sending the request
       
          - authentication method is to be determined by http header or the certificate 
          
          - once found, the request feeds user id and groups the user / client belongs to back to api server
       
       - authorization - what
-         - verifies if the aythenticated user is allowed to perform the requested activity on the requested resource
+         - verifies if the authenticated user is allowed to perform the requested activity on the requested resource
       
       - admission control
-         - this stage takes place only in case of create, modify, delete a resource
+         - takes place only in case of create, modify, delete a resource
          
          - admission is bypassed if the request is read only
       
    - resource validation 
 
-   - new state is stored in etcd
+   - new state gets stored in etcd
    
-   - final result is returned
+   - final result gets returned in output
 
 |
 
@@ -555,8 +555,40 @@ self signed certificates can be used to pass authentication phase and seen by ru
 
 |
 
-role based access control
-   used in requests issued by users (not pods) to prevent unauthorized users changing the state of cluster
+role based access control - rbac
+   used in requests issued by users not pods
+   
+   to prevent unauthorized users changing the state of cluster
+
+   roles - what
+      define what can be done
+      
+      user can be associated with single or multiple roles
+
+   bindings - who
+      define who can do it
+      
+   roles and bindings
+      work in context of a namespace resources
+      
+    cluster roles and cluster bindings
+      work in context of a cluster resources
+      
+      
+
+|
+
+roles and bindings
+
+*role based access control [source linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-role-based-access.png
+   :align: center
+   :alt: role based access control
+
+|
 
 contents_
 
