@@ -527,12 +527,8 @@ all requests origin from either
 api communication break down
    - request issued via ``kubectl`` command or a pod itself gets translated into api POST request that hits api server
    
-   - the request goes through 3 stages
-   
-   each stage contains number of plugins that are called by the api server one by one 
-   
+   - the request goes through 3 stages, each contains number of plugins that are called by the api server one by one 
       - authentication - who
-      
          - api server calls plugins until it determins ``who`` is sending the request
       
          - authentication method is to be determined by http header or the certificate 
@@ -540,11 +536,9 @@ api communication break down
          - once found, the request feeds user id and groups the user / client belongs to back to api server
       
       - authorization - what
-      
          - verifies if the aythenticated user is allowed to perform the requested activity on the requested resource
       
       - admission control
-      
          - this stage takes place only in case of create, modify, delete a resource
          
          - admission is bypassed if the request is read only
