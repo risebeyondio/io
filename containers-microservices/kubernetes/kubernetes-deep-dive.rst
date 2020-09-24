@@ -670,8 +670,8 @@ managemment
 
 |
 
-upgrading cluster
-=================
+components maintenance
+=======================
 
 |
 
@@ -710,6 +710,71 @@ steps
    
    - verify all nodes versions
       ``kubectl get nodes`` 
+
+|
+
+contents_
+
+|
+
+nodes maintanance
+=================
+
+|
+
+node maintenance
+   occasionally required to upgrade, change node OS, NIC, decommisioning - changes that involve node rebooting or removal
+   
+   zero downtime - even if pods are replicated on other nodes it is a good practice to move the pods from node to be maintained to a different node - to ensure zero downtime
+   
+   if the reboot is quick causing breif downtime, kublet will try restart the pod on same node
+   
+   if downtime is longer than 5 minutes the node controller will completly terminate the pods if no replica sets or deployment is being used
+   
+   it is crucial to utilise deployments or replica sets as when they are used a new pod will get automatically scheduled to a new node
+
+|
+
+node maintainance steps
+   1. before taking a node down - chceck if any pods are running on it ``kubectl get pods -o wide``
+   
+   2. if yes, then evict the pods on a node ``kubectl drain $nodeNameToBeEvicted --ignore-daemonsets``
+   
+   3. verify pods to observe if they moved to other nodes ``kubectl get pods -o wide``
+   
+   4. check if the drained node , one to be under maintanance has changed state to *Ready, SchedulingDisabled* by running ``kubectl get nodes -w``
+   
+   5. at this stages the node / server can be maintenance, reboot, etc. 
+   
+   6. once maintenance is done run ``kubectl uncordon $nodeName`` to start scheduling pods to the node again
+   
+   7. execute ``kubectl get nodes -w`` to check the node status
+
+|
+
+node decommissioning steps
+   1. repeat all steps 1 - 4
+   
+   5. delete node from cluster ``kubectl delete node $nodeName``
+   
+   6. execute ``kubectl get nodes -w`` to verify node removal
+   
+   7. shut down and decommisined the node
+   
+|
+
+adding new node to the cluster steps
+   1. spin up new server, virtual machine, etc.
+   
+   2. install docker, kubeadm, kubectl and kubelet
+   
+   3. on master server generate new token needed by the new node to join the cluster, run ``sudo kubeadm token generate``
+   
+   4. copy the just genereted token name from previous command output and past it to ``sudo kubeadm token create $tokenName --ttl 2h --print-join-command``
+   
+   5. copy the join command from master, switch to new server, paste the command and run it with ``sudo`` (ensure join command has no line breaks - one line with no extra whitespaces)
+   
+   6. on master execute ``kubectl get nodes -w`` to verify new node addition to the cluster  
 
 |
 
