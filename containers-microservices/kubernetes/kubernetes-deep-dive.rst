@@ -614,14 +614,14 @@ contents_
 
 |
 
-end to end tests
-================
+end to end testing
+==================
 
 |
 
 manual end-to-end testing - e2e checklist
    1. deployments can run
-      - create a nginx deployment ``kubectl create deployment nginx --image=nginx``
+         - create a nginx deployment ``kubectl create deployment nginx --image=nginx``
       
          - verify deployments ``kubectl get deployments``
    
