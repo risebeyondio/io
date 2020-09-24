@@ -577,7 +577,7 @@ role based access control - rbac
 |
 
 service accounts
-   request from a pod gets same as user authenticate, authorised and admitted
+   request from a pod gets (same as with user) authenticated, authorised and admitted
 
    service account gets created for each pod
    
@@ -585,16 +585,16 @@ service accounts
    
    token file holds service accounts authentication token
    
-   to check the token run ``cat /var/run/secrets/kubernetes.io/serviceaccount/token``
+   to check the token from within a pod run ``cat /var/run/secrets/kubernetes.io/serviceaccount/token``
    
    whenever api utilises genuine token to connect to api server
       - plugin authenticates the service account
       
       - passes the servive accounts username back to the api server
+      
+   to list service account resurces in a cluster, run ``kubectl get serviceaccounts
 
 |
-
-roles and bindings
 
 *role based access control [source linuxacademy.com]*
 
@@ -657,11 +657,17 @@ cli
    kubectl get pods --field-selector status.phase=Running,metadata.namespace=default
    kubectl get pods --field-selector status.phase!=Running,metadata.namespace!=default
 
+   # create new namespace
+   kubectl create ns $namespaceName
+   
    # list namespaces
    kubectl get namespaces
    
    # pod details
    kubectl describe pod $podName
+   
+   # get pods in a namespace context
+   kubectl get pods -n $namespaceName
 
    # pod deletion
    kubectl delete pod $podName
@@ -687,9 +693,20 @@ cli
    # check (self signed) certificate
    cat .kube/config | more
    
-   # verify api token file
-   cat /var/run/secrets/kubernetes.io/serviceaccount/token``
-
+   # check service account token
+   kubectl get secrets  
+   
+   # verify api token file from within a pod
+   cat /var/run/secrets/kubernetes.io/serviceaccount/token
+   
+   # run shemm in a pod
+   kubectl exec -it <name-of-pod> -n $namespaceName sh
+   
+   # list services in a namespace via API call
+   curl localhost:8001/api/v1/namespaces/myNamespace/services
+   
+   # list service account resurces in a cluster
+   kubectl get serviceaccounts
 |
 
 contents_
