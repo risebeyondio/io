@@ -675,53 +675,38 @@ upgrading cluster
 
 |
 
-Get the version of the API server:
+steps
+   - master node
+      - verify kubelet, (api) server and kubeadm versions
+         - ``kubectl get nodes``, ``kubectl version --short``, ``sudo kubeadm version``
 
-kubectl version --short
+      - unhold kubeadm, kubelet versions ``sudo apt-mark unhold kubeadm kubelet``
 
-Release the hold on versions of kubeadm and kubelet:
+      - install version 1.19.1 of kubeadm ``sudo apt install -y kubeadm=1.19.1-00``
 
-sudo apt-mark unhold kubeadm kubelet
+      - freeze the version of kubeadm at 1.19.1 ``sudo apt-mark hold kubeadm``
 
-Install version 1.18.5 of kubeadm:
+      - verify kubeadm ``kubeadm version``
 
-sudo apt install -y kubeadm=1.18.5-00
+      - plan the upgrade of all the controller components ``sudo kubeadm upgrade plan``
 
-Hold the version of kubeadm at 1.18.5:
+      - upgrade controller components ``sudo kubeadm upgrade apply v1.19.1`` minimal downtime can be involved
 
-sudo apt-mark hold kubeadm
+      - release kubectl version lock ``sudo apt-mark unhold kubectl``
 
-Verify the version of kubeadm:
+      - upgrade kubectl and kubelet ``sudo apt install -y kubectl=1.19.1-00 kubelet=1.19.1-00``
 
-kubeadm version
-
-Plan the upgrade of all the controller components:
-
-sudo kubeadm upgrade plan
-
-Upgrade the controller components:
-
-sudo kubeadm upgrade apply v1.18.5
-
-Release the hold on the version of kubectl:
-
-sudo apt-mark unhold kubectl
-
-Upgrade kubectl:
-
-sudo apt install -y kubectl=1.18.5-00
-
-Hold the version of kubectl at 1.18.5:
-
-sudo apt-mark hold kubectl
-
-Upgrade the version of kubelet:
-
-sudo apt install -y kubelet=1.18.5-00
-
-Hold the version of kubelet at 1.18.5:
-
-sudo apt-mark hold kubelet
+      - lock back version of kubectl and kublet ``sudo apt-mark hold kubectl kubelet``
+      
+      - verify kubelet, (api) server versions ``kubectl get nodes``, ``kubectl version --short``
+   
+   - all worker nodes
+      - upgrade kubelet 
+            - unhold version ``sudo apt-mark unhold kubelet``
+            
+            - upgrade it ``sudo apt install -y kubelet=1.19.1-00``
+            
+            - lock back ``sudo apt-mark hold kubelet``
 
 |
 
