@@ -678,6 +678,7 @@ upgrading cluster
 steps
    - master node
       - verify kubelet, (api) server and kubeadm versions
+      
          - ``kubectl get nodes``, ``kubectl version --short``, ``sudo kubeadm version``
 
       - unhold kubeadm, kubelet versions ``sudo apt-mark unhold kubeadm kubelet``
@@ -701,12 +702,15 @@ steps
       - verify kubelet, (api) server versions ``kubectl get nodes``, ``kubectl version --short``
    
    - all worker nodes
-      - upgrade kubelet 
+      - upgrade kubelet
+      
             - unhold version ``sudo apt-mark unhold kubelet``
             
             - upgrade it ``sudo apt install -y kubelet=1.19.1-00``
             
             - lock back ``sudo apt-mark hold kubelet``
+   
+   - verify all nodes versions ``kubectl get nodes`` 
 
 |
 
