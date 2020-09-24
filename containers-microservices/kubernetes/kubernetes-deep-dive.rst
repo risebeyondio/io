@@ -571,10 +571,26 @@ role based access control - rbac
    roles and bindings
       work in context of a namespace resources
       
-    cluster roles and cluster bindings
+   cluster roles and cluster bindings
       work in context of a cluster resources
       
+|
+
+service accounts
+   request from a pod gets same as user authenticate, authorised and admitted
+
+   service account gets created for each pod
+   
+   represents identity of api running in each pod
+   
+   token file holds service accounts authentication token
+   
+   to check the token run ``cat /var/run/secrets/kubernetes.io/serviceaccount/token``
+   
+   whenever api utilises genuine token to connect to api server
+      - plugin authenticates the service account
       
+      - passes the servive accounts username back to the api server
 
 |
 
@@ -584,7 +600,7 @@ roles and bindings
 
 |
 
-.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-role-based-access.png
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-role-based-access-control.png
    :align: center
    :alt: role based access control
 
@@ -670,6 +686,9 @@ cli
    
    # check (self signed) certificate
    cat .kube/config | more
+   
+   # verify api token file
+   cat /var/run/secrets/kubernetes.io/serviceaccount/token``
 
 |
 
