@@ -16,8 +16,8 @@
 
 |
 
-cluster architecture
---------------------
+architecture
+-------------
 
 |
 
@@ -235,8 +235,8 @@ contents_
 
 |
 
-cluster build
--------------
+build
+-----
 
 |
 
@@ -658,6 +658,70 @@ automated end-to-end testing
    use kubetest e2e testing tool
    
    https://github.com/kubernetes/test-infra/tree/master/kubetest
+
+|
+
+contents_
+
+|
+
+managemment
+-----------
+
+|
+
+upgrading cluster
+=================
+
+|
+
+Get the version of the API server:
+
+kubectl version --short
+
+Release the hold on versions of kubeadm and kubelet:
+
+sudo apt-mark unhold kubeadm kubelet
+
+Install version 1.18.5 of kubeadm:
+
+sudo apt install -y kubeadm=1.18.5-00
+
+Hold the version of kubeadm at 1.18.5:
+
+sudo apt-mark hold kubeadm
+
+Verify the version of kubeadm:
+
+kubeadm version
+
+Plan the upgrade of all the controller components:
+
+sudo kubeadm upgrade plan
+
+Upgrade the controller components:
+
+sudo kubeadm upgrade apply v1.18.5
+
+Release the hold on the version of kubectl:
+
+sudo apt-mark unhold kubectl
+
+Upgrade kubectl:
+
+sudo apt install -y kubectl=1.18.5-00
+
+Hold the version of kubectl at 1.18.5:
+
+sudo apt-mark hold kubectl
+
+Upgrade the version of kubelet:
+
+sudo apt install -y kubelet=1.18.5-00
+
+Hold the version of kubelet at 1.18.5:
+
+sudo apt-mark hold kubelet
 
 |
 
