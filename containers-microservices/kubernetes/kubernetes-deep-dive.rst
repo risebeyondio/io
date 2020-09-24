@@ -621,7 +621,7 @@ end to end tests
 
 manual end-to-end testing - e2e checklist
    1. deployments can run
-         - create a nginx deployment ``kubectl create deployment nginx --image=nginx``
+      - create a nginx deployment ``kubectl create deployment nginx --image=nginx``
       
          - verify deployments ``kubectl get deployments``
    
@@ -634,10 +634,9 @@ manual end-to-end testing - e2e checklist
          - open new terminal session on the same machine and run ``curl --head http://127.0.0.1:8081`` to verify http return code and nginx version
       
    4. logs can be collected from a pod
-         - ``kubectl logs $podName``
+      - ``kubectl logs $podName``
 
    5. commands run from pod
-   
          - ``kubectl exec -it $podName -- nginx -v``
 
    6. services can provide accesss
@@ -648,7 +647,6 @@ manual end-to-end testing - e2e checklist
          - swith to one of the worker nodes and run ``curl -I localhost:$nodeExposedPort``
    
    7. nodes are healthy
-   
          - ``kubectl get nodes`` and ``kubectl describe nodes`` 
 
    8. pods are healthy 
