@@ -565,23 +565,21 @@ role based access control - rbac
       
       user can be associated with single or multiple roles
 
-   bindings - who
-      define who can do it
+   role bindings - who and what
+      define who can do whar
       
-   roles and bindings
+   roles and role bindings
       work in context of a namespace resources
       
-   cluster roles and cluster bindings
-      work in context of a cluster resources
+   cluster roles and cluster role bindings
+      work in context of a cluster scope resources
       
 |
 
 service accounts
    request from a pod gets (same as with user) authenticated, authorised and admitted
 
-   service account gets created for each pod
-   
-   represents identity of api running in each pod
+   service account gets created for each pod and it represents identity of an application running in particular pod
    
    token file holds service accounts authentication token
    
@@ -593,6 +591,12 @@ service accounts
       - passes the servive accounts username back to the api server
       
    to list service account resurces in a cluster, run ``kubectl get serviceaccounts
+   
+   default service account - applied when no explicit service account is set in pod manifest
+   
+   if a pod tries to reach other service account in different namespace it will be blocked
+   
+   rule is that service account can only be accessed from within the same namespace
 
 |
 
@@ -603,6 +607,19 @@ service accounts
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-role-based-access-control.png
    :align: center
    :alt: role based access control
+
+|
+
+contents_
+
+|
+
+end to end tests
+================
+
+|
+
+
 
 |
 
