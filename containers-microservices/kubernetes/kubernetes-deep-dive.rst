@@ -842,6 +842,37 @@ etcdctl cluster restore from snapshot
       
       - starting etcd with new data directories set up correctly 
 
+|
+
+contents_
+
+|
+
+networking
+----------
+
+|
+
+pod and node
+=============
+
+|
+
+*node and pod networking [source linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-node-networking.png
+   :align: center
+   :alt: node and pod networking
+
+|
+
+networking in kubernetes 
+   uses linux network namespaces concepts
+
+|
+
 contents_
 
 |
