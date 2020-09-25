@@ -414,9 +414,9 @@ contents_
 
 |
 
-*******************************
+****************
 etcd replication
-*******************************
+****************
 
 |
 
@@ -1051,7 +1051,7 @@ nodeport service
 
 |
 
-.. code-block:: shell
+.. code-block:: yaml
    
    apiVersion: v1
    kind: Service
@@ -1109,6 +1109,193 @@ endpoint
    
    to check endpoints run ``kubectl get endpoints``
    
+|
+
+contents_
+
+|
+
+load balancers
+==============
+
+|
+
+*load balancing [source linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-load-balancing.png
+
+   :align: center
+   :alt: load balancing
+
+|
+
+load balancer
+   extension to nodeport type of service
+   
+   redirects traffic to all nodes and corresponding node ports
+   
+   front facing, clients accessing an application communicate only via load balancer IP address
+   
+   when listing services ``kubectl get services`` some services have *none* in external ip address field
+   
+   such services are only accessible internally via 
+   
+   - their private ip address and port number
+   
+   or
+   
+   - node's ip address and port number
+   
+   when cluster is deployed in cloud, the load balancer can be created automatically by creating ``loadbalancer`` type of service (instead of nodeport service)
+   
+   load balancers are not seeing pods or containers, that is why if one node contains 2 pods and other node just one pod, there would be no even distribution
+   
+   not even distribution is addressed by ip tables, discused further below 
+   
+|
+
+load balancer spec file
+   as shown below it does not contain nodeport field, this is to allow kubernetes to choose it automatically
+
+|
+
+.. code-block:: yaml
+   
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: nginx-loadbalancer
+   spec:
+     type: LoadBalancer
+     ports:
+     - port: 80
+       targetPort: 80
+     selector:
+       app: nginx: v1
+
+|
+
+load balancer configuration on cloud servers
+   - create new deployment ``kubectl run kubeserve2 --image=chadmcrowell/kubeserve2``
+   
+   - create a nginx deployment ``kubectl create deployment nginx --image=nginx``
+      
+   - verify deployments ``kubectl get deployments``
+   
+   - scale the deployments to 2 replicas to load balance between the two ``kubectl scale deployment/nginx --replicas=2``
+   
+   - verify which pods are on which nodes ``kubectl get pods -o wide``
+   
+   - create loadbalancer from a deployment ``kubectl expose deployment nginx --port 80 --target-port 8080 --type LoadBalancer``
+
+   - watch as services create ``kubectl get services -w``
+   
+   - check yaml of the service ``kubectl get services nginx -o yaml``, nginx deployment should show external ip of the load balancer
+
+   - curl load balancer external ip ``curl http://$external-ip``
+
+|
+
+ip tables
+   fix the issue not even load balancing by working out where the pod is in the cluster, if it is on pod 1 it will routed to pod one, if on pod 14 it will routed to pod 14
+   
+   then kubernetes needs to send it to the originating node in order to send it back to ip tables and correctly routed out
+   
+   whole process introduces latency
+   
+   if precisely even load balancing is not required, it is recommended to disable it by adding annotation to always pick the pod on that node - decreasing the extra latancy hop
+   
+   adding annotation can be done by ``kubectl annotate service nginx externalTrafficPolicy=Local``
+   
+   verify if annnotation was set by ``kubectl describe services nginx``
+   
+   the annotation makes routing load balancer traffic local to the node - route the traffic locally
+   
+|
+
+contents_
+
+|
+
+ingress rules
+=============
+
+|
+
+ingress
+   in load balancing it is required to have one external ip address for every service - one to one
+   
+   ingress makes it possible to access many services with just one external ip address - one to man
+   
+   ingress exposes http and https routes from outside the cluster to services operating within the cluster
+   
+   ingress resource operates at application layer, hence the functionality
+   
+   to provide ingress both an ingress controller and an ingress resource have to be created
+
+|
+
+ingress resource file
+   in the sample 3 ingress rules are present
+   
+   - request header containg hostname kubeserve.domain.com will get routed to my-kubeserve service
+
+   - request header containg hostname app.example.com will get routed to nginx service
+   
+   - request not stating hostname will be routed to httpd service
+
+|
+
+.. code-block:: yaml
+   
+   apiVersion: extensions/v1beta1
+   kind: Ingress
+   metadata:
+     name: service-ingress
+   spec:
+     rules:
+     - host: kubeserve.domain.com
+       http:
+         paths:
+         - backend:
+             serviceName: my-kubeserve
+             servicePort: 80
+     - host: app.example.com
+       http:
+         paths:
+         - backend:
+             serviceName: nginx
+             servicePort: 80
+     - http:
+         paths:
+         - backend:
+             serviceName: httpd
+             servicePort: 80
+   
+|
+
+implementing ingress
+   to create the rules run ``kubectl create -f ingress.yaml``
+
+   to ammend already existing rules, execute ``kubectl edit ingress``
+
+   to verify changes run ``kubectl describe ingress``
+
+|
+
+contents_
+
+|
+
+dns
+===
+
+|
+
+
+
 |
 
 contents_
