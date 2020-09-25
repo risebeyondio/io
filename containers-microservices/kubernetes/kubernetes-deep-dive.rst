@@ -868,9 +868,32 @@ pod and node
 
 |
 
-networking in kubernetes 
-   uses linux network namespaces concepts
+networking within nodes 
+   kubernetes uses linux network namespaces concepts
+   
+   inside a node each pod has own ip address
+  
+   pod ip comes from virtual ethernet interface pair
+   
+   one of the virtual interfaces pair gets associated with a pod and renamed ``eth0``
 
+**node Ethernet pipe to the pod**
+
+inspecting node pod virtual interface mapping
+   1. to check virtual interfaces, login to one of nodes and run ``ifconfig`` - in output ``vethXXXXXX`` interface represents one of node`s virtual interfaces that is than paired with specific pod's interface renamed to eth0
+   
+   inspect docker containers running in a pod ``docker ps``
+   
+   apart from an application containers such as nginx thare are containers running command ``/pause`` - their purpose is to hold pod network namespace 
+   
+   copy one of containers id and use it in the following ``docker inspect --format '{{ .State.Pid }}' $conteinerId`` to get container process id
+   
+   nsenter is used to run a command (here ip addr) in a processes' network namespace
+
+   copy process id and use it to run ``nsenter -t $containerPid -n ip addr``
+   
+   the output shows interface ``eth0@if6`` (or eth0@ifotherNumber) that representing mapping of pod's eth0 interface to for example inteface 6 - if6 - that is the 6th interface counted top to bottom shown in node ``ifconfig``that was run in first step - ``vethXXXXX``
+  
 |
 
 contents_
@@ -974,6 +997,11 @@ cli
    
    # list service account resurces in a cluster
    kubectl get serviceaccounts
+
+   # get container process id
+   docker inspect --format '{{ .State.Pid }}' $conteinerId  
+
+
 |
 
 contents_
