@@ -853,8 +853,8 @@ networking
 
 |
 
-pods communication within a single node
-=======================================
+single node communication
+=========================
 
 |
 
@@ -881,22 +881,22 @@ networking within nodes
 
 node's ethernet pipe to a pod - node to pod interface mapping 
    to verify the mapping take following steps
-   
-      1. check node's virtual interfaces, login to one of nodes and run ``ifconfig`` - in output ``vethXXXXXX`` interface represents one of node`s virtual interfaces that is than paired with specific pod's interface renamed to eth0
 
-      2. inspect docker containers running in a pod ``sudo su -`` ``docker ps``
+   1. check node's virtual interfaces, login to one of nodes and run ``ifconfig`` - in output ``vethXXXXXX`` interface represents one of node`s virtual interfaces that is than paired with specific pod's interface renamed to eth0
 
-      apart from an application containers such as nginx thare are containers running command ``/pause`` - their purpose is to hold pod network namespace 
+   2. inspect docker containers running in a pod ``sudo su -`` ``docker ps``
 
-      3. copy one of containers id and use it in the following ``docker inspect --format '{{ .State.Pid }}' $conteinerId`` to get container process id
+   apart from an application containers such as nginx thare are containers running command ``/pause`` - their purpose is to hold pod network namespace 
 
-      4. nsenter is used to run a command (here ip addr) in a processes' network namespace
+   3. copy one of containers id and use it in the following ``docker inspect --format '{{ .State.Pid }}' $conteinerId`` to get container process id
 
-      copy process id and use it to run ``nsenter -t $containerPid -n ip addr``
+   4. nsenter is used to run a command (here ip addr) in a processes' network namespace
 
-      the output shows interface ``eth0@if6`` (or eth0@ifDifferentNumber) representing mapping of pod's eth0 interface to for example node's inteface 6 - if6 - that is the 6th interface counted top to bottom shown in node ``ifconfig``that was run in first step - ``vethXXXXX``
-      
-      the output under eth0 also exposes private IP address of the pod 
+   copy process id and use it to run ``nsenter -t $containerPid -n ip addr``
+
+   the output shows interface ``eth0@if6`` (or eth0@ifDifferentNumber) representing mapping of pod's eth0 interface to for example node's inteface 6 - if6 - that is the 6th interface counted top to bottom shown in node ``ifconfig``that was run in first step - ``vethXXXXX``
+
+   the output under eth0 also exposes private IP address of the pod 
   
 |
 
@@ -911,8 +911,8 @@ communictaion between pods on same node
 
 |
 
-pods communication on multiple nodes
-====================================
+multiple nodes communication
+============================
 
 |
 
