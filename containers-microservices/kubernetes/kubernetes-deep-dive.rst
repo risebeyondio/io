@@ -952,10 +952,62 @@ container network interface - cni
 
 |
 
-
+*network overlay [source linuxacademy.com]*
 
 |
 
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/|kubernetes-network-overlay.png
+
+   :align: center
+   :alt: network overlay 
+
+|
+
+container network interface - cni
+   sits above existing network - network overlay
+   
+   cni overlay is a plugin, external to kubernetes solution
+   
+   allows to build a tunnel between nodes
+   
+   encapsulates a packet - adds a header on top of a packet
+   
+   changes source and destiation address - from: pod1 to pod2 - to: node1 to node2
+   
+   common cni plugin include flannel, calico, romana, weavenet
+
+|
+
+cni installation
+   to apply flannel run ``kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml``
+
+   once installed, it installs a network agent on each node
+
+   network agents tie to the cni interface
+
+   to use cni, kubelet has to be notified that cni is used
+
+   once notified, kubelet sets network plugin flag to the cni
+
+   kubelet is being notified that cni is to be used at the stage where the cluster is being initied ``sudo kubeadm init --pod-network-cidr=10.244.0.0/16`` - configured to used certain cidr space
+     
+|
+
+cni operation
+   - mapping association in user space - enabling programming / mapping of all pods ip addresses to node ip addresses
+
+   - once packet enters other node, flannel overlay decapsulates it and passes it to the bridge
+
+   - bridge acts as if the packet was locally originated - frome same node
+   
+   container runtime (docker, lxc, other) calls cni plugin executable to add or remove an instance to or from containers networking namespace
+   
+   cni plugin is responsible for creation and assigning ip addresses to pods as well as ip sapce management - deciding what ip adresses are currently avilable what are not, etc.
+   
+   cni overlay also takes care of assigning and managing ip addresses to multiple containers within a single pod
+
+|
+   
 contents_
 
 |
