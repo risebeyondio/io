@@ -894,7 +894,7 @@ node's ethernet pipe to a pod - node to pod interface mapping
 
    copy process id and use it to run ``nsenter -t $containerPid -n ip addr``
 
-   the output shows interface ``eth0@if6`` (or eth0@ifDifferentNumber) representing mapping of pod's eth0 interface to for example node's inteface 6 - if6 - that is the 6th interface counted top to bottom shown in node ``ifconfig``that was run in first step - ``vethXXXXX``
+   the output shows interface ``eth0@if6`` (or ``eth0@ifDifferentNumber``) representing mapping of pod's eth0 interface to for example node's inteface 6 - if6 - that is the 6th interface counted top to bottom shown in node ``ifconfig``that was run in first step - ``vethXXXXX``
 
    the output under eth0 also exposes private IP address of the pod 
   
@@ -927,8 +927,33 @@ multiple nodes communication
 
 |
 
-communication among pods on different nodes
-   content
+communication among pods on different nodes 
+   when packet traverse from one node to another following occurs
+   
+   - pod's private IP address changes to node's eth0 address (10.244.1.2 -> 172.31.43.91)
+   
+   - packets get decapsulated and routed over the network to reach destination node and its corresponding pod (pod2)
+   
+   node to node communication can be achieved through
+      - container network interface - cni
+      
+      or
+      
+      - manually via layer 3 routing - not recommended due to management overhead in larger multinode clusters
+   
+|
+
+contents_
+
+|
+
+container network interface - cni
+=================================
+
+|
+
+
+
 |
 
 contents_
