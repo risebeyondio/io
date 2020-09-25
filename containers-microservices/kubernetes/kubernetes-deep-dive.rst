@@ -1115,7 +1115,7 @@ contents_
 
 |
 
-load balancers
+load balancing
 ==============
 
 |
@@ -1224,6 +1224,17 @@ ingress rules
 
 |
 
+*ingress operation [source linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-ingress.png
+
+   :align: center
+   :alt: ingress operation 
+
+|
+
 ingress
    in load balancing it is required to have one external ip address for every service - one to one
    
@@ -1293,7 +1304,6 @@ dns
 ===
 
 |
-
 
 
 |
