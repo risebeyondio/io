@@ -853,12 +853,12 @@ networking
 
 |
 
-pod and node
-=============
+pods communication within a single node
+=======================================
 
 |
 
-*node and pod networking [source linuxacademy.com]*
+*pods networking on a single node [source linuxacademy.com]*
 
 |
 
@@ -873,27 +873,62 @@ networking within nodes
    
    inside a node each pod has own ip address
   
-   pod ip comes from virtual ethernet interface pair
+   pod ip comes from virtual ethernet interface pair and is handed out by linux ethernet bridge
    
    one of the virtual interfaces pair gets associated with a pod and renamed ``eth0``
 
-**node Ethernet pipe to the pod**
+|
 
-inspecting node pod virtual interface mapping
-   1. to check virtual interfaces, login to one of nodes and run ``ifconfig`` - in output ``vethXXXXXX`` interface represents one of node`s virtual interfaces that is than paired with specific pod's interface renamed to eth0
+node's ethernet pipe to a pod - node to pod interface mapping 
+   to verify the mapping take following steps
    
-   2. inspect docker containers running in a pod ``docker ps``
-   
-   apart from an application containers such as nginx thare are containers running command ``/pause`` - their purpose is to hold pod network namespace 
-   
-   3. copy one of containers id and use it in the following ``docker inspect --format '{{ .State.Pid }}' $conteinerId`` to get container process id
-   
-   4. nsenter is used to run a command (here ip addr) in a processes' network namespace
+      1. check node's virtual interfaces, login to one of nodes and run ``ifconfig`` - in output ``vethXXXXXX`` interface represents one of node`s virtual interfaces that is than paired with specific pod's interface renamed to eth0
 
-   copy process id and use it to run ``nsenter -t $containerPid -n ip addr``
-   
-   5. the output shows interface ``eth0@if6`` (or eth0@ifotherNumber) that representing mapping of pod's eth0 interface to for example inteface 6 - if6 - that is the 6th interface counted top to bottom shown in node ``ifconfig``that was run in first step - ``vethXXXXX``
+      2. inspect docker containers running in a pod ``sudo su -`` ``docker ps``
+
+      apart from an application containers such as nginx thare are containers running command ``/pause`` - their purpose is to hold pod network namespace 
+
+      3. copy one of containers id and use it in the following ``docker inspect --format '{{ .State.Pid }}' $conteinerId`` to get container process id
+
+      4. nsenter is used to run a command (here ip addr) in a processes' network namespace
+
+      copy process id and use it to run ``nsenter -t $containerPid -n ip addr``
+
+      the output shows interface ``eth0@if6`` (or eth0@ifDifferentNumber) representing mapping of pod's eth0 interface to for example node's inteface 6 - if6 - that is the 6th interface counted top to bottom shown in node ``ifconfig``that was run in first step - ``vethXXXXX``
+      
+      the output under eth0 also exposes private IP address of the pod 
   
+|
+
+communictaion between pods on same node   
+   two or more pods on a single node can talk to each other thanks to the linux ethernet bridge
+   
+   the bridge is responsible for handing out ip addresses to the pods
+   
+   linux ethernet bridges diiscover destination via arp requests
+   
+   bridge enables communication between all veth virtual interfaces, making possible for the pods to talk to each other
+
+|
+
+pods communication on multiple nodes
+====================================
+
+|
+
+*multiple nodes and pods communication [source linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-beyond-node-networking.png
+
+   :align: center
+   :alt: multiple nodes and pods communication
+
+|
+
+communication among pods on different nodes
+   content
 |
 
 contents_
