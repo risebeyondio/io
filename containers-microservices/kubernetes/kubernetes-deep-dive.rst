@@ -1012,6 +1012,109 @@ contents_
 
 |
 
+services - communication outside of clusters
+============================================
+
+|
+
+*kubernetes service networking [source linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-service-networking.png
+
+   :align: center
+   :alt: kubernetes service networking
+
+
+|
+
+service
+   allows locating application components even if the components move or scale up to additional replicas
+   
+   service gets assigne single virtual inteface
+   
+   service interface gets evenly distributed and automatically assigned to pods behid that interface
+   
+   behind the service single virtual inteface pods can change all ip addresses, move etc, but externally / from the outside the service will still have single / same doorway - the virtual interface 
+
+|
+
+****************
+nodeport service
+****************
+
+|
+
+nodeport service
+   in example below it exposes internal - container (nginx) port 80 to external - node port 30080
+
+|
+
+.. code-block:: shell
+   
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: nginx-nodeport
+   spec:
+     type: NodePort
+     ports:
+     - protocol: TCP
+       port: 80
+       targetPort: 80
+       nodePort: 30080
+     selector:
+       app: nginx
+  
+|
+
+*****************
+clusterip service
+*****************
+
+|
+
+clusterip service
+   gets automatically created during cluster iniitialization
+   
+   deals with internal load balancing and internal routing of the cluster
+   
+   if a pod gets moved within a cluster, other pods get updated information such as where it is and how to communicate with it
+   
+   to check clusterip service run ``kubectl get services -o yaml``
+   
+   clusterip service represents logical grouping of ip addresses and ports pairs - its own address is not pingable
+   
+   whenever new service gets creeated, api server informs all kube-proxy agents about the new service
+   
+   kube-proxy in past had a function of actual proxy, now it is a controller that keeps track of endpoints and updates iptables to maintain correct routing
+   
+   to check iptables for particular service (here nginx and kube) run ``sudo iptables-save | grep KUBE | grep nginx``
+   
+|
+
+*********
+endpoints
+*********
+
+|
+
+endpoint
+   is an object in api server
+   
+   whenever new service appears, endpoint gets automatically created  
+   
+   it keeps a cache of all pods' ip addresses that form the service
+   
+   to check endpoints run ``kubectl get endpoints``
+   
+|
+
+contents_
+
+|
+
 cli
 ---
 
@@ -1112,6 +1215,12 @@ cli
 
    # get container process id
    docker inspect --format '{{ .State.Pid }}' $conteinerId  
+   
+   # list iptables entries for particular service - here nginx and kube
+   sudo iptables-save | grep KUBE | grep nginx``
+
+   # list endpoints
+   kubectl get endpoints
 
 
 |
