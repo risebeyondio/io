@@ -433,6 +433,15 @@ contents_
 
 |
 
+cli
+---
+
+|
+
+- `cli <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes/cli.rst>`_
+
+|
+
 references
 ----------
 
