@@ -1,4 +1,4 @@
-**cli reference**
+**cli references**
 
 |
 
@@ -118,7 +118,6 @@ cli
 
    # list endpoints
    kubectl get endpoints
-
 
 |
 
