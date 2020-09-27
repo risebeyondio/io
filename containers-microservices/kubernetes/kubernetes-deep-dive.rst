@@ -1383,14 +1383,70 @@ testing dns
    
    run ``kubectl logs $coredns-or-other-service-pod-name``
    
+headles services
+   service without cluster ip
    
+   responds with a set of ip addresses instead of a single one
    
+   each pointing to ip address of individual pod that backs a particular service
    
+|
+
+spec file  for a headless service
+   ``clusterIP`` is set to ``none``, once deployed, dns servere will return and populate that field with pod or pods ip addresses instead of single service ip that would have been there if cluster ip was present
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: kube-headless
+   spec:
+     clusterIP: None
+     ports:
+     - port: 80
+       targetPort: 8080
+     selector:
+       app: kubserve2
+
+|
+
+dns policies
+   can be set on a per pod basis 
    
+   by default it is cluster first, which will inherit name resolution config from the node that pod is on
    
+   to override default dns policy - dns policy has to be set to ``none`` and configure own dns names, servers, searches and other options, example custom-dns.yaml below
    
+   once custom dns file is deployed ``kubectl create -f custom-dns.yaml`` pod, the pod get all the information in ``/etc/resolv.conf`` resolv.conf file
    
-   
+|
+
+.. code-block:: yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: default
+  name: dns-example
+spec:
+  containers:
+    - name: test
+      image: nginx
+  dnsPolicy: "None"
+  dnsConfig:
+    nameservers:
+      - 8.8.8.8
+    searches:
+      - ns1.svc.cluster.local
+      - my.dns.search.suffix
+    options:
+      - name: ndots
+        value: "2"
+      - name: edns0   
+
 |
 
 contents_
