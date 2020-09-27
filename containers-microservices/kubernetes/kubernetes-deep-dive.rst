@@ -1305,7 +1305,7 @@ dns
 
 |
 
-*dns[source linuxacademy.com]*
+*dns [source linuxacademy.com]*
 
 |
 
@@ -1313,6 +1313,55 @@ dns
 
    :align: center
    :alt: ingress operation 
+
+|
+
+coredns
+   coredns plugin has replaced its predecessor - kubedns
+   
+   default dns plugin, dns server written in go
+   
+   go advantages include memory safe executable
+   
+   it supports dns over tls - dot
+   
+   easilly configurable with etcd and cloud providers to pull authorative data
+   
+   allows to add dns entries without additional exposure to  service discovery
+   
+   check  coredns two pods in namespace  kube-system ``kubectl get pods -n kube-system``
+   
+   the two dns pods are running as two deployments ``kubectl get deployments -n kube-system``
+   
+   to check service that does dns load balancing use ``kubectl get services -n kube-system`` for compatibility the service name relates to its legacy - kube-dns
+   
+|
+   
+busybox testing container spec file
+
+|
+
+.. code-block:: yaml
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: busybox
+     namespace: default
+   spec:
+     containers:
+     - image: busybox:1.28.4
+       command:
+         - sleep
+         - "3600"
+       imagePullPolicy: IfNotPresent
+       name: busybox
+     restartPolicy: Always
+    
+|
+
+testing dns
+   content
 
 |
 
