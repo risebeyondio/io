@@ -1305,6 +1305,14 @@ dns
 
 |
 
+*dns[source linuxacademy.com]*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-dns.png
+
+   :align: center
+   :alt: ingress operation 
 
 |
 
