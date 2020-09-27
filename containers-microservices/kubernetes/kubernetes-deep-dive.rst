@@ -1309,7 +1309,7 @@ dns
 
 |
 
-.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-dns.png
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-dns-namespace.png
 
    :align: center
    :alt: ingress operation 
