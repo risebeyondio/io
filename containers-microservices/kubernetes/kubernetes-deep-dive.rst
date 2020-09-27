@@ -1458,7 +1458,39 @@ pod scheduling
 
 |
 
+configuration
+=============
 
+|
+
+pod scheduler
+   responsible for assigning a pod to a node - decides which node is best to host a pod based on default rules
+   
+   default rules can be customized, for example to save costs direct all pods to one node or some pods have ssd disks some optical once and some workloads would require faster drives, some not
+   
+   default rules
+      1. is node having adequate garware resources
+      
+      2. is node running out of the resources (cpu, disk, memmory)
+      
+      3. check if the request is to be scheluded to a specific node by name
+      
+      4. verify if a node has a label matching the node selector in the pods back
+      
+      5. check if the pod is requesting to be bound to a specific port and if yes, is that node port available
+      
+      6. test if a node has a specific type fo volume, can that volume be mounted and if differnt pods are using th same volume
+      
+      7. check if the pod can tolerate taints of the node, for example master node is tainted with no schedule - meaning no pause wiil be applied to it as it is a master, there might be custom taints such as environment, for example if it equals production and pods would not be intended to sit on production nodes, unless that intent was specifically defined / toleration set, defining that they can run on production nodes
+      
+      8. verify if a pod is specyfing pod or node affinity rules, and if scheduling to the node would violate these rules
+  
+   
+   
+   
+  
+   
+  
 
 |
 
