@@ -1481,17 +1481,84 @@ pod scheduler
       
       6. test if a node has a specific type fo volume, can that volume be mounted and if differnt pods are using th same volume
       
-      7. check if the pod can tolerate taints of the node, for example master node is tainted with no schedule - meaning no pause wiil be applied to it as it is a master, there might be custom taints such as environment, for example if it equals production and pods would not be intended to sit on production nodes, unless that intent was specifically defined / toleration set, defining that they can run on production nodes
+      7. check if the pod can tolerate taints of the node, for example master node is tainted with no schedule - meaning no pause wiil be applied to it as it is a master
+      
+      there might be custom taints such as environment, for example if it equals production and pods would not be intended to run on production nodes, unless that intent was specifically defined / toleration set, defining that they can run on production nodes
       
       8. verify if a pod is specyfing pod or node affinity rules, and if scheduling to the node would violate these rules
-  
+      
+   the sheduler may have more than one suitable node to host a pod, in such case it prioritisez and picks the best node
+   
+   if few nodest are equally at highest priority, the scheduler selects one in round robin manner
+   
+   
+node afinity rules
+   allow to have an impact on scheduling prioritization by the use of lables and weight
+   
+   as example four labels are assigned to two nodes - availibility zone and share-type
+   
+   ``kubectl label node $hostname.myServer1.com availability-zone=zone1``
+   
+   ``kubectl label node $hostname.myServer1.com  share-type=dedicated``
+   
+   ``kubectl label node $hostname.myServer2.com availability-zone=zone2``
+   
+   ``kubectl label node $hostname.myServer2.com  share-type=shared``
+   
+   below yaml example of node afinity rules, represents 80% intent to deploy pods to nodes labelled as ``Zone1`` and also to intent (four times smaller) deploy pods to nodes labeled as ``shared`` - zone preference 4 times more important than share-type state
+   
+   when these rules are implemented in cluster of 6 pods, 5 ended on server1 in az zone1 and 6th pod got assigned to server2 in shared nodes space (share-type=shared)
    
    
    
-  
+   ``preferredDuringSchedulingIgnoredDuringExecution`` states that below rules do not affect pods already running on a node
    
-  
+   
+.. code-block:: yaml
 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pref
+spec:
+  selector:
+    matchLabels:
+      app: pref
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: pref
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 80
+            preference:
+              matchExpressions:
+              - key: availability-zone
+                operator: In
+                values:
+                - zone1
+          - weight: 20
+            preference:
+              matchExpressions:
+              - key: share-type
+                operator: In
+                values:
+                - dedicated
+      containers:
+      - args:
+        - sleep
+        - "99999"
+        image: busybox
+        name: main
+
+selector spread priority function
+   second type of a way to customize scheduling
+   
+   it ensures that pods within single replica spread around different nodes to avoid downtime and maintain hig availibility
+   
 |
 
 contents_
