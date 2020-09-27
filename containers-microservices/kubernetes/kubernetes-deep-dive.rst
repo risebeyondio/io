@@ -1458,8 +1458,8 @@ pod scheduling
 
 |
 
-configuration
-=============
+single scheduler configuration
+==============================
 
 |
 
@@ -1565,6 +1565,212 @@ selector spread priority function
    
    it ensures that pods within single replica spread around different nodes to avoid downtime and maintain hig availibility
    
+|
+
+contents_
+
+|
+
+multiple schedulers configuration
+=================================
+
+|
+
+use of multiple schedulers
+   it is possible to use in single cluster multiple schedulers
+   
+   for example assign one part of pods to default scheduler and  other pods part to a custom scheduler
+
+|
+
+configuration    
+   detailed information can be found at 
+   
+   https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/
+   
+   configuration involves 
+   
+   1. packaging the scheduler 
+   
+   2. defining pod deployment of the scheduler (my-scheduler.yaml)
+   
+   copy the template from kubernetes website and replace image value to the packaged scheduler name (step 1)
+   
+   3. cluster role and cluster crole binding has to be defined in order to have a secret mounted to a pod in kube-system namespace
+   
+
+|
+
+my-scheduler.yaml template
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: ServiceAccount
+   metadata:
+     name: my-scheduler
+     namespace: kube-system
+   ---
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+     name: my-scheduler-as-kube-scheduler
+   subjects:
+   - kind: ServiceAccount
+     name: my-scheduler
+     namespace: kube-system
+   roleRef:
+     kind: ClusterRole
+     name: system:kube-scheduler
+     apiGroup: rbac.authorization.k8s.io
+   ---
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+     name: my-scheduler-as-volume-scheduler
+   subjects:
+   - kind: ServiceAccount
+     name: my-scheduler
+     namespace: kube-system
+   roleRef:
+     kind: ClusterRole
+     name: system:volume-scheduler
+     apiGroup: rbac.authorization.k8s.io
+   ---
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     labels:
+       component: scheduler
+       tier: control-plane
+     name: my-scheduler
+     namespace: kube-system
+   spec:
+     selector:
+       matchLabels:
+         component: scheduler
+         tier: control-plane
+     replicas: 1
+     template:
+       metadata:
+         labels:
+           component: scheduler
+           tier: control-plane
+           version: second
+       spec:
+         serviceAccountName: my-scheduler
+         containers:
+         - command:
+           - /usr/local/bin/kube-scheduler
+           - --address=0.0.0.0
+           - --leader-elect=false
+           - --scheduler-name=my-scheduler
+           image: gcr.io/my-gcp-project/my-kube-scheduler:1.0 # <-- replace it with own scheduler package name 
+           livenessProbe:
+             httpGet:
+               path: /healthz
+               port: 10251
+             initialDelaySeconds: 15
+           name: kube-second-scheduler
+           readinessProbe:
+             httpGet:
+               path: /healthz
+               port: 10251
+           resources:
+             requests:
+               cpu: '0.1'
+           securityContext:
+             privileged: false
+           volumeMounts: []
+         hostNetwork: false
+         hostPID: false
+         volumes: []
+         
+|
+
+cluster-role.yaml
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: rbac.authorization.k8s.io/v1beta1
+   kind: ClusterRole
+   metadata:
+     name: csinodes-admin
+   rules:
+   - apiGroups: ["storage.k8s.io"]
+     resources: ["csinodes"]
+     verbs: ["get", "watch", "list"]
+
+|
+
+cluster-role-binding.yaml
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+     name: read-csinodes-global
+   subjects:
+   - kind: ServiceAccount
+     name: my-scheduler
+     namespace: kube-system
+   roleRef:
+     kind: ClusterRole
+     name: csinodes-admin
+     apiGroup: rbac.authorization.k8s.io
+
+|
+
+role.yaml
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: Role
+   metadata:
+     name: system:serviceaccount:kube-system:my-scheduler
+     namespace: kube-system
+   rules:
+   - apiGroups:
+     - storage.k8s.io
+     resources:
+     - csinodes
+     verbs:
+     - get
+     - list
+     - watch
+     
+|
+
+RoleBinding.yaml
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: RoleBinding
+   metadata:
+     name: read-csinodes
+     namespace: kube-system
+   subjects:
+   - kind: User
+     name: kubernetes-admin
+     apiGroup: rbac.authorization.k8s.io
+   roleRef:
+     kind: Role 
+     name: system:serviceaccount:kube-system:my-scheduler
+     apiGroup: rbac.authorization.k8s.io
+
 |
 
 contents_
