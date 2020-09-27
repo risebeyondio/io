@@ -1361,8 +1361,36 @@ busybox testing container spec file
 |
 
 testing dns
-   content
-
+   create ``busybox`` pod ``cubectl create -f busybox.yaml``
+   
+   verify ``kubectl get pods``
+   
+   for each pod created, there is also a new dns entry and ``resolv.conf`` file
+   
+   to see it run ``kubectl exec -it busybox -- cat /etc/resolv.conf``
+   
+   look up the dns name for the native kubernetes service ``kubernetes`` name resolution ``kubectl exec -it busybox -- nslookup kubernetes``
+   
+   it is possible to use nslookup with hostname, that is ip addresses seperated by dashes not dots
+   
+   look up and choose ip address of one the pods ``kubectl get pods -o wide``
+   
+   verify certain pod dns resolution ``kubectl exec -ti busybox -- nslookup $pod-ip-address.default.pod.cluster.local``
+   
+   verify service in cluster - here ``kube-dns`` service in ``kube-system`` namespace ``kubectl exec -it busybox -- nslookup kube-dns.kube-system.svc.cluster.local``
+   
+   to search core-dns or other service logs, get the service pod name first ``kubectl get pods -n kube-system``
+   
+   run ``kubectl logs $coredns-or-other-service-pod-name``
+   
+   
+   
+   
+   
+   
+   
+   
+   
 |
 
 contents_
