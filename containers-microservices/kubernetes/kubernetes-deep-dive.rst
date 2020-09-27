@@ -1469,6 +1469,8 @@ pod scheduler
    default rules can be customized, for example to save costs direct all pods to one node or some pods have ssd disks some optical once and some workloads would require faster drives, some not
    
    default rules
+      criteria
+      
       1. is node having adequate garware resources
       
       2. is node running out of the resources (cpu, disk, memmory)
@@ -1491,7 +1493,8 @@ pod scheduler
    
    if few nodest are equally at highest priority, the scheduler selects one in round robin manner
    
-   
+|
+
 node afinity rules
    allow to have an impact on scheduling prioritization by the use of lables and weight
    
@@ -1513,46 +1516,49 @@ node afinity rules
    
    ``preferredDuringSchedulingIgnoredDuringExecution`` states that below rules do not affect pods already running on a node
    
-   
+|
+
 .. code-block:: yaml
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: pref
-spec:
-  selector:
-    matchLabels:
-      app: pref
-  replicas: 5
-  template:
-    metadata:
-      labels:
-        app: pref
-    spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 80
-            preference:
-              matchExpressions:
-              - key: availability-zone
-                operator: In
-                values:
-                - zone1
-          - weight: 20
-            preference:
-              matchExpressions:
-              - key: share-type
-                operator: In
-                values:
-                - dedicated
-      containers:
-      - args:
-        - sleep
-        - "99999"
-        image: busybox
-        name: main
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: pref
+   spec:
+     selector:
+       matchLabels:
+         app: pref
+     replicas: 5
+     template:
+       metadata:
+         labels:
+           app: pref
+       spec:
+         affinity:
+           nodeAffinity:
+             preferredDuringSchedulingIgnoredDuringExecution:
+             - weight: 80
+               preference:
+                 matchExpressions:
+                 - key: availability-zone
+                   operator: In
+                   values:
+                   - zone1
+             - weight: 20
+               preference:
+                 matchExpressions:
+                 - key: share-type
+                   operator: In
+                   values:
+                   - dedicated
+         containers:
+         - args:
+           - sleep
+           - "99999"
+           image: busybox
+           name: main
+
+|
 
 selector spread priority function
    second type of a way to customize scheduling
