@@ -1469,7 +1469,7 @@ pod scheduler
    default rules can be customized, for example to save costs direct all pods to one node or some pods have ssd disks some optical once and some workloads would require faster drives, some not
    
    default rules
-      criteria
+      8 criteria points
       
       1. is node having adequate garware resources
       
@@ -1923,12 +1923,106 @@ tolerations
    
    example - kube-proxy 
    
-   ``get copy full kube-proxy name from ``kubectl get pods -n kube-system``
+   copy full kube-proxy name from ``kubectl get pods -n kube-system``
    
    ``kubectl get pods $kube-proxy-name -n kube-system -o yaml``
    
-   on top of the output check tolerations - 
+   on top of the output check ``tolerations`` section and the coresponding values 
+      
+      - effect: NoSchedule
+        key: node.kubernetes.io/unschedulable
+        operator: Exists
    
+   this means that this pod (kube-proxy) is to tolerate a node that is unschedulable - necessary tolqrqtion for kube-proxy as it ia a deamon set pod that needs to run on every single node 
+   
+   with no further consideration, a pod will not be scheduled to a node that is tainted, unless it has a tolaration for that node
+
+|
+
+cpu and memory requests
+   scheduler does not check each individual resource to establish the best node
+   
+   scheduler uses a sum of resources requested by existing pods deployed on that node, this is because the pod may not be utilizing all requested resource at any particular time and the pods on that node should be allowed to utilise all requested resources  
+   
+   once default scheduler checks the 8 criteria points to check best node suitability to host a particular pod, it then moves to prioritisation
+   
+   prioritisation may involve 
+   
+   - least requested priority function
+      choses nodes that have least amount of resources requested to more evenly distribute pods to the nodes
+   
+   or
+   
+   - most requested priority function
+      choses nodes that have the largest sum of requested resources
+
+      this option allows to sqeeze as many pods to possibly smallest number of nodes - cost savings - smallest number of machines to run the cluster
+      
+   most or least requested priority preference is to be set within the scheduler
+
+   to verify nodes capacity run ``kubectl describe nodes``
+   
+   output is to contain sections
+   
+   ``capacity`` - describing entire node's capacity
+   
+   ``allocatable`` - stating what is available to allocate 
+   
+|
+
+resource requests
+   content
+
+|
+
+spec file containing resource ``requests``
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: resource-pod1
+   spec:
+     nodeSelector:
+       kubernetes.io/hostname: "my-server1"
+     containers:
+     - image: busybox
+       command: ["dd", "if=/dev/zero", "of=/dev/null"]
+       name: pod1
+       resources:
+         requests:
+           cpu: 800m
+           memory: 20Mi
+
+
+resource limits
+   content
+   
+|
+
+spec file containing resource ``limits``
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: limited-pod
+   spec:
+     containers:
+     - image: busybox
+       command: ["dd", "if=/dev/zero", "of=/dev/null"]
+       name: main
+       resources:
+         limits:
+           cpu: 1
+           memory: 20Mi
+
 |
 
 contents_
