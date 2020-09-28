@@ -1899,6 +1899,42 @@ contents_
 
 |
 
+resource limits and label selectors
+===================================
+
+|
+
+taints
+   nodes get tainted in order to repel work - stop being scheduled to perform certain workloads
+   
+   master node is one of examples ``kubectl describe node $master-node-name``
+   
+   at the top of description `taints`` value contains ``node-role.kubernetes.io/master.NoSchedule``
+
+
+|
+
+tolerations
+   allow to tollarate a taint 
+   
+   toleration can be added to pod's yaml 
+   
+   if the toleration of new schedule is included, potantially a pod  can be sceduled to run on the node - even if it is a master
+   
+   example - kube-proxy 
+   
+   ``get copy full kube-proxy name from ``kubectl get pods -n kube-system``
+   
+   ``kubectl get pods $kube-proxy-name -n kube-system -o yaml``
+   
+   on top of the output check tolerations - 
+   
+|
+
+contents_
+
+|
+
 cli
 ---
 
