@@ -2042,7 +2042,7 @@ resource limits
    
    pods limits can go beyond total utilization of cpu and memory on a node and still be allowed to be deployed, 
    
-    once kubernetes sens that more resources are being used compared to what is available, the pod that requested excessive resources will get killed
+   once kubernetes sens that more resources are being used compared to what is available, the pod that requested excessive resources will get killed
    
 |
 
@@ -2066,6 +2066,25 @@ spec file containing resource ``limits``
            cpu: 1
            memory: 20Mi
 
+|
+
+contents_
+
+|
+
+daemonsets and manual scheduling
+================================
+
+|
+
+daemonsets
+   in this approach sheduler is not being used
+   
+   daemonsets are capable to deploy a pod on each node
+   
+   good solution for pods requiring to run exactly one replica and for clusters that need a single pod on each node
+   
+   
 |
 
 contents_
