@@ -1930,7 +1930,9 @@ tolerations
    on top of the output check ``tolerations`` section and the coresponding values 
       
       - effect: NoSchedule
+      
         key: node.kubernetes.io/unschedulable
+        
         operator: Exists
    
    this means that this pod (kube-proxy) is to tolerate a node that is unschedulable - necessary tolqrqtion for kube-proxy as it ia a deamon set pod that needs to run on every single node 
