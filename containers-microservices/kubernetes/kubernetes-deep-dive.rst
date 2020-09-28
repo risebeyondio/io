@@ -1929,13 +1929,13 @@ tolerations
    
    on top of the output check ``tolerations`` section and the coresponding values 
       
-      - effect: NoSchedule
+        effect: NoSchedule
       
         key: node.kubernetes.io/unschedulable
         
         operator: Exists
    
-   this means that this pod (kube-proxy) is to tolerate a node that is unschedulable - necessary tolqrqtion for kube-proxy as it ia a deamon set pod that needs to run on every single node 
+   this means that this pod (kube-proxy) is to tolerate a node that is unschedulable - necessary tolaration for kube-proxy as it ia a deamon set pod that needs to run on every single node 
    
    with no further consideration, a pod will not be scheduled to a node that is tainted, unless it has a tolaration for that node
 
@@ -1970,10 +1970,44 @@ cpu and memory requests
    
    ``allocatable`` - stating what is available to allocate 
    
+   if a pod is scheduled but it remains in pending state run ``kubectl describe pods $name-of-pod``
+   
+   if it reqested excessive resources from node, in events section of the output warning may be found ``FailedScheduling`` and reason such as insufficient cpu or memory, etc. 
+   
+   to verify current utilization of a node, run ``kubectl describe nodes $node-name` and check output's bottom section ``non terminated pods`` that list currently running pods on this node and their use of resources
+   
+   the output also shows ``allocated resources`` that  will guide what resources may still be available on this particular node
+   
+|
+
+cpu sharing
+   if there are two pods on a node and one is idle, the other will consume all cpu if it needs it
+   
+   if both pods are using actively the cpu and some spare cpu power remains on the node (cpu above the sum of two requested amounts), the extra cpu will be divided proprtionally to the pods original reqests
+   
+   for example if pod1 requested 200 mCores and pod2 requested 1000 mCores, then the ratio would be 1 to 5
+   
+   pod1 will get allocated 1/6 of spare cpu, pod2 will get remaining 5/6 of the cpu excess
+
+|
+
+memory sharing
+   once memory is requested, the requesting pod may consume entire memory and not release it until the process is finished
+   
+   this can take down the whole node
+   
+   to avoid this risk ``resource limits`` can be configured to put a cap / limit on the size of memory a pod can use
+   
+   
+   
+   
+   
+   
+   
 |
 
 resource requests
-   content
+   defines what size of resources a pod needs to run on a specific node
 
 |
 
@@ -1999,9 +2033,16 @@ spec file containing resource ``requests``
            cpu: 800m
            memory: 20Mi
 
+|
 
 resource limits
-   content
+   when defining a limit, the limit in background sets a request that is equivalent to the limit
+   
+   as in the exmple, limits are set to one cpu and memory to 20 MB, the request is not explicitely defined but it is automatically set to the same values as limits
+   
+   pods limits can go beyond total utilization of cpu and memory on a node and still be allowed to be deployed, 
+   
+    once kubernetes sens that more resources are being used compared to what is available, the pod that requested excessive resources will get killed
    
 |
 
