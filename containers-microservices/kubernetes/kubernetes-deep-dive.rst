@@ -1426,26 +1426,26 @@ dns policies
 
 .. code-block:: yaml
 
-apiVersion: v1
-kind: Pod
-metadata:
-  namespace: default
-  name: dns-example
-spec:
-  containers:
-    - name: test
-      image: nginx
-  dnsPolicy: "None"
-  dnsConfig:
-    nameservers:
-      - 8.8.8.8
-    searches:
-      - ns1.svc.cluster.local
-      - my.dns.search.suffix
-    options:
-      - name: ndots
-        value: "2"
-      - name: edns0   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     namespace: default
+     name: dns-example
+   spec:
+     containers:
+       - name: test
+         image: nginx
+     dnsPolicy: "None"
+     dnsConfig:
+       nameservers:
+         - 8.8.8.8
+       searches:
+         - ns1.svc.cluster.local
+         - my.dns.search.suffix
+       options:
+         - name: ndots
+           value: "2"
+         - name: edns0   
 
 |
 
@@ -1590,14 +1590,72 @@ configuration
    
    configuration involves 
    
-   1. packaging the scheduler 
+   1. package the scheduler 
    
-   2. defining pod deployment of the scheduler (my-scheduler.yaml)
+   2. define pod deployment of the scheduler (my-scheduler.yaml)
    
    copy the template from kubernetes website and replace image value to the packaged scheduler name (step 1)
    
-   3. cluster role and cluster crole binding has to be defined in order to have a secret mounted to a pod in kube-system namespace
    
+   3.  commence authentication and authorisation configuration
+   
+   cluster role and cluster crole binding has to be defined in order to have a secret mounted to a pod in kube-system namespace
+   
+   the cluster role binding will link service account of my-scheduler with the cluster role 
+   
+   4. apply both the role and the binding 
+   
+   ``kubectl create -f ClusterRole.yaml``
+
+   ``kubectl create -f ClusterRoleBinding.yaml``
+
+   5. to enable scheduler to communicate to a pod and an to ba able to schedule the pod to nodes role and role binding needs to be created
+  
+   the role binding will link user - kubernetes-admin with the role 
+
+   6. apply both the role and the binding 
+
+   ``kubectl create -f Role.yaml``
+
+   ``kubectl create -f RoleBinding.yaml``
+   
+   7. edit existing kube-scheduler cluster role to finish authentication and authorisation configuration
+   
+   ``kubectl edit clusterrole system:kube-scheduler``
+
+      - apiGroups:
+        - ""
+        resourceNames:
+        - kube-scheduler
+        - my-scheduler # <-- add my scheduler along with kube-scheduler 
+        resources:
+        - endpoints
+        verbs:
+        - delete
+        - get
+        - patch
+        - update
+      - apiGroups:
+        - storage.k8s.io # <-- add storage
+        resources:
+        - storageclasses # <-- add storage classes
+        verbs:
+        - watch
+        - list
+        - get
+   
+   8. deployment of the new custom scheduler as pod in kube-system namespace 
+   
+   ``kubectl create -f my-scheduler.yaml``
+   
+   9. verify the scheduler pod ``kubectl get pods -n kube-system``
+   
+   both kube-scheduler (default) an my-scheduler shoul be present
+
+
+|
+
+spec files defining custom scheduler, roles and bindings
 
 |
 
@@ -1690,7 +1748,7 @@ my-scheduler.yaml template
          
 |
 
-cluster-role.yaml
+ClusterRole.yaml
 
 |
 
@@ -1707,7 +1765,7 @@ cluster-role.yaml
 
 |
 
-cluster-role-binding.yaml
+ClusterRoleBinding.yaml
 
 |
 
@@ -1728,7 +1786,7 @@ cluster-role-binding.yaml
 
 |
 
-role.yaml
+Role.yaml
 
 |
 
@@ -1771,6 +1829,70 @@ RoleBinding.yaml
      name: system:serviceaccount:kube-system:my-scheduler
      apiGroup: rbac.authorization.k8s.io
 
+|
+
+scheduling pods to multiple schedulers
+   for sample purposes 3 pods are defined and deployed below, where 
+
+   - pod1 - no specific annotation - hence it will use default scheduler
+
+   - pod2 - explicitly specified default scheduler  
+   
+   - pod3 - explicitly specified custom scheduler
+   
+   ``kubectl create -f pod1.yaml`` ``kubectl create -f pod2.yaml`` ``kubectl create -f pod3.yaml``
+   
+   verify pods ``kubectl get pods -o wide``
+   
+|
+
+all 3 pods spec files below
+
+|
+
+.. code-block:: yaml   
+
+   # pod1.yaml
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: no-annotation
+     labels:
+       name: multischeduler-example
+   spec:
+     containers:
+     - name: pod-with-no-annotation-container
+       image: k8s.gcr.io/pause:2.0
+   
+   # pod2.yaml
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: annotation-default-scheduler
+     labels:
+       name: multischeduler-example
+   spec:
+     schedulerName: default-scheduler
+     containers:
+     - name: pod-with-default-annotation-container
+       image: k8s.gcr.io/pause:2.0
+   
+   # pod3.yaml
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: annotation-second-scheduler
+     labels:
+       name: multischeduler-example
+   spec:
+     schedulerName: my-scheduler
+     containers:
+     - name: pod-with-second-annotation-container
+       image: k8s.gcr.io/pause:2.0
+       
 |
 
 contents_
