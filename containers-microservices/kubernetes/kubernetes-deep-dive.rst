@@ -2078,11 +2078,67 @@ daemonsets and manual scheduling
 |
 
 daemonsets
-   in this approach sheduler is not being used
-   
    daemonsets are capable to deploy a pod on each node
    
-   good solution for pods requiring to run exactly one replica and for clusters that need a single pod on each node
+    good solution for pods requiring to run exactly one replica and the need is to have one on each node
+
+   in this approach sheduler is not being used as deamonsets have special instruction to
+   
+   - run a pod on a specific node
+   
+   - automatically and instatntly initialize the pod on any new node in the cluster (this can not be done with scheduler)
+   
+   - instantly re-initialize deamonset pod if it gets deleted on any of the existing pods 
+   
+   when deamonset pod gets created it applies pod template created within itself as in replica sets
+   
+   check sytem existing deamonsets ``kubectl get pods -n kube-system -o wide`` including pods on each node of kube-proxy pod, network overlay pod (flannel or other)
+   
+   when drianing a node for maintenance purposes ``kubectl drain $nodeNameToBeEvicted --ignore-daemonsets`` ignore-daemonsets flag was set to avoid draining them
+   
+   deamonsets are configured to ignore / tolerate any teit set on nodes, this is why they can even run on master node
+   
+   it is possible to create custom deamonset that would utilise node selector field to specify on which nodes to run
+
+|
+
+custom deamonset sample
+   solid state drive monitoring deamonset
+   
+   create node label stating that it has a ssd disk ``kubectl label node $node-name disk=ssd``
+   
+   create spec file and run it ``kubectl create -f ssd-monitor.yaml``
+|
+
+ssd-monitor.yaml deamonset spec
+
+|
+
+.. code-bloc:: yaml
+
+   apiVersion: apps/v1
+   kind: DaemonSet
+   metadata:
+     name: ssd-monitor
+   spec:
+     selector:
+       matchLabels:
+         app: ssd-monitor
+     template:
+       metadata:
+         labels:
+           app: ssd-monitor
+       spec:
+         nodeSelector:
+           disk: ssd
+         containers:
+         - name: main
+           image: my-utilities/ssd-monitor
+   
+   
+   
+   
+   
    
    
 |
