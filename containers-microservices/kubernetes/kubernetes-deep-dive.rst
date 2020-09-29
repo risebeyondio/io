@@ -2150,17 +2150,94 @@ ssd-monitor.yaml deamonset spec
          - name: main
            image: my-utilities/ssd-monitor
    
-   
-   
-   
-   
-   
-   
 |
 
 contents_
 
 |
+
+monitoring scheduling events
+============================
+
+|
+
+veryfing scheduler operation
+   can be performed at level of
+   
+   - pod
+   
+   get the scheduler full pod name ``kubectl get pods -n kube-system``
+   
+   check scheduler pod events:``kubectl describe pods $scheduler-pod-name -n kube-system``
+   
+   - event
+   
+   see all events in the following namesaces
+   
+      - default ``kubectl get events``
+
+      - kube-system ``kubectl get events -n kube-system``
+      
+      - real time events watch ``kubectl get events -w``
+   
+   - log
+   
+   check scheduler pod logs ``kubectl logs $kube-scheduler-pod-name -n kube-system``
+   
+   if the scheduler is manually set up as systemd service the location of systemd service scheduler pod is ``/var/log/kube-scheduler.log``
+
+|
+
+contents_
+
+|
+
+deploying applications
+----------------------
+
+|
+
+lifecycle - deployment, rolling updates, rollbacks
+==================================================
+
+|
+
+application deployment
+   declarative management of application lifecycle
+   
+|
+
+sample kubeserve-deployment.yaml spec
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: kubeserve
+   spec:
+     replicas: 3
+     selector:
+       matchLabels:
+         app: kubeserve
+     template:
+       metadata:
+         name: kubeserve
+         labels:
+           app: kubeserve
+       spec:
+         containers:
+         - image: linuxacademycontent/kubeserve:v1
+           name: app
+
+|
+
+contents_
+
+|
+
 
 cli
 ---
