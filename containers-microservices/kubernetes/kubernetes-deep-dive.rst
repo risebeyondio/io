@@ -2271,51 +2271,51 @@ application deployment updates
 
    change impementation can be done in thre ways
 
-   - apply ``kubectl apply -f kubeserve-deployment.yaml``
+   - apply
+      ``kubectl apply -f kubeserve-deployment.yaml``
 
-   with this approach if old depoyment did not exist a new deployment will get created
+      with this approach if old depoyment did not exist a new deployment will get created
 
-   may involve downtime
+      may involve downtime
 
-   - replace ``kubectl replace -f kubeserve-deployment.yaml``
+   - replace
+      ``kubectl replace -f kubeserve-deployment.yaml``
 
-   in this approach previous (v1) deployment has to exist to be replaced, otherwise replace will fail
+      in this approach previous (v1) deployment has to exist to be replaced, otherwise replace will fail
 
-   may involve downtime
-
+      may involve downtime
 
    - rolling update
+      this method involves no downtime / interraption to service 
 
-   this method involves no downtime / interraption to service 
+      behind scenes the rolling update
+      - creates new replica set and spins within it new pods based on new container image
 
-   behind scenes the rolling update
-   - creates new replica set and spins within it new pods based on new container image
+      - as the new pods in new replica set got created, the roling update starts to terminate pods in old replica set
 
-   - as the new pods in new replica set got created, the roling update starts to terminate pods in old replica set
+      - all this happen in gradual manner, transitioning from 
 
-   - all this happen in gradual manner, transitioning from 
+         - old replica - v1
 
-      - old replica - v1
+         - old and new replica running at the same time v1 and v2
 
-      - old and new replica running at the same time v1 and v2
+         - new replica v2
 
-      - new replica v2
+      it is the quickets of the three update methods
 
-   it is the quickets of the three update methods
+      it involves changing an image in pod's container instead of updating pod spec yaml files
 
-   it involves changing an image in pod's container instead of updating pod spec yaml files
+      to observe real time changes during the update of the service curl loop command ,ight be used ``while true; do sleep 1; curl $service-ip-or-url; done``
 
-   to observe real time changes during the update of the service curl loop command ,ight be used ``while true; do sleep 1; curl $service-ip-or-url; done``
+      rolling update command 
 
-   rolling update command 
-   
-   ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v2 --v 6``
+      ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v2 --v 6``
 
-   check changes after the apply or replace ``kubectl describe deployments``
-   
-   check replica sets ``kubectl get replicasets``
-   
-   check replica sets details ``kubectl describe replicasets kubeserve-[hash]``
+      check changes after the apply or replace ``kubectl describe deployments``
+
+      check replica sets ``kubectl get replicasets``
+
+      check replica sets details ``kubectl describe replicasets kubeserve-[hash]``
    
 |
 
@@ -2325,7 +2325,7 @@ application deployment rollbacks
 |
 
 rollbacks from bugged updates
-   a bugged version v3 has been rolled out
+   a bugged version v3 has been introduced
    
    ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v3 --v 6``
    
