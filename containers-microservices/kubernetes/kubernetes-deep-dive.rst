@@ -2346,7 +2346,7 @@ application rollbacks from bugged updates
 
    ``kubectl rollout pause deployment kubeserve``
 
-   ``once the rolling update is fully tested - resume  rollout to fully transition to new replica set - new version of the application
+   once the rolling update is fully tested - resume  rollout to fully transition to new replica set - new version of the application
 
    ``kubectl rollout resume deployment kubeserve``
            
@@ -2354,6 +2354,21 @@ application rollbacks from bugged updates
 
 contents_
 
+|
+
+
+high availibility
+=================
+
+|
+
+*application high availibility*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-app-ha.png
+   
+   alt: application high availibility
 |
 
 cli
