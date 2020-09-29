@@ -2316,15 +2316,10 @@ application deployment updates
       check replica sets ``kubectl get replicasets``
 
       check replica sets details ``kubectl describe replicasets kubeserve-[hash]``
-   
-|
-
-application deployment rollbacks
-================================
 
 |
 
-rollbacks from bugged updates
+application rollbacks from bugged updates
    a bugged version v3 has been introduced
    
    ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v3 --v 6``
