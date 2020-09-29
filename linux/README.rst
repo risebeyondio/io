@@ -1,5 +1,5 @@
-dummy
------
+linux referernces
+-----------------
 
 |
 
@@ -13,12 +13,12 @@ dummy
 
 |
 
-dummy
+cli
 =====
 
 |
 
-content
+`cli <https://github.com/risebeyondio/io/edit/master/linux/cli.rst>`_
 
 | 
 
@@ -27,7 +27,7 @@ references
 
 |
 
-- `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+`references <https://github.com/risebeyondio/rise/tree/master/references>`_
 
 |
 
