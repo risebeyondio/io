@@ -19,9 +19,9 @@ cli
 
 .. code-block:: shell
    
-   ########   
-   # labels
-   ########
+   ############  
+   ## labels ##
+   ############
    
    
    # add label to a node 
@@ -42,13 +42,36 @@ cli
    
    
    
-   
+  ##################
+  ## replica sets ##
+  ##################
   
-   
+   # view cluster replica sets
+   kubectl get replicasets
   
-   ########   
-   # other
-   ########
+  
+  
+  
+  
+  #################
+  ## deployments ##
+  #################
+  
+  # create
+  kubectl create -f kubeserve-deployment.yaml --record
+  
+  # check status of the rolout
+  kubectl rollout status deployments kubeserve
+  
+  # scle it up
+  kubectl scale deployment kubeserve --replicas=5
+  
+  
+  
+  
+   ###########   
+   ## other ##
+   ###########
    
    
    # cluster info
