@@ -2493,7 +2493,9 @@ configmap set up
       the volume is to be attached / monted and accessible by a container
       
       container will allow an application to retrive data from the volume
-        
+      
+      **plain text set up**
+      
       create the configmap volume pod
 
       ``kubectl apply -f configmap-volume-pod.yaml``
@@ -2506,9 +2508,10 @@ configmap set up
       
       ``kubectl exec configmap-volume-pod -- cat /etc/config/key1``
       
-      to avoid saving data as plain text, secrets need to be implemented
       
-      securing the data 
+      **use of secrets**
+      
+      to avoid saving data as plain text, secrets need to be implemented
       
       create secrets spec file and run it ``kubectl apply -f appsecret.yaml``
       
