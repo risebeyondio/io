@@ -2421,7 +2421,6 @@ readiness probe - kubeserve-deployment-readiness.yaml
 |
 
 high availibility
-   
    to prevent deployments from updating into broken, buggy versions, ``minReadySeconds`` attribute can be set to slow down the deployment of new updates
 
    ``kubectl patch deployment kubeserve -p '{"spec": {"minReadySeconds": 10}}'``
@@ -2491,7 +2490,6 @@ configmap set up
       ``kubectl logs configmap-pod``
    
    as mounted volume
-      
       the volume is to be attached / monted and accessible by a container
       
       container will allow an application to retrive data from the volume
