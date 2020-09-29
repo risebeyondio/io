@@ -2207,8 +2207,33 @@ application deployment
    
    in deployments use --record flag to store the command in revision history that might be useful in potential rollbacks ``kubectl create -f kubeserve-deployment.yaml --record`
 
-1:01
+   verify status of the deployment ``kubectl rollout status deployments kubeserve``
 
+   deployment add a string of numbers to the end of each pod's name - hash value of 
+   
+   - pod template
+   
+   - deployment 
+   
+   and 
+   
+   - replica set that manages the pot
+   
+   deployment automatically generates replica set, cluster set can be checked by ``kubectl get replicasets``
+   
+   replica set name contains hash value of its pod template as well 
+   
+   to sclae deployment run ``kubectl scale deployment kubeserve --replicas=5``
+   
+   to simulate app, sertvice may be created ``kubectl expose deployment kubeserve --port 80 --target-port 80 --type NodePort``
+   
+   verify it ``kubectl get services`` 
+
+|
+
+application deployment updates
+   kubernetes allows to update an application with no service disruption / downtime
+   
 |
 
 sample kubeserve-deployment.yaml spec
@@ -2235,13 +2260,12 @@ sample kubeserve-deployment.yaml spec
          containers:
          - image: my-images/kubeserve:v1
            name: app
-
+           
 |
 
 contents_
 
 |
-
 
 cli
 ---
