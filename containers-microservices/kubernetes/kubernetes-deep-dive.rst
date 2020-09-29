@@ -2080,7 +2080,7 @@ daemonsets and manual scheduling
 daemonsets
    daemonsets are capable to deploy a pod on each node
    
-    good solution for pods requiring to run exactly one replica and the need is to have one on each node
+   good solution for pods requiring to run exactly one replica and the need is to have one on each node
 
    in this approach sheduler is not being used as deamonsets have special instruction to
    
@@ -2099,6 +2099,8 @@ daemonsets
    deamonsets are configured to ignore / tolerate any teit set on nodes, this is why they can even run on master node
    
    it is possible to create custom deamonset that would utilise node selector field to specify on which nodes to run
+   
+   if a deamonset has configured node selector, whenever a new or existing node gets labeled with matching label, the deamonset will automatically initialise on that node
 
 |
 
@@ -2108,13 +2110,26 @@ custom deamonset sample
    create node label stating that it has a ssd disk ``kubectl label node $node-name disk=ssd``
    
    create spec file and run it ``kubectl create -f ssd-monitor.yaml``
+
+   check if it runs in the cluster ``kubectl get deamonsets``
+   
+   verify it it runs on any nodes that got previously labelled *disk=ssd* ``kubectl get pods -o wide``
+   
+   if a new node or existing one gets labeled *disk=ssd*, the demonset will instantly run on it as well - with no requirelment to changy anything within a deamonset
+   
+   if existing label is changed to one that is not matching the deamonset node selector, the deamonste pod will automatically get removed / terminated from the node 
+   
+   sample lable override ``kubectl label node $node-name disk=hdd --overwrite ``
+   
+   above override will lead to deamonser termination on the node the label was updated 
+   
 |
 
 ssd-monitor.yaml deamonset spec
 
 |
 
-.. code-bloc:: yaml
+.. code-block:: yaml
 
    apiVersion: apps/v1
    kind: DaemonSet
