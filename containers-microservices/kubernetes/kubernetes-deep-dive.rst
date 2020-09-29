@@ -2231,6 +2231,33 @@ application deployment
 
 |
 
+sample kubeserve-deployment.yaml spec
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: kubeserve
+   spec:
+     replicas: 3
+     selector:
+       matchLabels:
+         app: kubeserve
+     template:
+       metadata:
+         name: kubeserve
+         labels:
+           app: kubeserve
+       spec:
+         containers:
+         - image: my-images/kubeserve:v1
+           name: app
+
+|
+
 application deployment updates
    kubernetes allows to update an application with no service disruption / downtime
 
@@ -2278,38 +2305,55 @@ application deployment updates
 
    it involves changing an image in pod's container instead of updating pod spec yaml files
 
-   to observe real time changes during the update of the service curl loop command ,ight be used ``while true; do sleep 1; curl $service-ip-or-url; done`
+   to observe real time changes during the update of the service curl loop command ,ight be used ``while true; do sleep 1; curl $service-ip-or-url; done``
 
-   rolling update command ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v2 --v 6``
+   rolling update command 
+   
+   ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v2 --v 6``
 
    check changes after the apply or replace ``kubectl describe deployments``
    
+   check replica sets ``kubectl get replicasets``
+   
+   check replica sets details ``kubectl describe replicasets kubeserve-[hash]``
+   
 |
 
-sample kubeserve-deployment.yaml spec
+application deployment rollbacks
+================================
 
 |
 
-.. code-block:: yaml
+rollbacks from bugged updates
+   a bugged version v3 has been rolled out
+   
+   ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v3 --v 6``
+   
+   quck rollout can be performed to recover to the very previous version (v2)
+   
+   ``kubectl rollout undo`` is possible because the deployments keep revisions history and the history is stored in previous copies of replicasets 
+   
+   ``kubectl rollout undo deployments kubeserve``
+   
+   see rollout history ``kubectl rollout history deployment kubeserve``
+   
+   rollout history contains column ``change-casue`` that displays information about the command used to perform a change - important detail in troubleshooting 
+   
+   change-casue stores information thanks to --record flag set in ``kubectl create -f kubeserve-deployment.yaml --record``
+   
+   from the output note revision number and copy to next command if rollout to specific version is required
+   
+   roll back to a specific revision
 
-   apiVersion: apps/v1
-   kind: Deployment
-   metadata:
-     name: kubeserve
-   spec:
-     replicas: 3
-     selector:
-       matchLabels:
-         app: kubeserve
-     template:
-       metadata:
-         name: kubeserve
-         labels:
-           app: kubeserve
-       spec:
-         containers:
-         - image: my-images/kubeserve:v1
-           name: app
+   ``kubectl rollout undo deployment kubeserve --to-revision=2``
+   
+   pause rollout in the middle of a rolling update - canary release - so part of application will run on old replicaset and parto on new replicaset 
+
+   ``kubectl rollout pause deployment kubeserve``
+
+   ``once the rolling update is fully tested - resume  rollout to fully transition to new replica set - new version of the application
+
+   ``kubectl rollout resume deployment kubeserve``
            
 |
 
