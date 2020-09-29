@@ -2491,10 +2491,49 @@ configmap set up
       ``kubectl logs configmap-pod``
    
    as mounted volume
-      the volume is to be accessible by a container
+      
+      the volume is to be attached / monted and accessible by a container
       
       container will allow an application to retrive data from the volume
         
+      create the configmap volume pod
+
+      ``kubectl apply -f configmap-volume-pod.yaml``
+      
+      access keys from the volume on the container
+      
+      ``kubectl exec configmap-volume-pod -- ls /etc/config``
+      
+      and values 
+      
+      ``kubectl exec configmap-volume-pod -- cat /etc/config/key1``
+      
+      to avoid saving data as plain text, secrets need to be implemented
+      
+      securing the data 
+      
+      create secrets spec file and run it ``kubectl apply -f appsecret.yaml``
+      
+      create spec file for a pod using the secret and create a pod that has secret data attched
+      
+      ``kubectl apply -f secret-pod.yaml``
+      
+      open shell to echo environment variable
+
+      ``kubectl exec -it secret-pod -- sh``
+      
+      ``echo $MY_CERT``
+      
+      create pod spec file that will access the secret from a volume - secret-volume-pod.yaml
+      
+      run the pod with volume attached with secrets
+      
+      ``kubectl apply -f secret-volume-pod.yaml``
+      
+      check keys from the volume mounted to the container with the secrets:
+
+      ``kubectl exec secret-volume-pod -- ls /etc/certs``
+       
 |
 
 configmap-pod.yaml spec file
@@ -2544,9 +2583,77 @@ configmap-volume-pod.yaml spec file
          configMap:
            name: appconfig
 
+|
+
+appsecret.yaml spec file
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Secret
+   metadata:
+     name: appsecret
+   stringData:
+     cert: value
+     key: value
+
+|
+
+secret-pod.yaml spec file
+
+|
+
+.. clode-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: secret-pod
+   spec:
+     containers:
+     - name: app-container
+       image: busybox
+       command: ['sh', '-c', "echo Hello, Kubernetes! && sleep 3600"]
+       env:
+       - name: MY_CERT
+         valueFrom:
+           secretKeyRef:
+             name: appsecret
+             key: cert
+
+|
+
+secret-volume-pod.yaml spec file
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: secret-volume-pod
+   spec:
+     containers:
+     - name: app-container
+       image: busybox
+       command: ['sh', '-c', "echo $(MY_VAR) && sleep 3600"]
+       volumeMounts:
+         - name: secretvolume
+           mountPath: /etc/certs
+     volumes:
+       - name: secretvolume
+         secret:
+           secretName: appsecret
+
+|
+
 contents_
 
 |
+
 cli
 ---
 
