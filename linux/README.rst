@@ -18,7 +18,7 @@ cli
 
 |
 
-`cli <https://github.com/risebeyondio/io/edit/master/linux/cli.rst>`_
+`cli <https://github.com/risebeyondio/io/blob/master/linux/cli.rst>`_
 
 | 
 
