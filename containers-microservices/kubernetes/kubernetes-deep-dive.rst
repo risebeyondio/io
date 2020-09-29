@@ -2261,7 +2261,7 @@ sample kubeserve-deployment.yaml spec
 application deployment updates
    kubernetes allows to update an application with no service disruption / downtime
 
-   to be able to capture updates changes it is possible to slow done the deployment by configuring deployment minReadySeconds attribute
+   to be able to capture updates changes it is possible to slow down the deployment by configuring deployment minReadySeconds attribute
 
    ``kubectl patch deployment kubeserve -p '{"spec": {"minReadySeconds": 10}}'``
 
@@ -2357,8 +2357,8 @@ contents_
 |
 
 
-high availibility
-=================
+high availibility and scale
+===========================
 
 |
 
@@ -2368,9 +2368,113 @@ high availibility
 
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-app-ha.png
    
-   alt: application high availibility
+   :alt: application high availibility
 |
 
+minReadySeconds
+   this attribite specifies how long a newly created pod should remain in ready state before the pod is being considered available
+   
+   rolout will not continue untill the pod is in available state
+   
+   if minReadySeconds is set to 10, pod would have to report healthy state for 10 consecutive seconds before the pod could get relased
+   
+   too long minReadySeconds in relation to readines probe intervals could casue an issue
+
+|
+
+readiness probe
+   it verifies if a specific pod is ready to receive client requests or not
+   
+   once it returns success, it communicates to a pod that it is ready to take requests
+   
+   below readiness probe is set to perform check each second to ensure responsivness of the application
+
+|
+
+readiness probe - kubeserve-deployment-readiness.yaml
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: kubeserve
+   spec:
+     replicas: 3
+     selector:
+       matchLabels:
+         app: kubeserve
+     minReadySeconds: 10
+     strategy:
+       rollingUpdate:
+         maxSurge: 1
+         maxUnavailable: 0
+       type: RollingUpdate
+     template:
+       metadata:
+         name: kubeserve
+         labels:
+           app: kubeserve
+       spec:
+         containers:
+         - image: my-app-containers/kubeserve:v3
+           name: app
+           readinessProbe:
+             periodSeconds: 1
+             httpGet:
+               path: /
+               port: 80
+
+|
+
+high availibility
+   
+   to prevent deployments from updating into broken, buggy versions, ``minReadySeconds`` attribute can be set to slow down the deployment of new updates
+
+   ``kubectl patch deployment kubeserve -p '{"spec": {"minReadySeconds": 10}}'``
+   
+   in tandem with minReadySeconds, deployments also use readines probes to minimize posibility of bad updates
+   
+   update current deployment wit readiness probes set up
+   
+   ``kubectl apply -f kubeserve-deployment-readiness.yaml``
+   
+   verify rollout status
+   
+   ``kubectl rollout status deployment kubeserve``
+   
+|   
+
+passing configuration options to an application
+   environment variables are commonly used instead of having application reading configuration files or cli arguments
+   
+   application can be configured to look up values of particular environment variables
+   
+   frequently, these env variables contain passwords, keys, secrets - information that can not be available to all people that have access to images
+   
+   in kubernetes the configuration data may be stored in ``configmap`` and pass it to a container through environment variable
+   
+   if sensitive data needs to be passed, a secret can be created and passed as environmental variable
+  
+   once configmap and secrets are created, they can be modified with no need to rebuild an image
+  
+   single configmap and secret can be referenced by multiple containers
+  
+   configmap with single key
+
+   ``kubectl create configmap appconfig --from-literal=key1=value1``
+   
+   configmap with two keys
+
+   ``kubectl create configmap appconfig --from-literal=key1=value1 --from-literal=key2=value2``
+   
+|
+
+contents_
+
+|
 cli
 ---
 
