@@ -2655,6 +2655,45 @@ contents_
 
 |
 
+self healing applications
+=========================
+
+|
+
+*replicaSets*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/tree/master/media/kubernetes-self-healing-app.png
+   
+   :alt: replicasets
+
+|
+
+self healin apps
+   eliminates a need to continously watch servers for errors to keep applications running
+   
+   if errors happen, kubernetes replace the server and removes the faulty server or application image
+   
+   these capabilities are possible thanks to deployments and replica sets
+   
+   replica sets ensure that many replica sets of a particular pod are running throughout the cluster
+   
+   even if whole node goes down, ther would be zero downtime
+   
+   this is atomatically done by creating replicas and hosting them on nodes in good health state
+   
+   this liberates operation teams from performing manual migrations
+   
+   
+
+|
+
+
+contents_
+
+|
+
 cli
 ---
 
