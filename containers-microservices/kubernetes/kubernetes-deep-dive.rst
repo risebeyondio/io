@@ -2174,11 +2174,11 @@ veryfing scheduler operation
    
    see all events in the following namesaces
    
-      - default ``kubectl get events``
+   default ``kubectl get events``
 
-      - kube-system ``kubectl get events -n kube-system``
+   kube-system ``kubectl get events -n kube-system``
       
-      - real time events watch ``kubectl get events -w``
+   to real time events watch run ``kubectl get events -w``
    
    - log
    
@@ -2205,6 +2205,10 @@ lifecycle - deployment, rolling updates, rollbacks
 application deployment
    declarative management of application lifecycle
    
+   in deployments use --record flag to store the command in revision history that might be useful in potential rollbacks ``kubectl create -f kubeserve-deployment.yaml --record`
+
+1:01
+
 |
 
 sample kubeserve-deployment.yaml spec
@@ -2229,7 +2233,7 @@ sample kubeserve-deployment.yaml spec
            app: kubeserve
        spec:
          containers:
-         - image: linuxacademycontent/kubeserve:v1
+         - image: my-images/kubeserve:v1
            name: app
 
 |
