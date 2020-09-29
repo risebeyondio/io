@@ -2234,6 +2234,66 @@ application deployment
 application deployment updates
    kubernetes allows to update an application with no service disruption / downtime
    
+   to be able to capture updates changes it is possible to slow done the deployment by configuring deployment minReadySeconds attribute
+   
+   ``kubectl patch deployment kubeserve -p '{"spec": {"minReadySeconds": 10}}'``
+   
+   to simulate update to application deployment, spec image version can be edited to simulate the transition from v1 to v2
+   
+ ``spec : containers: image: my-images/kubeserve:v1 --> kubeserve:v2``
+ 
+   change impementation can be done in thre ways
+   
+   - apply ``kubectl apply -f kubeserve-deployment.yaml``
+   
+   with this approach if old depoyment did not exist a new deployment will get created
+   
+   may involve downtime
+
+   - replace ``kubectl replace -f kubeserve-deployment.yaml``
+   
+   in this approach previous (v1) deployment has to exist to be replaced, otherwise replace will fail
+   
+   may involve downtime
+
+   
+   - rolling update
+   
+   this method involves no downtime / interraption to service 
+   
+   behind scenes the rolling update
+   - creates new replica set and spins within it new pods based on new container image
+   
+   - as the new pods in new replica set got created, the roling update starts to terminate pods in old replica set
+   
+   - all this happen in gradual manner, transitioning from 
+   
+      - old replica - v1
+      
+      - old and new replica running at the same time v1 and v2
+      
+      - new replica v2
+         
+   it is the quickets of the three update methods
+   
+   it involves changing an image in pod's container instead of updating pod spec yaml files
+   
+   to observe real time changes during the update of the service curl loop command ,ight be used ``while true; do sleep 1; curl $service-ip-or-url; done`
+   
+   rolling update command ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v2 --v 6``
+    
+   check changes after the apply or replace ``kubectl describe deployments``
+   
+   
+
+   
+   
+   
+   
+   
+   
+   
+   
 |
 
 sample kubeserve-deployment.yaml spec
