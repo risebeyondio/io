@@ -19,6 +19,38 @@ cli
 
 .. code-block:: shell
    
+   ########   
+   # labels
+   ########
+   
+   
+   # add label to a node 
+   kubectl label node $node-name disk=ssd
+   
+   # add label to a pod
+   kubectl label pods $pod-name env=prod
+   
+   # existing label override
+   ``kubectl label node $node-name disk=hdd --overwrite
+
+    # list pods with label information
+   kubectl get pods --show-labels
+   kubectl get $pod-name --show-labels
+   
+   # list pods while showing certain label
+   kubectl get pods -L env
+   
+   
+   
+   
+  
+   
+  
+   ########   
+   # other
+   ########
+   
+   
    # cluster info
    cubectl cluster-info
    
@@ -29,7 +61,8 @@ cli
    cubectl describe nodes
    cubectl describe pods
    
-   # list all available resources in a cluster
+   
+    # list all available resources in a cluster
    cubectl api-resources -o wide   
 
    # list services
@@ -43,15 +76,6 @@ cli
 
    # detailed - wide output
    kubectl get pods --all-namespaces -o wide 
-   
-   # list pods with label information
-   kubectl get pods --show-labels
-   
-   # apply new label (here env) to specific pod
-   kubectl label pods $podName env=prod
-   
-   # list pods while showing certain lable
-   kubectl get pods -L env
    
    # field selectors filtering 
    kubectl get pods --field-selector status.phase=Running
@@ -118,6 +142,10 @@ cli
 
    # list endpoints
    kubectl get endpoints
+   
+   # list deamonsets in a cluster
+   kubectl get deamonsets
+
 
 |
 
