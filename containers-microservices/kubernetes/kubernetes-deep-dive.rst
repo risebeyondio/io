@@ -2362,15 +2362,6 @@ high availibility and scale
 
 |
 
-*application high availibility*
-
-|
-
-.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-app-ha.png
-   
-   :alt: application high availibility
-|
-
 minReadySeconds
    this attribite specifies how long a newly created pod should remain in ready state before the pod is being considered available
    
@@ -2445,7 +2436,16 @@ high availibility
    
    ``kubectl rollout status deployment kubeserve``
    
-|   
+| 
+
+*passing configuration options to an application*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-app-ha.png
+   
+   :alt: passing configuration options to an application
+|
 
 passing configuration options to an application
    environment variables are commonly used instead of having application reading configuration files or cli arguments
@@ -2461,16 +2461,88 @@ passing configuration options to an application
    once configmap and secrets are created, they can be modified with no need to rebuild an image
   
    single configmap and secret can be referenced by multiple containers
-  
-   configmap with single key
 
-   ``kubectl create configmap appconfig --from-literal=key1=value1``
+|
+
+configmap set up
+   it can be configured in two ways
    
-   configmap with two keys
+   as pod
+      configmap with single key
 
-   ``kubectl create configmap appconfig --from-literal=key1=value1 --from-literal=key2=value2``
+      ``kubectl create configmap appconfig --from-literal=key1=value1``
+
+      configmap with two keys
+
+      ``kubectl create configmap appconfig --from-literal=key1=value1 --from-literal=key2=value2``
+
+      define configmap-pod.yaml spec file to reference configmap named appconfig and its keys
+
+      create pod that will be passing the configmap data
+
+      ``kubectl apply -f configmap-pod.yaml``
+
+      show YAML  spec file from the configmap
+
+      ``kubectl get configmap appconfig -o yaml``
+
+      show logs from the pod presenting the value
+
+      ``kubectl logs configmap-pod``
+   
+   as mounted volume
+      the volume is to be accessible by a container
+      
+      container will allow an application to retrive data from the volume
+        
+|
+
+configmap-pod.yaml spec file
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: configmap-pod
+   spec:
+     containers:
+     - name: app-container
+       image: busybox:1.28
+       command: ['sh', '-c', "echo $(MY_VAR) && sleep 3600"]
+       env:
+       - name: MY_VAR
+         valueFrom:
+           configMapKeyRef:
+             name: appconfig
+             key: key1
    
 |
+
+configmap-volume-pod.yaml spec file
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: configmap-volume-pod
+   spec:
+     containers:
+     - name: app-container
+       image: busybox
+       command: ['sh', '-c', "echo $(MY_VAR) && sleep 3600"]
+       volumeMounts:
+         - name: configmapvolume
+           mountPath: /etc/config
+     volumes:
+       - name: configmapvolume
+         configMap:
+           name: appconfig
 
 contents_
 
