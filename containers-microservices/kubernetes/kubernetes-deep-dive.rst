@@ -3176,27 +3176,47 @@ storage object in use protection
 
       check pvc protection for a claim ``kubectl describe pvc mongodb-pvc``
       
-      under finalizers in the describe pv and pvc outputs ``pv-protection`` and ```pvc-protection`` shows
-
-
-
+      under finalizers in both describe pv and pvc outputs ``pv-protection`` and ```pvc-protection`` shows
+      
       delete the pv claim - pvc ``kubectl delete pvc mongodb-pvc``
+      
+      verify ``kubectl get pvc`` - pvc got terminated, but the volume is still attached to pod 
 
-      the pvc got terminated, but the volume is still attached to pod ``kubectl get pvc``
-
-      with just deleted pvc, attempt ro access to data ``kubectl exec -it mongodb mongo``
+      with just deleted pvc, attempt to access to data ``kubectl exec -it mongodb mongo``
       
       mongodb-shell> use mystore
       
       mongodb-shell>db.foo.find()
+      
+      all access still fine
 
       delete the pod, which finally deletes the PVC:
 
       ``kubectl delete pods mongodb``
 
-      Show that the PVC is deleted:
+      the pvs is now completely deleted:
 
       ``kubectl get pvc``
+
+|
+
+storage classes
+   automatically provision storage with no need to create storage, configuring it, etc. 
+   
+   storage class is an object
+   
+   declare what the provisioner is, everything else will get done by kubernetes
+   
+|
+
+   apiVersion: storage.k8s.io/v1
+   kind: StorageClass
+   metadata:
+     name: fast
+   provisioner: kubernetes.io/gce-pd
+   parameters:
+     type: pd-ssd   
+      
    
 |
 
