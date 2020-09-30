@@ -2845,11 +2845,128 @@ storage
 
 |
 
-persistent volumes
-
-
-google cloud set up
+persistent volumes configuration on google cloud
+   confirm cluster region ``gcloud container clusters list``
    
+   create a persistent disk in cluster region
+   
+   ``gcloud compute disks create --size=1GiB --zone=us-central1-a mongodb``
+   
+   create a spec file to run a pod with disk attached and mounted
+   
+   ``kubectl apply -f mongodb-pod.yaml``
+   
+   check the node on which the pod executed ``kubectl get pods -o wide``
+   
+   check if connection can be made from other pod and initialise mongodb shell
+
+   ``kubectl exec -it mongodb mongo``
+   
+   switch to mystore
+
+   mongodb-shell> ``use mystore``
+
+   create a samlpe json document
+
+   mongodb-shell> ``db.foo.insert({name:'foo'})``
+
+   check the inserted document
+
+   mongodb-shell> ``db.foo.find()``
+
+   mongodb-shell> ``exit`` 
+   
+   to test if volume is persistent, delete the pod to verify later if data would be accessible from persistent disk
+
+   ``kubectl delete pod mongodb``
+
+   create a new pod with same attached disk - same spec file
+
+   ``kubectl apply -f mongodb-pod.yaml``
+
+   verify node the pod executed on
+
+   ``kubectl get pods -o wide``
+
+   if the pod is on same node as previously - drain it
+   
+   apart from draining the command also changes the node status to ``schedulingDisabled``
+
+   ``kubectl drain $node-name --ignore-daemonsets``
+
+   access mongodb shell (once pod is on a different node)
+
+   ``kubectl exec -it mongodb mongo``
+
+   switch to mystore db 
+   
+   mongodb-shell> ``use mystore``
+
+   check document previously created
+
+   mongodb-shell> ``db.foo.find()``
+
+
+
+The YAML for a PersistentVolume object in Kubernetes:
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongodb-pv
+spec:
+  capacity: 
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  gcePersistentDisk:
+    pdName: mongodb
+    fsType: ext4
+
+
+
+Create the Persistent Volume resource:
+
+kubectl apply -f mongodb-persistentvolume.yaml
+
+View our Persistent Volumes:
+
+kubectl get persistentvolumes
+   
+   
+   
+   
+   
+|
+
+*mongodb-pod.yaml spec file*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: mongodb 
+   spec:
+     volumes:
+     - name: mongodb-data
+       gcePersistentDisk:
+         pdName: mongodb
+         fsType: ext4
+     containers:
+     - image: mongo
+       name: mongodb
+       volumeMounts:
+       - name: mongodb-data
+         mountPath: /data/db
+       ports:
+       - containerPort: 27017
+         protocol: TCP
+
 |
 
 contents_
