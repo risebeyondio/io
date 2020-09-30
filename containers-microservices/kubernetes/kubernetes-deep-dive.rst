@@ -75,6 +75,7 @@ worker node(s)
 |
 
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes_application_run.png
+
    :align: center
    :alt: application runing on kubernetes
 
