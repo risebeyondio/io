@@ -3161,13 +3161,44 @@ contents_
 
 |
 
-storage objects
-===============
+storage objects and storage classes
+===================================
 
 |
 
-storage objects
-   content
+storage object in use protection
+   once persistent volume claim - pvc is attached to a volume, storage objects in use protection offers a protaction against loss of data
+   
+   it ensures that pvc can not be prematurely removed
+   
+   storage oject mechanism - sample
+      check pv protection on a volume ``kubectl describe pv mongodb-pv``
+
+      check pvc protection for a claim ``kubectl describe pvc mongodb-pvc``
+
+      delete the pv claim - pvc ``kubectl delete pvc mongodb-pvc``
+
+      the pvc got terminated, but the volume is still attached to pod
+      
+      
+
+kubectl get pvc
+
+Try to access the data, even though we just deleted the PVC:
+
+kubectl exec -it mongodb mongo
+use mystore
+db.foo.find()
+
+Delete the pod, which finally deletes the PVC:
+
+kubectl delete pods mongodb
+
+Show that the PVC is deleted:
+
+kubectl get pvc
+   
+   
 
 |
 
