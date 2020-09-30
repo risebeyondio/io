@@ -3172,34 +3172,32 @@ storage object in use protection
    it ensures that pvc can not be prematurely removed
    
    storage oject mechanism - sample
-      check pv protection on a volume ``kubectl describe pv mongodb-pv``
+      check pv protection on a volume ``kubectl describe pv mongodb-pv``      
 
       check pvc protection for a claim ``kubectl describe pvc mongodb-pvc``
+      
+      under finalizers in the describe pv and pvc outputs ``pv-protection`` and ```pvc-protection`` shows
+
+
 
       delete the pv claim - pvc ``kubectl delete pvc mongodb-pvc``
 
-      the pvc got terminated, but the volume is still attached to pod
+      the pvc got terminated, but the volume is still attached to pod ``kubectl get pvc``
+
+      with just deleted pvc, attempt ro access to data ``kubectl exec -it mongodb mongo``
       
+      mongodb-shell> use mystore
       
+      mongodb-shell>db.foo.find()
 
-kubectl get pvc
+      delete the pod, which finally deletes the PVC:
 
-Try to access the data, even though we just deleted the PVC:
+      ``kubectl delete pods mongodb``
 
-kubectl exec -it mongodb mongo
-use mystore
-db.foo.find()
+      Show that the PVC is deleted:
 
-Delete the pod, which finally deletes the PVC:
-
-kubectl delete pods mongodb
-
-Show that the PVC is deleted:
-
-kubectl get pvc
+      ``kubectl get pvc``
    
-   
-
 |
 
 contents_
