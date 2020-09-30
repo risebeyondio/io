@@ -2761,7 +2761,7 @@ replica sets
 statefulsets
    same as replicasets they allow to keep constant number of relicas alive
    
-   but he pods within statful sets are all unique (not originating from single replicaset pod template)
+   but the pods within statful sets are all unique (not originating from single replicaset pod template)
    
    if a pod goes down it is replaced by a pod with the same hostname and configuration
    
@@ -2769,13 +2769,13 @@ statefulsets
    
    specific traffic has to go to specific pods 
    
-   this set's spec file contains volume claim template
+   sets' spec files contains volume claim template
    
    as each pod in the set is unique it needs own storage
    
    run the set ``kubectl apply -f statefulset.yaml``
    
-   verify ``kubectl get statefulsets`` ``kubectl describe statefulsets``
+   verify it ``kubectl get statefulsets`` ``kubectl describe statefulsets``
 
 |
 
@@ -2818,6 +2818,63 @@ statefulset.yaml spec file
            requests:
              storage: 1Gi
    
+|
+
+contents_
+
+|
+
+data
+----
+
+|
+
+persistent volumes
+==================
+
+|
+
+storage
+   pods are ephermal - each time pod gets terminated, its file system is also gone
+   
+   storage has to be independent - decoupled to live beyond conteiner's life
+   
+   if a container changes pod the storage has to move as well
+   
+   kubernetes offers persistent volumes functionality
+
+|
+
+persistent volumes
+
+
+google cloud set up
+   
+|
+
+contents_
+
+|
+
+security
+--------
+
+|
+
+primitives
+==========
+
+|
+
+intro
+   each request to communicate with api server, wether from a user or a pod (via service account) needs to go through steps including
+   
+   - authentication (who)
+   
+   - authorisation (what)
+   
+   - admit
+
 |
 
 contents_
