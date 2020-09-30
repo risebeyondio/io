@@ -2848,59 +2848,59 @@ storage
 persistent volume configuration - manual steps
    google cloud - gcp persitent storage
    
-      confirm cluster region ``gcloud container clusters list``
+   confirm cluster region ``gcloud container clusters list``
 
-      create a persistent disk in cluster region
+   create a persistent disk in cluster region
 
-      ``gcloud compute disks create --size=1GiB --zone=us-central1-a mongodb``
+   ``gcloud compute disks create --size=1GiB --zone=us-central1-a mongodb``
 
-      create a spec file to run a pod with disk attached and mounted
+   create a spec file to run a pod with disk attached and mounted
 
-      ``kubectl apply -f mongodb-pod.yaml``
+   ``kubectl apply -f mongodb-pod.yaml``
 
-      check the node on which the pod executed ``kubectl get pods -o wide``
+   check the node on which the pod executed ``kubectl get pods -o wide``
 
-      check if connection can be made from other pod and initialise mongodb shell
+   check if connection can be made from other pod and initialise mongodb shell
 
-      ``kubectl exec -it mongodb mongo``
+   ``kubectl exec -it mongodb mongo``
 
-      switch to mystore
+   switch to mystore
 
-      mongodb-shell> ``use mystore``
+   mongodb-shell> ``use mystore``
 
-      create a samlpe json document
+   create a samlpe json document
 
-      mongodb-shell> ``db.foo.insert({name:'foo'})``
+   mongodb-shell> ``db.foo.insert({name:'foo'})``
 
-      check the inserted document
+   check the inserted document
 
-      mongodb-shell> ``db.foo.find()``
+   mongodb-shell> ``db.foo.find()``
 
-      mongodb-shell> ``exit`` 
+   mongodb-shell> ``exit`` 
 
-      to test if volume is persistent, delete the pod to verify later if data would be accessible from persistent disk
+   to test if volume is persistent, delete the pod to verify later if data would be accessible from persistent disk
 
-      ``kubectl delete pod mongodb``
+   ``kubectl delete pod mongodb``
 
-      create a new pod with same attached disk - same spec file ``kubectl apply -f mongodb-pod.yaml``
+   create a new pod with same attached disk - same spec file ``kubectl apply -f mongodb-pod.yaml``
 
-      verify node the pod executed on ``kubectl get pods -o wide``
+   verify node the pod executed on ``kubectl get pods -o wide``
 
-      if the pod is on same node as previously - drain it
+   if the pod is on same node as previously - drain it
 
-      apart from draining the command also changes the node status to ``schedulingDisabled``
+   apart from draining the command also changes the node status to ``schedulingDisabled``
 
-      ``kubectl drain $node-name --ignore-daemonsets``
+   ``kubectl drain $node-name --ignore-daemonsets``
 
-      access mongodb shell (once pod is on a different node) ``kubectl exec -it mongodb mongo``
+   access mongodb shell (once pod is on a different node) ``kubectl exec -it mongodb mongo``
 
-      switch to mystore db 
+   switch to mystore db 
 
-      mongodb-shell> ``use mystore``
+   mongodb-shell> ``use mystore``
 
-      check document previously created
+   check document previously created
 
-      mongodb-shell> ``db.foo.find()``
+   mongodb-shell> ``db.foo.find()``
 
 |
 
