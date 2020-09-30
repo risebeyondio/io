@@ -3011,12 +3011,162 @@ contents_
 
 |
 
-persistent volume claims
-========================
+persistent volume claims - pvc
+==============================
 
 |
 
-persistent volume claims
+*pv claims*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-pv-claims.png
+   
+   :alt: pv claims
+
+|
+
+persistent volume claims - pvc
+   it is a pod's request to utilise  / preserve already provisioned storage volume
+   
+   these claims are usually done by development teams requesting application access to a storage
+   
+   the storage can not be directly utilzed within a pod
+   
+   to pod to have a right to use the storage must make a claim
+   
+   the claim remains with the persinent volume and is independent from pod that might get terminated
+   
+   pv claim is a separate resource in kubernetes
+   
+   set up pvc
+      create pvc spec file and run it ``kubectl apply -f mongodb-pvc.yaml``
+   
+      before the pvc is created, system checks if requested size and access mode matches to what is available 
+
+      if both conditions are matched - requested size and access mode are available, then the volume is to be bound to the claim 
+
+      to list cluster's pvc run ``kubectl get pvc``
+
+      to list pv run ``kubectl get pv``
+      
+      create pod spec file that would be utilising the pvc, apply it
+      
+      ``kubectl apply -f mongo-pvc-pod.yaml``
+      
+      both ``kubectl get pvc`` and ``kubectl get pv`` should now show status ``bound``
+      
+   test pvc   
+      open mogodb shell ``kubectl exec -it mongodb mongo``
+      
+      switch to mystore
+
+      mongodb-shell> ``use mystore``
+
+      search for the previously created json document
+
+      mongodb-shell> ``db.foo.find()``
+
+      delete mongodb pod ``kubectl delete pod mongodb``
+
+      remove mongodb-pvc PVC ``kubectl delete pvc mongodb-pvc``
+
+      verify it ``kubectl get pv`` status should now show ``released``
+      
+      ``released`` status is caused by the reclaim policy set to ``retain`` 
+      
+      reclaim policy can was specified in the original pv spec file (mongodb-persistentvolume.yaml)
+      
+      reclaim policies can be set to
+      
+      - retain - volume data will be retained / kept available within the volume
+      
+      - rycycle - volume data will be deleted in order to reuse the volume for a new persistent volume claim
+      
+      - delete - the uderlying storage volume is to be deleted
+
+|
+
+*mongodb-pvc.yaml spec file*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: PersistentVolumeClaim
+   metadata:
+     name: mongodb-pvc 
+   spec:
+     resources:
+       requests:
+         storage: 1Gi
+     accessModes:
+     - ReadWriteOnce
+     storageClassName: ""
+     
+|
+
+*mongodb-pvc-pod.yaml spec file*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: mongodb 
+   spec:
+     containers:
+     - image: mongo
+       name: mongodb
+       volumeMounts:
+       - name: mongodb-data
+         mountPath: /data/db
+       ports:
+       - containerPort: 27017
+         protocol: TCP
+     volumes:
+     - name: mongodb-data
+       persistentVolumeClaim:
+         claimName: mongodb-pvc
+
+|
+
+*mongodb-persistentvolume.yaml - pv spec file showing its reclaim policy*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: PersistentVolume
+   metadata:
+     name: mongodb-pv
+   spec:
+     capacity: 
+       storage: 1Gi
+     accessModes:
+       - ReadWriteOnce
+       - ReadOnlyMany
+     persistentVolumeReclaimPolicy: Retain
+     gcePersistentDisk:
+       pdName: mongodb
+       fsType: ext4   
+
+|
+
+contents_
+
+|
+
+storage objects
+===============
+
+|
+
+storage objects
    content
 
 |
@@ -3024,6 +3174,7 @@ persistent volume claims
 contents_
 
 |
+
 security
 --------
 
