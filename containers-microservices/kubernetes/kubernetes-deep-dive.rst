@@ -2970,6 +2970,60 @@ contents_
 
 |
 
+volumes access modes
+====================
+
+|
+
+access modes
+   when creating the vloume access modes has to be specified
+   
+   this information enables the volume to be mounted on one or many nodes and to be read from and written to by one or multiple nodes
+   
+   three access modes
+      - rwo (read write once)
+
+      only a single node can mount this volume for reading and writing
+
+      - rox (read only many)
+
+      multiple nodes can mount this volume for reading only
+
+      - rwx (read write many)
+
+      multiple nodes can mount this volume for reading and writing
+   
+   capability to mount a volume relates to node' capability not pod's capability
+   
+   volume can only be mounted using one access mode at a time - even if it supports many
+   
+   to illustrate, google cloud disk can be mounted as rwo (read write once) by a single node
+   
+   or at a different time as rox (read only many) by multiple nodes - but not simultenesly
+   
+   it is not possible to have this node writing this volume and then read by a totally different node at the same moment
+   
+   while utilising persistent volumes inside a pod, persistent volume claim has to be referenced
+   
+|
+
+contents_
+
+|
+
+persistent volume claims
+========================
+
+|
+
+persistent volume claims
+   content
+
+|
+
+contents_
+
+|
 security
 --------
 
