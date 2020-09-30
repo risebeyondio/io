@@ -2674,7 +2674,7 @@ self healing applications
 
 |
 
-.. figure:: https://github.com/risebeyondio/rise/tree/master/media/kubernetes-self-healing-app.png
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-self-healing-app.png
    
    :alt: replicasets
 
