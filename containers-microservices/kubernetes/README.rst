@@ -11,7 +11,7 @@ kubernetes
 
 - `deep dive <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes/kubernetes-deep-dive.rst>`_   
 
-- `cli reference<https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes/cli.rst>`_
+- `cli reference <https://github.com/risebeyondio/io/blob/master/containers-microservices/kubernetes/cli.rst>`_
 
 |
 
