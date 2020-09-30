@@ -2680,7 +2680,7 @@ self healing applications
 
 |
 
-self healing apps
+replica sets
    eliminates a need to continously watch servers for errors to keep applications running
    
    if errors happen, kubernetes replace the server and removes the faulty server or application image
@@ -2693,12 +2693,132 @@ self healing apps
    
    this is atomatically done by creating replicas and hosting them on nodes in good health state
    
-   this liberates operation teams from performing manual migrations
+   this liberates operation teams from performing manual migrations of application components
    
+   replica sets labels - if it contains labels, any pods that have matching label with replica set will be automatically picked up by the replica
    
+   create replica set ``kubectl apply -f replicaset.yaml``
+   
+   if replica set is configured to have 3 replicas that are already running
+   
+   and another pod gets created with same label as replicaset
+   
+   it will get terminated as replicaset is running desired 3 pods already
+   
+   if a lebel of pod within replicaset is changed it will get removed from replicaset
+   
+   removing a pod from replicaset in such way is not recommended as management of replicaset should be done via deployments 
+   
+|
+
+*replicaste.yaml spec file*
+
+|
+   
+.. code-block:: yaml
+   
+   apiVersion: apps/v1
+   kind: ReplicaSet
+   metadata:
+     name: myreplicaset
+     labels:
+       app: app
+       tier: frontend
+   spec:
+     replicas: 3
+     selector:
+       matchLabels:
+         tier: frontend
+     template:
+       metadata:
+         labels:
+           tier: frontend
+       spec:
+         containers:
+         - name: main
+           image: linuxacademycontent/kubeserve
+|
+
+*pod-replica.yaml spec file with same label as replicaset*
 
 |
 
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: pod1
+     labels:
+       tier: frontend
+   spec:
+     containers:
+     - name: main
+       image: linuxacademycontent/kubeserve
+
+|
+
+statefulsets
+   same as replicasets they allow to keep constant number of relicas alive
+   
+   but he pods within statful sets are all unique (not originating from single replicaset pod template)
+   
+   if a pod goes down it is replaced by a pod with the same hostname and configuration
+   
+   a service in statefulsets must be headless, as every single pod will be unique
+   
+   specific traffic has to go to specific pods 
+   
+   this set's spec file contains volume claim template
+   
+   as each pod in the set is unique it needs own storage
+   
+   run the set ``kubectl apply -f statefulset.yaml``
+   
+   verify ``kubectl get statefulsets`` ``kubectl describe statefulsets``
+
+|
+
+statefulset.yaml spec file
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: apps/v1
+   kind: StatefulSet
+   metadata:
+     name: web
+   spec:
+     serviceName: "nginx"
+     replicas: 2
+     selector:
+       matchLabels:
+         app: nginx
+     template:
+       metadata:
+         labels:
+           app: nginx
+       spec:
+         containers:
+         - name: nginx
+           image: nginx
+           ports:
+           - containerPort: 80
+             name: web
+           volumeMounts:
+           - name: www
+             mountPath: /usr/share/nginx/html
+     volumeClaimTemplates:
+     - metadata:
+         name: www
+       spec:
+         accessModes: [ "ReadWriteOnce" ]
+         resources:
+           requests:
+             storage: 1Gi
+   
+|
 
 contents_
 
