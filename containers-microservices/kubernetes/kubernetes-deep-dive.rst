@@ -2357,8 +2357,8 @@ contents_
 |
 
 
-high availibility and scale
-===========================
+high availibility 
+=================
 
 |
 
@@ -2434,8 +2434,17 @@ high availibility
    verify rollout status
    
    ``kubectl rollout status deployment kubeserve``
-   
-| 
+
+|
+
+contents_
+
+|
+
+passing env variables, configmap and secrets
+============================================
+
+|
 
 *passing configuration options to an application*
 
@@ -2670,7 +2679,7 @@ self healing applications
 
 |
 
-self healin apps
+self healing apps
    eliminates a need to continously watch servers for errors to keep applications running
    
    if errors happen, kubernetes replace the server and removes the faulty server or application image
