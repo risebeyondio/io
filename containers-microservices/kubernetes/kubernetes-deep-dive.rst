@@ -3352,7 +3352,7 @@ applications deployment with persistent storage
 
 |
 
-1. create storage class object spec file
+1. create storageclass-fast.yaml - storage class object spec file
 
 .. code-block:: yaml
 
@@ -3364,7 +3364,9 @@ applications deployment with persistent storage
   parameters:
     type: pd-ssd
 
-2. create pvc spec
+2. create kubeserve-pvc.yaml - persistent volume claim - pvc spec file
+
+it will automatically provision a volume
 
 .. code-block:: yaml
 
@@ -3388,11 +3390,15 @@ applications deployment with persistent storage
 
 ``kubectl apply -f kubeserve-pvc.yaml`` ``kubectl get pvc``
 
-5. verify automatically provisioned pv
+verificartion output should confirm ``bound`` status 
+
+5. verify automatically provisioned storage - pv
 
 ``kubectl get pv``
 
-6. create deployment spec file
+verificartion output should confirm ``bound`` status 
+
+6. create kubeserve-deployment.yaml deployment spec file
 
 .. code-block:: yaml
 
@@ -3415,7 +3421,7 @@ applications deployment with persistent storage
         - env:
           - name: app
             value: "1"
-          image: linuxacademycontent/kubeserve:v1
+          image: app-images/kubeserve:v1
           name: app
           volumeMounts:
           - mountPath: /data
@@ -3425,11 +3431,13 @@ applications deployment with persistent storage
           persistentVolumeClaim:
             claimName: kubeserve-pvc
 
-7. apply the deployment with attached storage to the pods
+7. apply deployment with attached storage to the pods - rollout
 
 ``kubectl apply -f kubeserve-deployment.yaml``
 
 8. verify deployment
+
+- deployment ``kubectl get deployments``
 
 - rollout status ``kubectl rollout status deployments kubeserve``
 
@@ -3439,11 +3447,11 @@ applications deployment with persistent storage
 
   - connect to the pod to create a file on the PV
 
-  ``kubectl exec -it [pod-name] -- touch /data/file1.txt``
+  ``kubectl exec -it $pod-name -- touch /data/file1.txt``
 
   - connect to the pod to list contents of /data directory
 
-  ``kubectl exec -it [pod-name] -- ls /data``
+  ``kubectl exec -it $pod-name -- ls /data``
 
 |
 
