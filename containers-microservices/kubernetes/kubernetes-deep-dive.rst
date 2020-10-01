@@ -3470,15 +3470,15 @@ primitives
 |
 
 basics
-   each request to communicate with api server, wether from a user or a pod (via service account) needs to go through steps including
+  each request to communicate with api server, wether from a user or a pod (via service account) needs to go through steps including
    
-   - authentication (who)
+  - authentication (who)
    
-   - authorisation (what)
+  - authorisation (what)
    
-   - admit
+  - admit
    
- api server checks first if the requests originates from
+  api server checks first if the requests originates from
  
   - user 
     this might be trough private key, user store or file containg a list of user names and passwords 
