@@ -3480,7 +3480,7 @@ basics
    
   api server checks first if the requests originates from
  
-  - user 
+  user 
     this might be trough private key, user store or file containg a list of user names and passwords 
  
     user accounts are not represented by an object in kubernetes
@@ -3489,7 +3489,7 @@ basics
 
   or 
 
-  - service account
+  service account
     identity of pods
 
 |
