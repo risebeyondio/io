@@ -3238,13 +3238,11 @@ storage class
 
       - host path volume type
       
-      or
-      
       - empty directory volume type
 
-      solution good for transient data, when it also needs to be share between multiple containers in the same pod
+    solution good for transient data, when it also needs to be share between multiple containers in the same pod
 
-      volume gets deleted along with the pod
+    volume gets deleted along with the pod
 
     - git repositories
 
