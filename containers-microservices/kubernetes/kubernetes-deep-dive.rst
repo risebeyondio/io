@@ -10,9 +10,8 @@
 
 |
 
-.. comment --> depth describes headings level inclusion
 .. contents:: contents
-   :depth: 10
+  :depth: 10
 
 |
 
@@ -3188,7 +3187,7 @@ storage object in use protection
       
       mongodb-shell>db.foo.find()
       
-      all access still fine
+      all access still fine, pod is still attached to the the persistent volume
 
       delete the pod, which finally deletes the PVC:
 
@@ -3200,13 +3199,63 @@ storage object in use protection
 
 |
 
-storage classes
+storage class
    automatically provision storage with no need to create storage, configuring it, etc. 
    
    storage class is an object
    
-   declare what the provisioner is, everything else will get done by kubernetes
+   in storage class object, declare what the provisioner is, everything else will get done by kubernetes
    
+   sample configuration
+      google cloud storage
+      
+      create storage class object and apply it ``kubectl apply -f sc-fast.yaml``
+      
+      verify it ``kubectl get sc``
+      
+      update previously created pv claim with storage class name : fast
+      
+      this update makes storageclass object included in the pvc 
+      
+      apply the change to automatically provision the storage
+      
+      ``kubectl apply -f mongodb-pvc.yaml``
+      
+      verify pvc ``kubectl get pvc``
+      
+      verify provisioned volume - pv ``kubectl get pv``
+      
+      pv storage is bound
+   
+   storage class - volume types 
+      apart from gcp storage other soulutions can also be used
+   
+      - aws - ebs volumes
+      
+      - local storage - nfs, isci, cinder, gluster fs, vsphere volume, other
+
+     -  worker nodes - mount their file system directories via
+
+         - host path volume type
+
+      or
+
+         - empty directory volume type
+
+         solution for transient data, when it also needs to be share between multiple containers in the same pod
+
+         volume gets deleted along with the pod
+  
+      - git repositories
+      
+      mount emptydir into initcontainer that clones the repo using git
+      
+      then mount the emptydir into pod's container
+      
+|
+
+*sc-fast.yaml storage class object spec file*
+
 |
 
    apiVersion: storage.k8s.io/v1
@@ -3215,9 +3264,71 @@ storage classes
      name: fast
    provisioner: kubernetes.io/gce-pd
    parameters:
-     type: pd-ssd   
-      
-   
+     type: pd-ssd      
+     
+|
+
+*mongodb-pvc.yaml updating storageClassName: fast*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: PersistentVolumeClaim
+   metadata:
+     name: mongodb-pvc 
+   spec:
+     storageClassName: fast
+     resources:
+       requests:
+         storage: 100Mi
+     accessModes:
+       - ReadWriteOnce
+ 
+|
+
+*hostPath PV spec file*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: PersistentVolume
+   metadata:
+     name: pv-hostpath
+   spec:
+     storageClassName: local-storage
+     capacity:
+       storage: 1Gi
+     accessModes:
+       - ReadWriteOnce
+     hostPath:
+       path: "/mnt/data"
+
+|
+
+*spec file pod with an empty directory volume*
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: emptydir-pod
+   spec:
+     containers:
+     - image: busybox
+       name: busybox
+       command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
+       volumeMounts:
+       - mountPath: /tmp/storage
+         name: vol
+     volumes:
+     - name: vol
+       emptyDir: {}
+
 |
 
 contents_
