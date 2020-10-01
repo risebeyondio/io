@@ -3491,22 +3491,34 @@ basics
 
   service account
     identity of pods
+    
+    when cluster gets created a deafult service account is generated
+    
+    display service accounts ``kubectl get serviceaccounts``
 
+    create service account - jenkins ``kubectl create serviceaccount jenkins``
+    
+    when new service account is generated coresponding secret is atomatically created 
+
+    verify it - abbrieviated ``kubectl get sa``
+    
+    a secret contains 
+      
+    - public certificate authority of the api server
+    
+    - signed json web token  
+
+    check service account yaml ``kubectl get serviceaccounts jenkins -o yaml`` and copy the secret name
+    
+    view secrets within a cluster ``kubectl get secret $secret-name``
+    
+    the secret is what the request will use to authenticat with the api server
+    
+    service account can be assigned to a pod by including it in the pod's manifest - spec file
+    
+    if a particular service account is not specified in pod's manifest, the pod will apply default service account
+    
 |
-
-display service accounts
-
-``kubectl get serviceaccounts``
-
-create service account - jenkins
-
-``kubectl create serviceaccount jenkins``
-
-verify it - abbrieviated ``kubectl get sa``
-
-check service account yaml ``kubectl get serviceaccounts jenkins -o yaml``
-
-view secrets within a cluster ``kubectl get secret $secret-name``
 
 busybox.yaml pod spec file utilising jenkins service account
 
