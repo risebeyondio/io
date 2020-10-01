@@ -3469,7 +3469,7 @@ primitives
 
 |
 
-intro
+basics
    each request to communicate with api server, wether from a user or a pod (via service account) needs to go through steps including
    
    - authentication (who)
@@ -3477,8 +3477,99 @@ intro
    - authorisation (what)
    
    - admit
+   
+ api server checks first if the requests originates from
+ 
+  - user 
+    this might be trough private key, user store or file containg a list of user names and passwords 
+ 
+    user accounts are not represented by an object in kubernetes
+ 
+    users can not be added to a cluster via api request
+
+  or 
+
+  - service account
+    identity of pods
 
 |
+
+display service accounts
+
+``kubectl get serviceaccounts``
+
+create service account - jenkins
+
+``kubectl create serviceaccount jenkins``
+
+verify it - abbrieviated ``kubectl get sa``
+
+check service account yaml ``kubectl get serviceaccounts jenkins -o yaml``
+
+view secrets within a cluster ``kubectl get secret $secret-name``
+
+busybox.yaml pod spec file utilising jenkins service account
+
+|
+
+.. code-block:: yaml
+
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: busybox
+    namespace: default
+  spec:
+    serviceAccountName: jenkins
+    containers:
+    - image: busybox:1.28.4
+      command:
+        - sleep
+        - "3600"
+      imagePullPolicy: IfNotPresent
+      name: busybox
+    restartPolicy: Always
+
+|
+
+apply the pod ``kubectl apply -f busybox.yaml``
+
+check cluster config - used by kubectl
+
+``kubectl config view``
+
+verify configuration ``cat ~/.kube/config``
+
+configure cluster`s new credentials 
+
+``kubectl config set-credentials piotr --username=piotr --password=password``
+
+create a role binding for anonymous users - not recommended
+
+``kubectl create clusterrolebinding cluster-system-anonymous --clusterrole=cluster-admin --user=system:anonymous``
+
+scp certificate authority to workstation or server
+
+``scp ca.crt cloud_user@[pub-ip-of-remote-server]:~/``
+
+confihure cluster address and authentication
+
+``kubectl config set-cluster kubernetes --server=https://172.31.41.61:6443 --certificate-authority=ca.crt --embed-certs=true``
+
+set credentials for piotr
+
+``kubectl config set-credentials chad --username=chad --password=password``
+
+configure context for the cluster
+
+``kubectl config set-context kubernetes --cluster=kubernetes --user=chad --namespace=default``
+
+use it ``kubectl config use-context kubernetes``
+
+check nodes ``kubectl get nodes``
+
+|
+
 
 contents_
 
