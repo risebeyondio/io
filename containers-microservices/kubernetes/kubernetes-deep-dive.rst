@@ -3443,7 +3443,7 @@ applications deployment with persistent storage
 
   - connect to the pod to list contents of /data directory
 
-  ``kubectl exec -it [pod-name] -- ls /data
+  ``kubectl exec -it [pod-name] -- ls /data``
 
 |
 
