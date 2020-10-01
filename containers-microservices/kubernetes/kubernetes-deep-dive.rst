@@ -3340,21 +3340,35 @@ applications deployment with persistent storage
 
 |
 
-- **steps to perform appllication deployment with persistent volume**
+*deployment of application with persistent volume*
 
 |
 
-The YAML for our StorageClass object:
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-app-with-pv.png
 
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: fast
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-ssd
+|
 
-The YAML for our PVC:
+**steps to perform appllication deployment with persistent volume**
+
+|
+
+1. The YAML for our StorageClass object:
+
+|
+
+.. code-block:: yaml
+
+  apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: fast
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+
+|
+
+- 2. The YAML for our PVC:
 
 apiVersion: v1
 kind: PersistentVolumeClaim
