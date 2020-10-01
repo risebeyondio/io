@@ -3227,29 +3227,29 @@ storage class
       
       pv storage is bound
    
-   storage class - volume types 
-      apart from gcp storage other soulutions can also be used
+  storage class - volume types
+    apart from gcp storage other soulutions can also be used
    
       - aws - ebs volumes
-      
+
       - local storage - nfs, isci, cinder, gluster fs, vsphere volume, other
 
      -  worker nodes - mount their file system directories via
 
-         - host path volume type
+     - host path volume type
 
-      or
+    or
 
-         - empty directory volume type
+      - empty directory volume type
 
-         solution for transient data, when it also needs to be share between multiple containers in the same pod
+      solution for transient data, when it also needs to be share between multiple containers in the same pod
 
-         volume gets deleted along with the pod
-  
+      volume gets deleted along with the pod
+
       - git repositories
-      
+
       mount emptydir into initcontainer that clones the repo using git
-      
+
       then mount the emptydir into pod's container
       
 |
@@ -3257,6 +3257,8 @@ storage class
 *sc-fast.yaml storage class object spec file*
 
 |
+
+.. code-block:: yaml
 
    apiVersion: storage.k8s.io/v1
    kind: StorageClass
