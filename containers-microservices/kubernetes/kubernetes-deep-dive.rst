@@ -3340,7 +3340,7 @@ applications deployment with persistent storage
 
 |
 
-*deployment of application with persistent volume*
+*deployment of application with persistent volume [source linuxacademy.com]*
 
 |
 
