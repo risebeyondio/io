@@ -3394,7 +3394,7 @@ applications deployment with persistent storage
 
 6. create deployment spec file
 
-.. code-bmock:: yaml
+.. code-block:: yaml
 
   apiVersion: apps/v1
   kind: Deployment
