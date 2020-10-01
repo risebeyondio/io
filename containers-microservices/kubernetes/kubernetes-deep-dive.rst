@@ -3520,7 +3520,7 @@ basics
     
 |
 
-busybox.yaml pod spec file utilising jenkins service account
+busybox.yaml pod spec file with declared service account - jenkins 
 
 |
 
@@ -3581,7 +3581,6 @@ use it ``kubectl config use-context kubernetes``
 check nodes ``kubectl get nodes``
 
 |
-
 
 contents_
 
