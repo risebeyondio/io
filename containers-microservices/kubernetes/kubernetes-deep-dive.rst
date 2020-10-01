@@ -3200,32 +3200,32 @@ storage object in use protection
 |
 
 storage class
-   automatically provision storage with no need to create storage, configuring it, etc. 
+  automatically provision storage with no need to create storage, configuring it, etc. 
    
-   storage class is an object
-   
-   in storage class object, declare what the provisioner is, everything else will get done by kubernetes
-   
-   sample configuration
-      google cloud storage
-      
-      create storage class object and apply it ``kubectl apply -f sc-fast.yaml``
-      
-      verify it ``kubectl get sc``
-      
-      update previously created pv claim with storage class name : fast
-      
-      this update makes storageclass object included in the pvc 
-      
-      apply the change to automatically provision the storage
-      
-      ``kubectl apply -f mongodb-pvc.yaml``
-      
-      verify pvc ``kubectl get pvc``
-      
-      verify provisioned volume - pv ``kubectl get pv``
-      
-      pv storage is bound
+  storage class is an object
+
+  in storage class object, declare what the provisioner is, everything else will get done by kubernetes
+
+  sample configuration
+    google cloud storage
+
+    create storage class object and apply it ``kubectl apply -f sc-fast.yaml``
+
+    verify it ``kubectl get sc``
+
+    update previously created pv claim with storage class name : fast
+
+    this update makes storageclass object included in the pvc 
+
+    apply the change to automatically provision the storage
+
+    ``kubectl apply -f mongodb-pvc.yaml``
+
+    verify pvc ``kubectl get pvc``
+
+    verify provisioned volume - pv ``kubectl get pv``
+
+    pv storage is bound
    
   storage class - volume types
     apart from gcp storage other soulutions can also be used
