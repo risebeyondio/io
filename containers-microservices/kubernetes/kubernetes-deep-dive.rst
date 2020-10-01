@@ -3340,11 +3340,11 @@ applications deployment with persistent storage
 
 |
 
-*deployment of application with persistent volume [source linuxacademy.com]*
-
-|
+*deployment of application with persistent volume*
 
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-app-with-pv.png
+
+*source linuxacademy.com*
 
 |
 
