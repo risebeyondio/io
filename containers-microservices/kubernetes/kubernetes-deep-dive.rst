@@ -3237,9 +3237,9 @@ storage class
     -  worker nodes - mount their file system directories via
 
       - host path volume type
-
-    or
-
+      
+      or
+      
       - empty directory volume type
 
       solution good for transient data, when it also needs to be share between multiple containers in the same pod
