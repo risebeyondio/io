@@ -3352,9 +3352,7 @@ applications deployment with persistent storage
 
 |
 
-1. The YAML for our StorageClass object:
-
-|
+1. create storage class object spec file
 
 .. code-block:: yaml
 
@@ -3366,98 +3364,93 @@ applications deployment with persistent storage
   parameters:
     type: pd-ssd
 
-|
+2. create pvc spec
 
-- 2. The YAML for our PVC:
+.. code-block:: yaml
 
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: kubeserve-pvc 
-spec:
-  storageClassName: fast
-  resources:
-    requests:
-      storage: 100Mi
-  accessModes:
-    - ReadWriteOnce
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: kubeserve-pvc 
+  spec:
+    storageClassName: fast
+    resources:
+      requests:
+        storage: 100Mi
+    accessModes:
+      - ReadWriteOnce
 
-Create our StorageClass object:
+3. apply and verify storage class object
 
-kubectl apply -f storageclass-fast.yaml
+``kubectl apply -f storageclass-fast.yaml`` ``kubectl get sc``
 
-View the StorageClass objects in your cluster:
+4. apply and verify pvc
 
-kubectl get sc
+``kubectl apply -f kubeserve-pvc.yaml`` ``kubectl get pvc``
 
-Create our PVC:
+5. verify automatically provisioned pv
 
-kubectl apply -f kubeserve-pvc.yaml
+``kubectl get pv``
 
-View the PVC created in our cluster:
+6. create deployment spec file
 
-kubectl get pvc
+.. code-bmock:: yaml
 
-View our automatically provisioned PV:
-
-kubectl get pv
-
-The YAML for our deployment:
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: kubeserve
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: kubeserve
-  template:
-    metadata:
-      name: kubeserve
-      labels:
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: kubeserve
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
         app: kubeserve
-    spec:
-      containers:
-      - env:
-        - name: app
-          value: "1"
-        image: linuxacademycontent/kubeserve:v1
-        name: app
-        volumeMounts:
-        - mountPath: /data
-          name: volume-data
-      volumes:
-      - name: volume-data
-        persistentVolumeClaim:
-          claimName: kubeserve-pvc
+    template:
+      metadata:
+        name: kubeserve
+        labels:
+          app: kubeserve
+      spec:
+        containers:
+        - env:
+          - name: app
+            value: "1"
+          image: linuxacademycontent/kubeserve:v1
+          name: app
+          volumeMounts:
+          - mountPath: /data
+            name: volume-data
+        volumes:
+        - name: volume-data
+          persistentVolumeClaim:
+            claimName: kubeserve-pvc
 
-Create our deployment and attach the storage to the pods:
+7. apply the deployment with attached storage to the pods
 
-kubectl apply -f kubeserve-deployment.yaml
+``kubectl apply -f kubeserve-deployment.yaml``
 
-Check the status of the rollout:
+8. verify deployment
 
-kubectl rollout status deployments kubeserve
+- rollout status ``kubectl rollout status deployments kubeserve``
 
-Check the pods have been created:
+- pods ``kubectl get pods``
 
-kubectl get pods
+- persistant storage
 
-Connect to our pod and create a file on the PV:
+  - connect to the pod to create a file on the PV
 
-kubectl exec -it [pod-name] -- touch /data/file1.txt
+  ``kubectl exec -it [pod-name] -- touch /data/file1.txt``
 
-Connect to our pod and list the contents of the /data directory:
+  - connect to the pod to list contents of /data directory
 
-kubectl exec -it [pod-name] -- ls /data
+  ``kubectl exec -it [pod-name] -- ls /data
 
 |
 
 contents_
 
 |
+
 security
 --------
 
