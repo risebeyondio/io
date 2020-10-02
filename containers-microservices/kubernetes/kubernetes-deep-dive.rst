@@ -4053,9 +4053,11 @@ verify ``cfssl version``
 
 |
 
-once executed list current directory to check if ``server.csr``file is present
+once executed list current directory to check if ``server.csr`` file is present
 
-3. create a certificate signing request api object
+3. create a certificate signing request api object,  verify it
+
+below spec file refernces server.csr file created in previous step
 
 .. code-block:: yaml
 
@@ -4074,29 +4076,24 @@ once executed list current directory to check if ``server.csr``file is present
     - server auth
   EOF
 
-View the CSRs in the cluster:
+view all csr in the cluster ``kubectl get csr`` - new csr object should be now ``pending`` state 
 
-kubectl get csr
+get more in depth csr view ``kubectl describe csr pod-csr.web``
 
-View additional details about the CSR:
+4. approve the csr
 
-kubectl describe csr pod-csr.web
+without the administrator approval the csr would remain in pending state 
 
-Approve the CSR:
+``kubectl certificate approve pod-csr.web``
 
-kubectl certificate approve pod-csr.web
-
-View the certificate within your CSR:
+5. check the certificate within your CSR:
 
 kubectl get csr pod-csr.web -o yaml
 
 Extract and decode your certificate to use in a file:
 
-kubectl get csr pod-csr.web -o jsonpath='{.status.certificate}' \
-    | base64 --decode > server.crt
-
-
-
+``kubectl get csr pod-csr.web -o jsonpath='{.status.certificate}' \
+    | base64 --decode > server.crt``
 
 |
 
