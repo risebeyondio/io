@@ -3470,7 +3470,7 @@ primitives
 |
 
 basics
-  each request to communicate with api server, wether from a user or a pod (via service account) needs to go through steps including
+  each request to communicate with api server, wether from a human user or a pod (via service account) needs to go through steps including
    
   - authentication (who)
    
@@ -3633,6 +3633,143 @@ cluster remote access
   
   verify it by running sample command on the re,ote server ``kubectl get nodes``
   
+|
+
+contents_
+
+|
+
+cluster authentication and authorization
+========================================
+
+|
+
+*role and role bindings*
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-role-role-bindings.png
+  :alt: role and role bindings
+
+*source linuxacademy.com*
+
+|
+
+cluster api calls access
+  - 1st step - authentication - who is the requestor and is it a human user or a pod
+  
+  - 2nd step - authorization - what human user or a pod is allowed to do
+  
+  authorization is managed by authorization rules configured in ``rbac`` - role based access control
+  
+|
+
+role based access control - rbac
+  rbac authorisation rules are configured by through four resources divided in two gropups
+  
+  - roles and cluster roles
+  
+  define ``what`` actions can be performed on ``which`` resource
+  
+  cluster roles help to define actions for resources that are not namespaced, such as
+  nodes, persistent volumes, namespaces themselves
+  
+  - role bindings and cluster role bindings
+  
+  define ``who``can do it
+  
+  role binding will always reference a single role
+  
+  the binding can bind the role to multiple service account, user, group
+  
+  role and role bindings are namespaced 
+  
+  cluster role and cluster role bindings are cluster level
+  
+|
+  
+sample role configuration  
+  1. create a namespace ``kubectl create ns web``
+  
+  2. create service role and apply it ``kubectl apply -f role.yaml``
+  
+  this role will allow to list services within namespace *web*
+
+|
+
+*role.yaml spec file*
+
+|
+
+.. code-block:: yaml
+
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    namespace: web
+    name: service-reader
+  rules:
+  - apiGroups: [""]
+    verbs: ["get", "list"]
+    resources: ["services"]
+    
+| 
+
+at this stage it is specified by the role, ``what`` actions on what resource can be performed 
+
+3. to specify ``who`` can performed these actions role binding has to be applied
+
+``kubectl create rolebinding test --role=service-reader --serviceaccount=web:default -n web``
+
+4. initiate a proxy for inside cluster communications and test it
+
+``kubectl proxy``
+
+while being in default namespace, verify access to services in the web namespace
+
+``curl localhost:8001/api/v1/namespaces/web/services``
+
+5. make a cluster role to view persistent volumes
+
+``kubectl create clusterrole pv-reader --verb=get,list --resource=persistentvolumes``
+
+many cluster level resources are not namespaced - node, persistent volumes, namespaces themselves, other 
+
+
+6. Create a cluster role binding for the cluster role
+
+``kubectl create clusterrolebinding pv-test --clusterrole=pv-reader --serviceaccount=web:default``
+
+The YAML for a pod that includes a curl and proxy container:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curlpod
+  namespace: web
+spec:
+  containers:
+  - image: tutum/curl
+    command: ["sleep", "9999999"]
+    name: main
+  - image: linuxacademycontent/kubectl-proxy
+    name: proxy
+  restartPolicy: Always
+
+Create the pod that will allow you to curl directly from the container:
+
+kubectl apply -f curl-pod.yaml
+
+Get the pods in the web namespace:
+
+kubectl get pods -n web
+
+Open a shell to the container:
+
+kubectl exec -it curlpod -n web -- sh
+
+Access PersistentVolumes (cluster-level) from the pod:
+
+curl localhost:8001/api/v1/persistentvolumes
+
 |
 
 contents_
