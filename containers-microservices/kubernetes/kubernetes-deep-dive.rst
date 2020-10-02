@@ -3989,25 +3989,24 @@ contents_
 
 |
 
-creating tls certificates
-=========================
+tls certificates
+================
 
 |
 
 tls certificates
   tls / ssl - transport layer security,  secure sockets layer 
   
-  certificate authority - ca - is utilised to generate TLS certificates and authenticate to requested API servers
+  certificate authority - ca - is utilised to generate TLS certificates and authenticate with the requested API servers
   
+  ca certificate bundle is automatically mounted into pods using default path presented below
   
+  ``kubectl exec busybox -- ls /var/run/secrets/kubernetes.io/serviceaccount``
   
 |
 
-
-
-Find the CA certificate on a pod in your cluster:
-
-kubectl exec busybox -- ls /var/run/secrets/kubernetes.io/serviceaccount
+generating custom certificates
+==============================
 
 Download the binaries for the cfssl tool:
 
