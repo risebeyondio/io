@@ -4006,62 +4006,73 @@ tls certificates
 |
 
 generating custom certificates
-==============================
+  kubernetes has a build in api to generate and use own / custom certificates
+  
+  1. install prereqs ``cfssl`` and ``cfssljson`` 
+  
+  cfssl tools need to be installed to generate certificate signing request - csr
+  
+.. code-block:: shell
 
-Download the binaries for the cfssl tool:
-
-wget -q --show-progress --https-only --timestamping \
+  wget -q --show-progress --https-only --timestamping \
   https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 \
   https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
 
-Make the binary files executable:
+make the binaroes executable
 
-chmod +x cfssl_linux-amd64 cfssljson_linux-amd64
+``chmod +x cfssl_linux-amd64 cfssljson_linux-amd64``
 
-Move the files into your bin directory:
+move both to bin directory
 
-sudo mv cfssl_linux-amd64 /usr/local/bin/cfssl
+``sudo mv cfssl_linux-amd64 /usr/local/bin/cfssl``
 
-sudo mv cfssljson_linux-amd64 /usr/local/bin/cfssljson
+``sudo mv cfssljson_linux-amd64 /usr/local/bin/cfssljson``
 
-Check to see if you have cfssl installed correctly:
+verify ``cfssl version``
 
-cfssl version
 
-Create a CSR file:
+2. using cfssl utility generate the csr file
 
-cat <<EOF | cfssl genkey - | cfssljson -bare server
-{
-  "hosts": [
-    "my-svc.my-namespace.svc.cluster.local",
-    "my-pod.my-namespace.pod.cluster.local",
-    "172.168.0.24",
-    "10.0.34.2"
-  ],
-  "CN": "my-pod.my-namespace.pod.cluster.local",
-  "key": {
-    "algo": "ecdsa",
-    "size": 256
+.. code-block:: json
+
+  cat <<EOF | cfssl genkey - | cfssljson -bare server
+  {
+    "hosts": [
+      "my-svc.my-namespace.svc.cluster.local",
+      "my-pod.my-namespace.pod.cluster.local",
+      "172.168.0.24",
+      "10.0.34.2"
+    ],
+    "CN": "my-pod.my-namespace.pod.cluster.local",
+    "key": {
+      "algo": "ecdsa",
+      "size": 256
+    }
   }
-}
-EOF
+  EOF
 
-Create a CertificateSigningRequest API object:
+|
 
-cat <<EOF | kubectl create -f -
-apiVersion: certificates.k8s.io/v1beta1
-kind: CertificateSigningRequest
-metadata:
-  name: pod-csr.web
-spec:
-  groups:
-  - system:authenticated
-  request: $(cat server.csr | base64 | tr -d '\n')
-  usages:
-  - digital signature
-  - key encipherment
-  - server auth
-EOF
+once executed list current directory to check if ``server.csr``file is present
+
+3. create a certificate signing request api object
+
+.. code-block:: yaml
+
+  cat <<EOF | kubectl create -f -
+  apiVersion: certificates.k8s.io/v1beta1
+  kind: CertificateSigningRequest
+  metadata:
+    name: pod-csr.web
+  spec:
+    groups:
+    - system:authenticated
+    request: $(cat server.csr | base64 | tr -d '\n')
+    usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  EOF
 
 View the CSRs in the cluster:
 
