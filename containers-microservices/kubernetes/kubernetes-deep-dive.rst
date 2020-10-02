@@ -3787,6 +3787,208 @@ contents_
 
 |
 
+network policies
+================
+
+|
+
+network policies
+  by default access to pods in a cluster is open, anyone can access them
+  
+  it is crucial to restrcict their access to the operational minimum - only for pods and services that need to access them
+  
+  network policies define which pods can talk to other pods
+  
+  between pods communication security
+  
+  policies can produce 
+  
+  - ingress rules - who can access pods
+  
+  - egress rules - what destinations are allowed
+  
+  network policy can be applicable to a pod by
+  
+  - pod label selector
+  
+  - namespace label selectors
+  
+  - cidr block ip ranges
+  
+  network policies require a plugin called canal
+  
+  to check current network policies run ``kubectl get networkpolicies`` or ``kubectl get netpol``
+
+|
+
+network policies sample configurations
+  1. download and apply canal plugin  
+  
+  ``wget -O canal.yaml https://docs.projectcalico.org/v3.5/getting-started/kubernetes/installation/hosted/canal/canal.yaml``
+
+  ``kubectl apply -f canal.yaml``
+  
+  2. ingress - pod selector deny-all policy
+  
+  all pods are open by default - enabled communication, to improve security, this has to be reversed with deny-all policy, 
+  
+  within the policy pod selector is left blank ``{}`` to apply it / inherit to all pods within the namespace
+  
+  ``kubectl apply -f deny-all-net-policy.yaml``
+
+|
+
+*deny-all-net-policy.yaml spec file*
+
+|
+
+.. code-block:: yaml
+
+  apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: deny-all
+  spec:
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    
+|
+
+3. test the policy by creating a basic deployment
+
+``kubectl run nginx --image=nginx --replicas=2``
+
+to build a service, expose the deployment 
+
+``kubectl expose deployment nginx --port=80``
+
+test access to the service via busybox pod
+
+``kubectl run busybox --rm -it --image=busybox /bin/sh``
+
+interactive pod flags
+
+--rm - delet pod once finished, -it - maintain open session 
+
+from inside the busy box run
+
+``wget --spider --timeout=1 nginx``
+
+--spider flag - requests to look only (not download) through the pages
+
+once time out shows, deny-all network polikcy proves effective
+
+4. ingress - pod selector policy - open up communication between specific pods
+
+example, when web server pods have to talk to db, the ingress rule needs to declared
+
+the policy would be applied to pods with label ``app: db``
+
+ingress - in traffic would only be accepted from pods labeled ``app: web`` and additionally communicate over a port 5432
+
+``kubectl apply -f db-netpolicy.yaml``
+
+|
+
+*db-netpolicy.yaml spec file*
+
+|
+
+.. code-block:: yaml
+
+  apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: db-netpolicy
+  spec:
+    podSelector:
+      matchLabels:
+        app: db
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: web
+      ports:
+      - port: 5432
+
+label pods to get the NetworkPolicy
+
+db pods with ``kubectl label pods $pod-name app=db``
+
+web server pods with ``kubectl label pods $pod-name app=web``
+
+
+5. ingress - namespace selector policy - open up communication between specific pods
+
+*namespace based policy spec file*
+
+.. code-block:: yaml
+
+  apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: ns-netpolicy
+  spec:
+    podSelector:
+      matchLabels:
+        app: db
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            tenant: web
+      ports:
+      - port: 5432
+
+6. ingress - cidr range / ip block selector policy - open up communication between specific pods
+
+*ip block bases policy spec file*
+
+.. code-block:: yaml
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ipblock-netpolicy
+spec:
+  podSelector:
+    matchLabels:
+      app: db
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 192.168.1.0/24
+
+7 . egress - pod selector policy - open up communication between specific pods
+
+*pod selector based policy spec file*
+
+.. code-block:: yaml
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-netpol
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: db
+    ports:
+    - port: 5432
+
+|
+
+contents_
+
+|
+
 cli
 ---
 
