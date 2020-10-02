@@ -3520,7 +3520,7 @@ basics
     
 |
 
-busybox.yaml pod spec file with declared service account - jenkins 
+*busybox.yaml pod spec file with declared service account - jenkins*
 
 |
 
@@ -3544,13 +3544,28 @@ busybox.yaml pod spec file with declared service account - jenkins
 
 |
 
-apply the pod ``kubectl apply -f busybox.yaml``
+apply the pod and verify it 
 
-check cluster config - used by kubectl
+``kubectl apply -f busybox.yaml`` verify the pod ``kubectl get pods busybox -o wide``
 
-``kubectl config view``
+verification sholud confirm that service account is set to use jenkins
 
-verify configuration ``cat ~/.kube/config``
+to finish the set up of jenkins pod, two things would need to be completed on jenkins node to allow the jenkins server control other pods using jenkins service account 
+
+- add kubernetes cli 
+
+- enter the token 
+
+
+
+
+cluster kubectl access
+  to be able to use kubectl, it is required to know where the cluster is and have credentials to access it
+  
+  to verify kubectl cluster location (ip address) and credentials, run ``kubectl config view`` 
+  or
+  
+  acceess configuration file directly ``cat ~/.kube/config``
 
 configure cluster`s new credentials 
 
