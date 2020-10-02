@@ -3738,37 +3738,48 @@ many cluster level resources are not namespaced - node, persistent volumes, name
 
 ``kubectl create clusterrolebinding pv-test --clusterrole=pv-reader --serviceaccount=web:default``
 
-The YAML for a pod that includes a curl and proxy container:
+7. create, run and verify a pod that includes 2 containers 
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: curlpod
-  namespace: web
-spec:
-  containers:
-  - image: tutum/curl
-    command: ["sleep", "9999999"]
-    name: main
-  - image: linuxacademycontent/kubectl-proxy
-    name: proxy
-  restartPolicy: Always
+- 1st curl capable - allowing to curl directly from the container
 
-Create the pod that will allow you to curl directly from the container:
+- 2nd proxy - enable intra-cluster communication 
 
-kubectl apply -f curl-pod.yaml
+``kubectl apply -f curl-pod.yaml``
 
-Get the pods in the web namespace:
+``kubectl get pods -n web``
 
-kubectl get pods -n web
+|
 
-Open a shell to the container:
+*curl-pod.yaml spec file*
 
-kubectl exec -it curlpod -n web -- sh
+.. code-block:: yaml
 
-Access PersistentVolumes (cluster-level) from the pod:
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: curlpod
+    namespace: web
+  spec:
+    containers:
+    - image: tutum/curl
+      command: ["sleep", "9999999"]
+      name: main
+    - image: container-images/kubectl-proxy
+      name: proxy
+    restartPolicy: Always
 
-curl localhost:8001/api/v1/persistentvolumes
+
+8. initiate shell to the container
+
+``kubectl exec -it curlpod -n web -- sh``
+
+9. attempt to access persistent volumes from the pod
+
+confirm acceess to cluster level resources - persistent volumes 
+
+``curl localhost:8001/api/v1/persistentvolumes``
+
+if a response is received, test proves that cluster role and cluster role binding allowed pod to access a ressource at cluster level
 
 |
 
