@@ -3948,18 +3948,18 @@ web server pods with ``kubectl label pods $pod-name app=web``
 
 .. code-block:: yaml
 
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ipblock-netpolicy
-spec:
-  podSelector:
-    matchLabels:
-      app: db
-  ingress:
-  - from:
-    - ipBlock:
-        cidr: 192.168.1.0/24
+  apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: ipblock-netpolicy
+  spec:
+    podSelector:
+      matchLabels:
+        app: db
+    ingress:
+    - from:
+      - ipBlock:
+          cidr: 192.168.1.0/24
 
 7 . egress - pod selector policy - open up communication between specific pods
 
@@ -3967,21 +3967,21 @@ spec:
 
 .. code-block:: yaml
 
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: egress-netpol
-spec:
-  podSelector:
-    matchLabels:
-      app: web
-  egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: db
-    ports:
-    - port: 5432
+  apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: egress-netpol
+  spec:
+    podSelector:
+      matchLabels:
+        app: web
+    egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            app: db
+      ports:
+      - port: 5432
 
 |
 
