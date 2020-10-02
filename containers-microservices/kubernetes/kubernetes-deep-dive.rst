@@ -140,7 +140,7 @@ spec - desired state - declarative intent - yaml
    
    label selector can be used to filter through the cluster objects ``kubectl get pods --show-labels``
    
-   annotations can be also added to object metadata value, as in example ``kubectl annotate deployment $deploymentName myCorp/annotation='piotr'``
+   annotations can be also added to object metadata value, as in example ``kubectl annotate deployment $deploymentName myCorp/annotation='pogo'``
    
 filtering with field selectors
    ``kubectl get pods --field-selector status.phase=Running``
@@ -3556,45 +3556,81 @@ to finish the set up of jenkins pod, two things would need to be completed on je
 
 - enter the token 
 
+|
 
-
-
-cluster kubectl access
+cluster, kubectl, user name, context 
   to be able to use kubectl, it is required to know where the cluster is and have credentials to access it
   
-  to verify kubectl cluster location (ip address) and credentials, run ``kubectl config view`` 
+  to verify kubectl cluster location (ip address) and credentials that kubectl is using, run ``kubectl config view`` 
+  
   or
   
   acceess configuration file directly ``cat ~/.kube/config``
+  
+  each cluster user and context have the same name
+  
+  the name is applied to reffer to the contex, user or cluster
 
-configure cluster`s new credentials 
+|
 
-``kubectl config set-credentials piotr --username=piotr --password=password``
+cluster remote access 
+  to access any cluster node from external server the following has to be passed
+  
+  - cluster location - ip address
+  
+  - user
+  
+  - context
+  
+  to allow remote user (pogo) to access cluster, master node the steps below needs to be followed 
+  
+  - on the master server configure the user new credentials 
 
-create a role binding for anonymous users - not recommended
+  ``kubectl config set-credentials pogo --username=pogo --password=password``
 
-``kubectl create clusterrolebinding cluster-system-anonymous --clusterrole=cluster-admin --user=system:anonymous``
+  - create a new cluster role binding for anonymous users - not recommended in production
 
-scp certificate authority to workstation or server
+  ``kubectl create clusterrolebinding cluster-system-anonymous --clusterrole=cluster-admin --user=system:anonymous``
 
-``scp ca.crt cloud_user@[pub-ip-of-remote-server]:~/``
+  - in a non production environment certificate authority can be send to remote workstation via scp
+  
+  in production environments it would be recommended to generate public cerificate using ``cfssl`` instead of copying and sending the ca certificate itself
 
-confihure cluster address and authentication
+  change directory to where the ca is
+  
+  ``cd /etc/kubernetes/pki``
+  
+  ``scp ca.crt $use-namer@$remote-server-ip:~/``
+  
+  - login to remote server and isntall all requirements to instal kubctl client
+  
+    - get gpg key
 
-``kubectl config set-cluster kubernetes --server=https://172.31.41.61:6443 --certificate-authority=ca.crt --embed-certs=true``
+    - add it to packages and apt update
 
-set credentials for piotr
+    - ``sudo apt install kubectl``and veryfi it ``kubctl version``
+  
+  - on remote server, the cluster location, credentials and context can be configured trough kubectl
+  
+  all master node information needed to run this command can be found on master node from the output of ````kubectl config view````  
 
-``kubectl config set-credentials chad --username=chad --password=password``
+  ``kubectl config set-cluster kubernetes --server=https://172.x.x.x:6443 --certificate-authority=ca.crt --embed-certs=true``
 
-configure context for the cluster
 
-``kubectl config set-context kubernetes --cluster=kubernetes --user=chad --namespace=default``
+  on remote server set credentials for pogo user
 
-use it ``kubectl config use-context kubernetes``
+  ``kubectl config set-credentials pogo --username=pogo --password=password``
 
-check nodes ``kubectl get nodes``
+  on the remote, configure context for the cluster (contexts can be used to connect to differnt cluster from single workstation)
 
+  ``kubectl config set-context kubernetes --cluster=kubernetes --user=pogo --namespace=default``
+
+  swith to the created context ``kubectl config use-context kubernetes``
+
+  from this moment, remote user from a remote server can run same kubectl commands as if on master node
+  
+  verify it by running sample command on the re,ote server ``kubectl get nodes``
+  
 |
 
 contents_
