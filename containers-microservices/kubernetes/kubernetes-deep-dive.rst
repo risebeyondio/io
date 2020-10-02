@@ -3518,6 +3518,8 @@ basics
     
     if a particular service account is not specified in pod's manifest, the pod will apply default service account
     
+    it is a good practice to create specific service account for each pod or replicated pods and then associate it with a cluster role through role binding mechanism
+    
 |
 
 *busybox.yaml pod spec file with declared service account - jenkins*
