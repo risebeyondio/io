@@ -4146,50 +4146,54 @@ docker images security
 
 |
 
-   changing pod to use private registry
-      1. log in to a private registry using the docker
+changing pod to use private registry
+   1. log in to a private registry using the docker
 
-      ``sudo docker login -u pogo -p 'otj701c9OucKZOCx5qrRblofcNRf3W+e' pogo-private-reg.azurecr.io``
+   ``sudo docker login -u pogo -p 'otj701c9OucKZOCx5qrRblofcNRf3W+e' pogo-private-reg.azurecr.io``
 
-      once docker was used to login to the private registry, additional credentials appended to the config file
+   once docker was used to login to the private registry, additional credentials appended to the config file
 
-      ``sudo cat /home/cloud_user/.docker/config.json``
+   ``sudo cat /home/cloud_user/.docker/config.json``
 
-      2. tag an image in order to push it to a private registry
+   2. tag an image in order to push it to a private registry
 
-      ``sudo docker tag busybox:1.28.4 pogo.azurecr.io/busybox:latest``
+   ``sudo docker tag busybox:1.28.4 pogo.azurecr.io/busybox:latest``
 
-      from this point, tag latest maps to v1.28.4
+   from this point, tag latest maps to v1.28.4
 
-      3. push the image to the private registry
+   3. push the image to the private registry
 
-      ``docker push pogo.azurecr.io/busybox:latest``
+   ``docker push pogo.azurecr.io/busybox:latest``
 
-      verify it on registry side if the image is present
+   verify it on registry side if the image is present
 
-      4. create docker-registry secret
+   4. create docker-registry secret
 
-      in kubernetes three types of secrete can be generated, visible when ``kubectl create secret`` is run
+   in kubernetes three types of secrete can be generated, visible when ``kubectl create secret`` is run
 
-      - docker-registry
+   - docker-registry
 
-      - generic
+   - generic
 
-      - tls
+   - tls
 
-      ``kubectl create secret docker-registry acr --docker-server=https://pogo.azurecr.io --docker-username=pogo --docker-password='otj701c9OucKZOCx5qrRblofcNRf3W+e' --docker-email=pogo@risebeyound.io``
+   ``kubectl create secret docker-registry acr --docker-server=https://pogo.azurecr.io --docker-username=pogo --docker-password='otj701c9OucKZOCx5qrRblofcNRf3W+e' --docker-email=pogo@risebeyound.io``
 
-      5. ammend default service account to use new docker-registry secret when pulling images
+   5. ammend default service account to use new docker-registry secret when pulling images
 
-      ``kubectl patch sa default -p '{"imagePullSecrets": [{"name": "acr"}]}'``
+   ``kubectl patch sa default -p '{"imagePullSecrets": [{"name": "acr"}]}'``
 
-      verify service account ``kubectl get sa default -o yaml``
+   verify service account ``kubectl get sa default -o yaml``
 
-      output should confirm imagePullSecrets set to *acr*
+   output should confirm imagePullSecrets set to *acr*
 
-      6. create pod spec file, run and verify it
+   6. create pod spec file, run and verify it
+
+|
 
 *acr-pod.yaml pod spec file  set to pull image from a private repository*
+
+|
 
 .. code-block:: yaml
 
