@@ -31,4 +31,8 @@ references
 |
 
 .. toctree::
+  
+  docker.rst
+
+|
 
