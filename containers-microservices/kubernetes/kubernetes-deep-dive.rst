@@ -4146,48 +4146,48 @@ docker images security
 
 |
 
-  changing pod to use private registry
-    1. log in to a private registry using the docker
+   changing pod to use private registry
+      1. log in to a private registry using the docker
 
-    ``sudo docker login -u pogo -p 'otj701c9OucKZOCx5qrRblofcNRf3W+e' pogo-private-reg.azurecr.io``
+      ``sudo docker login -u pogo -p 'otj701c9OucKZOCx5qrRblofcNRf3W+e' pogo-private-reg.azurecr.io``
 
-    once docker was used to login to the private registry, additional credentials appended to the config file
-    
-    ``sudo cat /home/cloud_user/.docker/config.json``
+      once docker was used to login to the private registry, additional credentials appended to the config file
 
-    2. tag an image in order to push it to a private registry
+      ``sudo cat /home/cloud_user/.docker/config.json``
 
-    ``sudo docker tag busybox:1.28.4 pogo.azurecr.io/busybox:latest``
-    
-    from this point, tag latest maps to v1.28.4
+      2. tag an image in order to push it to a private registry
 
-    3. push the image to the private registry
+      ``sudo docker tag busybox:1.28.4 pogo.azurecr.io/busybox:latest``
 
-    ``docker push pogo.azurecr.io/busybox:latest``
-    
-    verify it on registry side if the image is present
+      from this point, tag latest maps to v1.28.4
 
-    4. create docker-registry secret
-    
-    in kubernetes three types of secrete can be generated, visible when ``kubectl create secret`` is run
-    
-    - docker-registry
-    
-    - generic
-    
-    - tls
+      3. push the image to the private registry
 
-  ``kubectl create secret docker-registry acr --docker-server=https://pogo.azurecr.io --docker-username=pogo --docker-password='otj701c9OucKZOCx5qrRblofcNRf3W+e' --docker-email=pogo@risebeyound.io``
-  
-    5. ammend default service account to use new docker-registry secret when pulling images
+      ``docker push pogo.azurecr.io/busybox:latest``
 
-    ``kubectl patch sa default -p '{"imagePullSecrets": [{"name": "acr"}]}'``
-    
-    verify service account ``kubectl get sa default -o yaml``
-    
-    output should confirm imagePullSecrets set to *acr*
-  
-    6. create pod spec file, run and verify it
+      verify it on registry side if the image is present
+
+      4. create docker-registry secret
+
+      in kubernetes three types of secrete can be generated, visible when ``kubectl create secret`` is run
+
+      - docker-registry
+
+      - generic
+
+      - tls
+
+      ``kubectl create secret docker-registry acr --docker-server=https://pogo.azurecr.io --docker-username=pogo --docker-password='otj701c9OucKZOCx5qrRblofcNRf3W+e' --docker-email=pogo@risebeyound.io``
+
+      5. ammend default service account to use new docker-registry secret when pulling images
+
+      ``kubectl patch sa default -p '{"imagePullSecrets": [{"name": "acr"}]}'``
+
+      verify service account ``kubectl get sa default -o yaml``
+
+      output should confirm imagePullSecrets set to *acr*
+
+      6. create pod spec file, run and verify it
 
 *acr-pod.yaml pod spec file  set to pull image from a private repository*
 
@@ -4206,9 +4206,258 @@ docker images security
         command: ['sh', '-c', 'echo Hello pogo! && sleep 3600']
         imagePullPolicy: Always
 
+|
+
 apply and verify the pod
 
 ``kubectl apply -f acr-pod.yaml`` ``kubectl get pods``
+
+|
+
+contents_
+
+|
+
+security contexts
+=================
+
+|
+
+security contexts   
+   define access control for pods and containers to control access to files and processes within a pod or a container itself
+   
+   lock down containers to only allow certain processes to do defined things
+   
+   context can be added to a pod spec file and then inherited by all containers within the pod
+   
+   wnen a container is run with default security
+
+   ``kubectl run pod-with-defaults --image alpine --restart Never -- /bin/sleep 999999``
+
+   it will run as root user ``uid=0 gid=0`` - not a good securituy practice
+
+   ``kubectl exec pod-with-defaults id``
+   
+   container runs as root user when the docker file does not have ``user directive``  specified / blank
+
+*alpine dockerfile*
+
+.. code-block:: yaml
+
+FROM alpine:3.9
+RUN apk add --no-cache lua5.3 lua-filesystem lua-lyaml lua-http
+COPY fetch-latest-releases.lua /usr/local/bin
+VOLUME /out
+ENTRYPOINT [ "/usr/local/bin/fetch-latest-releases.lua" ]
+
+|
+
+The YAML for a container that runs as a user:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-user-context
+spec:
+  containers:
+  - name: main
+    image: alpine
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      runAsUser: 405
+
+Create a pod that runs the container as user:
+
+kubectl apply -f alpine-user-context.yaml
+
+View the IDs of the new pod created with container user permission:
+
+kubectl exec alpine-user-context id
+
+The YAML for a pod that runs the container as non-root:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-nonroot
+spec:
+  containers:
+  - name: main
+    image: alpine
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      runAsNonRoot: true
+
+Create a pod that runs the container as non-root:
+
+kubectl apply -f alpine-nonroot.yaml
+
+View more information about the pod error:
+
+kubectl describe pod alpine-nonroot
+
+The YAML for a privileged container pod:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: privileged-pod
+spec:
+  containers:
+  - name: main
+    image: alpine
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      privileged: true
+
+Create the privileged container pod:
+
+kubectl apply -f privileged-pod.yaml
+
+View the devices on the default container:
+
+kubectl exec -it pod-with-defaults ls /dev
+
+View the devices on the privileged pod container:
+
+kubectl exec -it privileged-pod ls /dev
+
+Try to change the time on a default container pod:
+
+kubectl exec -it pod-with-defaults -- date +%T -s "12:00:00"
+
+The YAML for a container that will allow you to change the time:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kernelchange-pod
+spec:
+  containers:
+  - name: main
+    image: alpine
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      capabilities:
+        add:
+        - SYS_TIME
+
+Create the pod that will allow you to change the container’s time:
+
+kubectl run -f kernelchange-pod.yaml
+
+Change the time on a container:
+
+kubectl exec -it kernelchange-pod -- date +%T -s "12:00:00"
+
+View the date on the container:
+
+kubectl exec -it kernelchange-pod -- date
+
+The YAML for a container that removes capabilities:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: remove-capabilities
+spec:
+  containers:
+  - name: main
+    image: alpine
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      capabilities:
+        drop:
+        - CHOWN
+
+Create a pod that’s container has capabilities removed:
+
+kubectl apply -f remove-capabilities.yaml
+
+Try to change the ownership of a container with removed capability:
+
+kubectl exec remove-capabilities chown guest /tmp
+
+The YAML for a pod container that can’t write to the local filesystem:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readonly-pod
+spec:
+  containers:
+  - name: main
+    image: alpine
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      readOnlyRootFilesystem: true
+    volumeMounts:
+    - name: my-volume
+      mountPath: /volume
+      readOnly: false
+  volumes:
+  - name: my-volume
+    emptyDir:
+
+Create a pod that will not allow you to write to the local container filesystem:
+
+kubectl apply -f readonly-pod.yaml
+
+Try to write to the container filesystem:
+
+kubectl exec -it readonly-pod touch /new-file
+
+Create a file on the volume mounted to the container:
+
+kubectl exec -it readonly-pod touch /volume/newfile
+
+View the file on the volume that’s mounted:
+
+kubectl exec -it readonly-pod -- ls -la /volume/newfile
+
+The YAML for a pod that has different group permissions for different containers:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: group-context
+spec:
+  securityContext:
+    fsGroup: 555
+    supplementalGroups: [666, 777]
+  containers:
+  - name: first
+    image: alpine
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      runAsUser: 1111
+    volumeMounts:
+    - name: shared-volume
+      mountPath: /volume
+      readOnly: false
+  - name: second
+    image: alpine
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      runAsUser: 2222
+    volumeMounts:
+    - name: shared-volume
+      mountPath: /volume
+      readOnly: false
+  volumes:
+  - name: shared-volume
+    emptyDir:
+
+Create a pod with two containers and different group permissions:
+
+kubectl apply -f group-context.yaml
+
+Open a shell to the first container on that pod:
+
+kubectl exec -it group-context -c first sh
+
+
+
 
 |
 
