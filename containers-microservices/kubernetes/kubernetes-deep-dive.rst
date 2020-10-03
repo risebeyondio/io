@@ -11,15 +11,10 @@
 |
 
 .. contents:: contents
-  :depth: 10
 
 |
 
 `references <https://github.com/risebeyondio/rise/tree/master/references>`_
-
-|
-
-`top contents_`_
 
 |
 
