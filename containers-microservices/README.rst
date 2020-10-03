@@ -27,3 +27,16 @@ references
 |
 
 `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
+|
+
+.. toctree::
+    :maxdepth: 2
+    :numbered:
+    :titlesonly:
+    :glob:
+    :hidden:
+
+    intro.rst
+    chapter1.rst
+    chapter2.rst
