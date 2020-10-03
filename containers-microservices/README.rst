@@ -29,10 +29,3 @@ references
 `references <https://github.com/risebeyondio/rise/tree/master/references>`_
 
 |
-
-.. toctree::
-  
-  docker.rst
-
-|
-
