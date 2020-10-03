@@ -19,7 +19,7 @@
 
 |
 
-`top <contents>`_
+`top contents_`_
 
 |
 
