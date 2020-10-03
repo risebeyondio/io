@@ -4076,24 +4076,112 @@ below spec file refernces server.csr file created in previous step
     - server auth
   EOF
 
-view all csr in the cluster ``kubectl get csr`` - new csr object should be now ``pending`` state 
+view all csr in the cluster ``kubectl get csr`` - new csr object should be now ``pending`` condition 
 
 get more in depth csr view ``kubectl describe csr pod-csr.web``
 
 4. approve the csr
 
-without the administrator approval the csr would remain in pending state 
+without the administrator'r approval the csr would remain in pending state 
 
 ``kubectl certificate approve pod-csr.web``
 
-5. check the certificate within your CSR:
+5. view the certificate within the csr
 
 kubectl get csr pod-csr.web -o yaml
 
-Extract and decode your certificate to use in a file:
+condition should now show ``approved`` and contents of certificate itsellf should also be visable
+
+6. apply jsonpath to extract, base64 to decode the certificate and save it
 
 ``kubectl get csr pod-csr.web -o jsonpath='{.status.certificate}' \
     | base64 --decode > server.crt``
+
+|
+
+contents_
+
+|
+
+secure images
+=============
+
+|
+
+docker images security
+  check where docker credentials are kept
+  
+  ``sudo vim /home/$user-name/.docker/config.json``
+  
+  config file freequently contains credential information
+  
+  log in to docker hub ``sudo docker login``
+
+  verify what images are currently stored locally on workstation being used 
+  
+  ``sudo docker images``
+
+  pull a new image for later use
+
+  ``sudo docker pull busybox:1.28.4``
+  
+  locally stored images ``sudo docker images`` should show now the busybox as well
+
+  it is a good sercurity practice not to leave docker images on local machine
+  
+  even if images are pulled from private registry, while other users do not have the image secrets, as it is on local disk, they can still use it
+  
+  to prevent it set image pull policy to always - never keep images on the disk for unauthorised individuals to use
+  
+  
+  
+  Log in to a private registry using the docker login command:
+
+sudo docker login -u podofminerva -p 'otj701c9OucKZOCx5qrRblofcNRf3W+e' podofminerva.azurecr.io
+
+View your stored credentials:
+
+sudo vim /home/cloud_user/.docker/config.json
+
+Tag an image in order to push it to a private registry:
+
+sudo docker tag busybox:1.28.4 podofminerva.azurecr.io/busybox:latest
+
+Push the image to your private registry:
+
+docker push podofminerva.azurecr.io/busybox:latest
+
+Create a new docker-registry secret:
+
+kubectl create secret docker-registry acr --docker-server=https://podofminerva.azurecr.io --docker-username=podofminerva --docker-password='otj701c9OucKZOCx5qrRblofcNRf3W+e' --docker-email=user@example.com
+
+Modify the default service account to use your new docker-registry secret:
+
+kubectl patch sa default -p '{"imagePullSecrets": [{"name": "acr"}]}'
+
+The YAML for a pod using an image from a private repository:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: acr-pod
+  labels:
+    app: busybox
+spec:
+  containers:
+    - name: busybox
+      image: podofminerva.azurecr.io/busybox:latest
+      command: ['sh', '-c', 'echo Hello Kubernetes! && sleep 3600']
+      imagePullPolicy: Always
+
+Create the pod from the private image:
+
+kubectl apply -f acr-pod.yaml
+
+View the running pod:
+
+kubectl get pods
+
 
 |
 
