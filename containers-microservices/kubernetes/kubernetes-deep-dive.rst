@@ -15,6 +15,9 @@
 
 |
 
+contents_
+
+|
 architecture
 -------------
 
@@ -4131,57 +4134,81 @@ docker images security
   
   even if images are pulled from private registry, while other users do not have the image secrets, as it is on local disk, they can still use it
   
-  to prevent it set image pull policy to always - never keep images on the disk for unauthorised individuals to use
+  to prevent it, set image pull policy to always - never keep images on the disk for unauthorised individuals to use
   
+  ``imagePullPolicy: Always`` setting means that whenever pull is made it will be always pull it from registry even if the image is trorad on local disk 
   
+  if containers are pulled from public registry, the risk of pulling faulty images that could crash all pods on a node is more significant as compared with privare registry
   
-  Log in to a private registry using the docker login command:
+  additionally some containers are more prone to vulnerabilities
+  
+  open source tools such as ``CoreOs Clair`` and ``Aqua Microscanner`` are good security practice to prevent deployments of vulnerable container to include the tools in a deployment pipline 
 
-sudo docker login -u podofminerva -p 'otj701c9OucKZOCx5qrRblofcNRf3W+e' podofminerva.azurecr.io
+|
 
-View your stored credentials:
+  changing pod to use private registry
+    1. log in to a private registry using the docker
 
-sudo vim /home/cloud_user/.docker/config.json
+    ``sudo docker login -u pogo -p 'otj701c9OucKZOCx5qrRblofcNRf3W+e' pogo-private-reg.azurecr.io``
 
-Tag an image in order to push it to a private registry:
+    once docker was used to login to the private registry, additional credentials appended to the config file
+    
+    ``sudo cat /home/cloud_user/.docker/config.json``
 
-sudo docker tag busybox:1.28.4 podofminerva.azurecr.io/busybox:latest
+    2. tag an image in order to push it to a private registry
 
-Push the image to your private registry:
+    ``sudo docker tag busybox:1.28.4 pogo.azurecr.io/busybox:latest``
+    
+    from this point, tag latest maps to v1.28.4
 
-docker push podofminerva.azurecr.io/busybox:latest
+    3. push the image to the private registry
 
-Create a new docker-registry secret:
+    ``docker push pogo.azurecr.io/busybox:latest``
+    
+    verify it on registry side if the image is present
 
-kubectl create secret docker-registry acr --docker-server=https://podofminerva.azurecr.io --docker-username=podofminerva --docker-password='otj701c9OucKZOCx5qrRblofcNRf3W+e' --docker-email=user@example.com
+    4. create docker-registry secret
+    
+    in kubernetes three types of secrete can be generated, visible when ``kubectl create secret`` is run
+    
+    - docker-registry
+    
+    - generic
+    
+    - tls
 
-Modify the default service account to use your new docker-registry secret:
+  ``kubectl create secret docker-registry acr --docker-server=https://pogo.azurecr.io --docker-username=pogo --docker-password='otj701c9OucKZOCx5qrRblofcNRf3W+e' --docker-email=pogo@risebeyound.io``
+  
+    5. ammend default service account to use new docker-registry secret when pulling images
 
-kubectl patch sa default -p '{"imagePullSecrets": [{"name": "acr"}]}'
+    ``kubectl patch sa default -p '{"imagePullSecrets": [{"name": "acr"}]}'``
+    
+    verify service account ``kubectl get sa default -o yaml``
+    
+    output should confirm imagePullSecrets set to *acr*
+  
+    6. create pod spec file, run and verify it
 
-The YAML for a pod using an image from a private repository:
+*acr-pod.yaml pod spec file  set to pull image from a private repository*
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: acr-pod
-  labels:
-    app: busybox
-spec:
-  containers:
-    - name: busybox
-      image: podofminerva.azurecr.io/busybox:latest
-      command: ['sh', '-c', 'echo Hello Kubernetes! && sleep 3600']
-      imagePullPolicy: Always
+.. code-block:: yaml
 
-Create the pod from the private image:
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: acr-pod
+    labels:
+      app: busybox
+  spec:
+    containers:
+      - name: busybox
+        image: pogo.azurecr.io/busybox:latest
+        command: ['sh', '-c', 'echo Hello pogo! && sleep 3600']
+        imagePullPolicy: Always
 
-kubectl apply -f acr-pod.yaml
+apply and verify the pod
 
-View the running pod:
-
-kubectl get pods
-
+``kubectl apply -f acr-pod.yaml`` ``kubectl get pods``
 
 |
 
@@ -4218,3 +4245,8 @@ references
 |
 
 `references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
+|
+
+`back to top contents_`
+
