@@ -4244,62 +4244,84 @@ security contexts
    
    container runs as root user when the docker file does not have ``user directive``  specified / blank
 
-*alpine dockerfile*
+|
 
-.. code-block:: yaml
+*alpine default dockerfile with no user directive specified*
 
-FROM alpine:3.9
-RUN apk add --no-cache lua5.3 lua-filesystem lua-lyaml lua-http
-COPY fetch-latest-releases.lua /usr/local/bin
-VOLUME /out
-ENTRYPOINT [ "/usr/local/bin/fetch-latest-releases.lua" ]
+*when deployed it will run as root*
 
 |
 
-The YAML for a container that runs as a user:
+.. code-block:: yaml
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: alpine-user-context
-spec:
-  containers:
-  - name: main
-    image: alpine
-    command: ["/bin/sleep", "999999"]
-    securityContext:
-      runAsUser: 405
+   FROM alpine:3.9
+   RUN apk add --no-cache lua5.3 lua-filesystem lua-lyaml lua-http
+   COPY fetch-latest-releases.lua /usr/local/bin
+   VOLUME /out
+   ENTRYPOINT [ "/usr/local/bin/fetch-latest-releases.lua" ]
 
-Create a pod that runs the container as user:
+|
 
-kubectl apply -f alpine-user-context.yaml
+preventing containers from running as root in pods
+   within a pod spec file in *container* field configure ``securityContext.runAsUser`` property to match required no root user
 
-View the IDs of the new pod created with container user permission:
+|
 
-kubectl exec alpine-user-context id
+*alpine-user-context.yaml spec file deploying container set to ``runAsUser: 405`` - guest user*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: alpine-user-context
+   spec:
+     containers:
+     - name: main
+       image: alpine
+       command: ["/bin/sleep", "999999"]
+       securityContext:
+         runAsUser: 405
+
+|
+
+apply it ``kubectl apply -f alpine-user-context.yaml``
+
+verify user ids ``kubectl exec alpine-user-context id``
+
+the output should confirm uid 405 (guest) and gid 100
 
 The YAML for a pod that runs the container as non-root:
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: alpine-nonroot
-spec:
-  containers:
-  - name: main
-    image: alpine
-    command: ["/bin/sleep", "999999"]
-    securityContext:
-      runAsNonRoot: true
 
-Create a pod that runs the container as non-root:
+*alpine-nonroot.yaml spec file deploying container where user has to be non root, but user uid is not known or not important ``runAsNonRoot: true``*
 
-kubectl apply -f alpine-nonroot.yaml
+|
 
-View more information about the pod error:
+.. code-block:: yaml
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: alpine-nonroot
+   spec:
+     containers:
+     - name: main
+       image: alpine
+       command: ["/bin/sleep", "999999"]
+       securityContext:
+         runAsNonRoot: true
+         
+|
 
-kubectl describe pod alpine-nonroot
+run it ``kubectl apply -f alpine-nonroot.yaml``
 
+|
+
+container run in privilleged mode
+   it is a good solution  scenarios when pod has to use node`s kernel features
 The YAML for a privileged container pod:
 
 apiVersion: v1
