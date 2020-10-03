@@ -15,9 +15,14 @@
 
 |
 
-contents_
+`references <https://github.com/risebeyondio/rise/tree/master/references>`_
 
 |
+
+`top <contents>`_
+
+|
+
 architecture
 -------------
 
@@ -4247,6 +4252,4 @@ references
 `references <https://github.com/risebeyondio/rise/tree/master/references>`_
 
 |
-
-`back to top contents_`
 
