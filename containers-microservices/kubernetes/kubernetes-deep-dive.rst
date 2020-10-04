@@ -4420,7 +4420,7 @@ multiple capabilities can be definied via list
 |
 
 revoking capabilities
-   below spec file removes ability to ammend file' ownership 
+   below spec file removes ability to ammend file's ownership 
 
 |
 
@@ -4430,19 +4430,19 @@ revoking capabilities
 
 .. code-block:: yaml
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: remove-capabilities
-spec:
-  containers:
-  - name: main
-    image: alpine
-    command: ["/bin/sleep", "999999"]
-    securityContext:
-      capabilities:
-        drop:
-        - CHOWN
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: remove-capabilities
+   spec:
+     containers:
+     - name: main
+       image: alpine
+       command: ["/bin/sleep", "999999"]
+       securityContext:
+         capabilities:
+           drop:
+           - CHOWN
 
 |
 
@@ -4457,11 +4457,11 @@ preventing container from writing to local file system
    
    instead, the container's processes should only write to persistent volumes
    
-   to achieve it, ``readOnlyRootFilesystem: true`` property could be used
+   to achieve it, ``readOnlyRootFilesystem: true`` property should be set
 
 |
 
-   *readonly-pod.yaml spec file*
+*readonly-pod.yaml spec file*
 
 |   
 
@@ -4487,63 +4487,95 @@ preventing container from writing to local file system
        emptyDir:
 
 
-``kubectl apply -f readonly-pod.yaml``
+apply it ``kubectl apply -f readonly-pod.yaml``
 
-Try to write to the container filesystem:
+verify if writing to the container filesystem is now blocked
 
 ``kubectl exec -it readonly-pod touch /new-file``
 
-Create a file on the volume mounted to the container:
+verify if writing to volume mounted to the container works
 
 kubectl exec -it readonly-pod touch /volume/newfile
 
-View the file on the volume that’s mounted:
+confirm it ``kubectl exec -it readonly-pod -- ls -la /volume``
 
-kubectl exec -it readonly-pod -- ls -la /volume/newfile
+|
 
+setting pod level security permissions
+   setting it is simmilar to conteiner level settings
+   
+   instead of declaring ``securityContext`` under ``conteiners section``, it needs to be defined under pod's ``spec`` part
+   
+   
+   
 The YAML for a pod that has different group permissions for different containers:
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: group-context
-spec:
-  securityContext:
-    fsGroup: 555
-    supplementalGroups: [666, 777]
-  containers:
-  - name: first
-    image: alpine
-    command: ["/bin/sleep", "999999"]
-    securityContext:
-      runAsUser: 1111
-    volumeMounts:
-    - name: shared-volume
-      mountPath: /volume
-      readOnly: false
-  - name: second
-    image: alpine
-    command: ["/bin/sleep", "999999"]
-    securityContext:
-      runAsUser: 2222
-    volumeMounts:
-    - name: shared-volume
-      mountPath: /volume
-      readOnly: false
-  volumes:
-  - name: shared-volume
-    emptyDir:
+.. code-block:: yaml
 
-Create a pod with two containers and different group permissions:
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: group-context
+   spec:
+     securityContext:
+       fsGroup: 555
+       supplementalGroups: [666, 777]
+     containers:
+     - name: first
+       image: alpine
+       command: ["/bin/sleep", "999999"]
+       securityContext:
+         runAsUser: 1111
+       volumeMounts:
+       - name: shared-volume
+         mountPath: /volume
+         readOnly: false
+     - name: second
+       image: alpine
+       command: ["/bin/sleep", "999999"]
+       securityContext:
+         runAsUser: 2222
+       volumeMounts:
+       - name: shared-volume
+         mountPath: /volume
+         readOnly: false
+     volumes:
+     - name: shared-volume
+       emptyDir:
 
-kubectl apply -f group-context.yaml
+apply a pod containing two containers and different group permissions
 
-Open a shell to the first container on that pod:
+``kubectl apply -f group-context.yaml``
 
-kubectl exec -it group-context -c first sh
+initiate shell to specific container - first (-c flag)
 
+``kubectl exec -it group-context -c first sh``
 
+verify the user and group settings ``id``
 
+the output present ``uid=1111 gid=0(root) groups==555,666,777``
+
+ensure test file ownership on persistent volume
+
+``echo file > /volume/file``
+
+``ls -l /volume``
+
+output should confirms
+
+``uid 1111, gid 555``
+
+|
+
+ensure test file ownership on local file system (not on the volume)
+
+``echo file > /tmp/file``
+
+``ls -l /tmp`` 
+
+the output proves 
+
+``uid 1111 gid 0 (root)``
 
 |
 
