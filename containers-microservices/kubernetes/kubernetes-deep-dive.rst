@@ -4321,66 +4321,114 @@ run it ``kubectl apply -f alpine-nonroot.yaml``
 |
 
 container run in privilleged mode
-   it is a good solution  scenarios when pod has to use node`s kernel features
-The YAML for a privileged container pod:
+   it is a good solution in scenarios when pod has to use node`s kernel features
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: privileged-pod
-spec:
-  containers:
-  - name: main
-    image: alpine
-    command: ["/bin/sleep", "999999"]
-    securityContext:
-      privileged: true
+   create spec file and run it 
+|
 
-Create the privileged container pod:
+*privileged-pod.yaml spec file*
 
-kubectl apply -f privileged-pod.yaml
+|
 
-View the devices on the default container:
+.. code-block:: yaml
 
-kubectl exec -it pod-with-defaults ls /dev
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: privileged-pod
+   spec:
+     containers:
+     - name: main
+       image: alpine
+       command: ["/bin/sleep", "999999"]
+       securityContext:
+         privileged: true
 
-View the devices on the privileged pod container:
+|
 
-kubectl exec -it privileged-pod ls /dev
+``kubectl apply -f privileged-pod.yaml``
 
-Try to change the time on a default container pod:
 
-kubectl exec -it pod-with-defaults -- date +%T -s "12:00:00"
 
-The YAML for a container that will allow you to change the time:
+listing devices on default container will only show the pod`s devices
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: kernelchange-pod
-spec:
-  containers:
-  - name: main
-    image: alpine
-    command: ["/bin/sleep", "999999"]
-    securityContext:
-      capabilities:
-        add:
-        - SYS_TIME
+``kubectl exec -it pod-with-defaults ls /dev``
 
-Create the pod that will allow you to change the container’s time:
+listing devices on the privileged pod container will list pod's and node's devices
 
-kubectl run -f kernelchange-pod.yaml
+``kubectl exec -it privileged-pod ls /dev``
 
-Change the time on a container:
+|
 
-kubectl exec -it kernelchange-pod -- date +%T -s "12:00:00"
 
-View the date on the container:
+kernel level access to container
+   kubernetes allow to control access to kernel features through the use of securityContext.capabilities property
+   
+   to verify if container has access to kernel features try to mofify system time 
+   
+   ``kubectl exec -it pod-with-defaults -- date +%T -s "12:00:00"``
 
-kubectl exec -it kernelchange-pod -- date
+   if not allowed, the operation will not be permitted
 
-The YAML for a container that removes capabilities:
+|
+
+adding capabilities
+   to enable access to system time ``SYS_TIME``would need to be added ad in below spec file
+
+|
+
+*kernelchange-pod.yaml spec file*
+
+|
+
+.. code-block:: yaml
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: kernelchange-pod
+   spec:
+     containers:
+     - name: main
+       image: alpine
+       command: ["/bin/sleep", "999999"]
+       securityContext:
+         capabilities:
+           add:
+           - SYS_TIME
+
+|
+
+apply it ``kubectl run -f kernelchange-pod.yaml``
+
+re-run the command ``kubectl exec -it kernelchange-pod -- date +%T -s "12:00:00"``
+
+verify it ``kubectl exec -it kernelchange-pod -- date``
+
+|
+
+multiple capabilities can be definied via list
+
+|
+
+.. code-block:: yaml
+
+   ...
+   capabilities:
+           add: ["SYS_TIME", "NET_ADMIN"]
+
+|
+
+revoking capabilities
+   below spec file removes ability to ammend file' ownership 
+
+|
+
+*remove-capabilities.yaml spec file*
+
+|
+
+.. code-block:: yaml
 
 apiVersion: v1
 kind: Pod
@@ -4396,42 +4444,54 @@ spec:
         drop:
         - CHOWN
 
-Create a pod that’s container has capabilities removed:
+|
 
-kubectl apply -f remove-capabilities.yaml
+apply it ``kubectl apply -f remove-capabilities.yaml``
 
-Try to change the ownership of a container with removed capability:
+verify if operation is not permitted ``kubectl exec remove-capabilities chown guest /tmp``
 
-kubectl exec remove-capabilities chown guest /tmp
+|
 
-The YAML for a pod container that can’t write to the local filesystem:
+preventing container from writing to local file system
+   as containers file systems are ephemeral, it is a good practice to stop their processes writing / saving to own file system
+   
+   instead, the container's processes should only write to persistent volumes
+   
+   to achieve it, ``readOnlyRootFilesystem: true`` property could be used
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: readonly-pod
-spec:
-  containers:
-  - name: main
-    image: alpine
-    command: ["/bin/sleep", "999999"]
-    securityContext:
-      readOnlyRootFilesystem: true
-    volumeMounts:
-    - name: my-volume
-      mountPath: /volume
-      readOnly: false
-  volumes:
-  - name: my-volume
-    emptyDir:
+|
 
-Create a pod that will not allow you to write to the local container filesystem:
+   *readonly-pod.yaml spec file*
 
-kubectl apply -f readonly-pod.yaml
+|   
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: readonly-pod
+   spec:
+     containers:
+     - name: main
+       image: alpine
+       command: ["/bin/sleep", "999999"]
+       securityContext:
+         readOnlyRootFilesystem: true
+       volumeMounts:
+       - name: my-volume
+         mountPath: /volume
+         readOnly: false
+     volumes:
+     - name: my-volume
+       emptyDir:
+
+
+``kubectl apply -f readonly-pod.yaml``
 
 Try to write to the container filesystem:
 
-kubectl exec -it readonly-pod touch /new-file
+``kubectl exec -it readonly-pod touch /new-file``
 
 Create a file on the volume mounted to the container:
 
