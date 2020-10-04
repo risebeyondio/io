@@ -4573,9 +4573,233 @@ ensure test file ownership on local file system (not on the volume)
 
 ``ls -l /tmp`` 
 
-the output proves 
+the output should prove 
 
 ``uid 1111 gid 0 (root)``
+
+|
+
+contents_
+
+|
+
+securing persistent key value store
+===================================
+
+|
+
+*secrets*
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-secrets.png
+   :alt: secrets
+
+|
+
+persistent key value store
+   used to permanently store configuration data that may include sensitive information that needs to be passed to containers within a pod, cluster
+   
+  to keep the store data secure ``secrets`` are used 
+   
+|
+
+secrets
+   are applied to secure sensitive data within a pod
+   
+   secrets data never gets written to disk as it's stored in an in-memory filesystem - tmpfs
+   
+   risk of the secret being exposed during the pod lifecycle is less significant as secrets can be created independently of pods
+   
+   secrets are maps that hold key value pairs
+   
+   they can be passed to a container as
+   
+   - environment variables
+   
+   - exposed seccrets as files in a volume
+   
+   unfortunatelly applications commonly store environment variables in error reports or save them in application start up log
+   
+   this creates exposure risk, therfore best practice is not to use environment variables to store secrets
+      
+   secrets mounted through volumes never get written to physical storage
+   
+   these secrets are stored as files in an in-memory filesystem - tmpfs
+   
+   by default, each pod has automatically attached secret volume - the default
+   
+   when secrets are exposed to a container through secret volume, secret entry value is decoded 
+   
+   once decoded, it gets written to the file in its actual form
+   
+   the application itsel has no need to decode it, it can see it directly
+   
+   to check default secrets in cluster run ``kubectl get secrets``
+   
+   secret named ``default-token-...(hash value)`` should be visible
+
+   to see the default secret mounted to specific pod, execute (here pod-with-defaults)
+
+   ``kubectl describe pods pod-with-defaults``
+   
+   the mounted secret information could be seen in similar format 
+   
+   ``/var/run/secrets/kubernets.io/service account from default-token-...(hash value)``
+
+   it is posiible to descirbe the secret and check the token, certificate and namespace within the secret
+   
+   ``kubectl describe secret $default-token-...(hash value)``
+
+|
+
+sample use case - https server
+   https server to serve traffic needs a certificate and a key
+   
+   both need to be kept secure
+   
+   1. create a key for a https server ``openssl genrsa -out https.key 2048``
+
+   2. create a certificate for the server:
+
+   ``openssl req -new -x509 -key https.key -out https.cert -days 3650 -subj /CN=www.risebeyond.io``
+
+   3. generate an empty file to be used by the secret ``touch file``
+   
+   4. verify the three required files are present ``ls``
+   
+   ``https.cert https.key file``
+
+   5. generate a secret from the three files - key, cert and file
+
+   ``kubectl create secret generic sample-https-secret --from-file=https.key --from-file=https.cert --from-file=file``
+
+   6. verify it 
+   
+   ``kubectl get secrets``
+   
+   check yaml that got generated for the new secret
+
+   ``kubectl get secrets sample-https-secret -o yaml``
+   
+   the output shows thar both https.cert and https.key are now base64 encoded
+   
+   7. create configMap to mount the secret to a pod
+
+|
+
+*configmap.yaml*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: ConfigMap
+   metadata:
+     name: config
+   data:
+     my-nginx-config.conf: |
+       server {
+           listen              80;
+           listen              443 ssl;
+           server_name         www.risebeyond.io;
+           ssl_certificate     certs/https.cert;
+           ssl_certificate_key certs/https.key;
+           ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+           ssl_ciphers         HIGH:!aNULL:!MD5;
+
+           location / {
+               root   /usr/share/nginx/html;
+               index  index.html index.htm;
+           }
+
+       }
+     sleep-interval: |
+       25
+
+|
+
+8. create pod spec file utilising new secret
+
+|
+
+*example-https.yaml*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: example-https
+   spec:
+     containers:
+     - image: linuxacademycontent/fortune
+       name: html-web
+       env:
+       - name: INTERVAL
+         valueFrom:
+           configMapKeyRef:
+             name: config
+             key: sleep-interval
+       volumeMounts:
+       - name: html
+         mountPath: /var/htdocs
+     - image: nginx:alpine
+       name: web-server
+       volumeMounts:
+       - name: html
+         mountPath: /usr/share/nginx/html
+         readOnly: true
+       - name: config
+         mountPath: /etc/nginx/conf.d
+         readOnly: true
+       - name: certs
+         mountPath: /etc/nginx/certs/
+         readOnly: true
+       ports:
+       - containerPort: 80
+       - containerPort: 443
+     volumes:
+     - name: html
+       emptyDir: {}
+     - name: config
+       configMap:
+         name: config
+         items:
+         - key: my-nginx-config.conf
+           path: https.conf
+     - name: certs
+       secret:
+         secretName: sample-https-secret
+
+9. apply both the config map and the pod spec files
+
+``kubectl apply -f configmap.yaml``
+
+``kubectl apply -f example-https.yaml``
+
+10. verify the operation
+
+verify pods ``kubectl get pods``
+
+verify  nginx conf via ConfigMap ``kubectl describe configmap``
+
+check how the certificate mounted to the container
+
+``kubectl exec example-https -c web-server -- mount | grep certs``
+
+above check should prove that the certificate is mounted to ``tmpfs`` and that the secret data is never written to physical storage or local file system - security measure to prevent secret data leak
+
+11. open port 443 - set port forwarding on the pod to serve https traffic
+
+``kubectl port-forward example-https 8443:443 &``
+
+12. on same server open new seesion and perform curl to check web server response
+
+(localhost as on the sam server)
+
+``curl https://localhost:8443 -k``
 
 |
 
