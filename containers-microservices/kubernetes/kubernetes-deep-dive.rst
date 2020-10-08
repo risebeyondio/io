@@ -4807,6 +4807,245 @@ contents_
 
 |
 
+monitoring
+----------
+
+|
+
+cluster components
+==================
+
+|
+
+metrics server
+   the server metrcis data is exposed via api
+   
+   it discovers every node in a cluster and gets from it usage of
+   
+   - memory
+   
+   - cpu
+
+|
+
+metrics server installation and usage
+
+   install it in a cluster
+
+   ``kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml``
+   
+   verify api call rsponse from the server with --raw flag (directly to the server)
+   
+   ``kubectl get --raw /apis/metrics.k8s.io/``
+
+   gather CPU and memory utilization of the cluster' nodes
+
+   ``kubectl top node``
+
+   gather cpu and memory utilization of cluster' pods
+
+   ``kubectl top pods``
+
+   gather pods metrics in all namespaces
+
+   ``kubectl top pods --all-namespaces``
+
+   gather pods metrics in a single namespace
+
+   ``kubectl top pods -n kube-system``
+
+   gather pods metrics using label selector
+
+   ``kubectl top pod -l run=pod-with-defaults``
+
+   gather a specific pods metrics
+
+   ``kubectl top pod $pod-name``
+
+  check the metrics of containers inside a pod 
+
+   ``kubectl top pods $pod-name --containers``
+
+|
+
+contents_
+
+|
+
+applications
+============
+
+|
+
+*application monitoring probs*
+
+|
+
+.. fig:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-monitoring-probs.png
+   :alt: application monitoring probes
+   
+*source linuxacademy.com*   
+   
+|
+
+application monitoring
+   kubernetes offers approaches of two probes - liveness and readiness
+   
+   probe specifics need to be added to a pod's spec file
+
+   
+liveness probes
+   vrifies if a pod is alive - usefull when problems occur with memory leaks, deadlocks, infinite loops
+   
+   if liveness probe fails, attempt to restart container will be made
+
+   three types include
+
+   - http get probe
+
+   the get requests sent to container ip address, port and path
+
+   in case of no response, it attempts to restart container 
+
+   - tcp socket probe
+
+   attempts to open tcp connetction to a specified containe's port
+
+   in case of no response, it attempts to restart container 
+
+
+   - exec probe
+
+   executes a specified command inside a container and verifies the exit code
+
+   in case of non zero return code response, it attempts to restart container 
+
+|
+
+*liveness.yaml pod with the probe configured spec file*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: liveness
+   spec:
+     containers:
+     - image: image-location/kubeserve
+       name: kubeserve
+       livenessProbe:
+         httpGet:
+           path: /
+           port: 80
+
+|
+
+run the service and a pods with livness probe:
+
+``kubectl apply -f liveness.yaml``
+
+verify wether liveness check passed or failed
+
+``kubectl get pods``
+
+|
+
+readiness probes
+   verifies if the pod is prepared to receive client requests
+   
+   if readiness probe fails, the container will be removed from endpoint object (it will not be atttempted to restart)
+
+|
+
+*readiness.yaml for a service and two pods with readiness probesconfigure on both containers*
+
+|
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: nginx
+   spec:
+     type: LoadBalancer
+     ports:
+     - port: 80
+       targetPort: 80
+     selector:
+       app: nginx
+   
+   ---
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: nginx
+     labels:
+       app: nginx
+   spec:
+     containers:
+     - name: nginx
+       image: nginx
+       readinessProbe:
+         httpGet:
+           path: /
+           port: 80
+         initialDelaySeconds: 5
+         periodSeconds: 5
+  
+  ---
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: nginxpd
+     labels:
+       app: nginx
+   spec:
+     containers:
+     - name: nginx
+       image: nginx:BadImageTAG
+       readinessProbe:
+         httpGet:
+           path: /
+           port: 80
+         initialDelaySeconds: 5
+         periodSeconds: 5
+
+|
+
+apply the service and both pods with readiness probes - one pod including BadImageTAG
+
+``kubectl apply -f readiness.yaml``
+
+verify wether the readiness check passed or failed
+
+``kubectl get pods``
+
+verify if the failed pod has been added to endpoints' list
+
+``kubectl get ep``
+
+fix the problem - remove BadImageTAG and enter it back into the service
+
+``kubectl edit pod $pod-name``
+
+list endpoint and pods, the repaired pod got automatically added to to active - ready services
+
+``kubectl get ep``
+
+``kubectl get pods``
+
+|
+
+contents_
+
+|
+
 cli
 ---
 
