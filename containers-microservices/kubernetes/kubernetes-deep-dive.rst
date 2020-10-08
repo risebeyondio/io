@@ -4882,6 +4882,7 @@ applications
 |
 
 .. fig:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-monitoring-probs.png
+   
    :alt: application monitoring probes
    
 *source linuxacademy.com*   
