@@ -5046,6 +5046,137 @@ contents_
 
 |
 
+component logs
+==============
+
+|
+
+*cluster logs*
+
+|
+
+.. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-logs.png
+   :alt: cluster logs
+
+|   
+
+logs
+   container logs location ``/var/log/containers``
+
+   kubelet (which runs as process) logs location ``/var/log``
+   
+   no kubernetes native log rotation solution
+   
+   options to automatically rotate logs
+   
+   - log rotate tool
+   
+   - docker log-opt
+
+|   
+
+manual logs approch
+   below spec file represent manual set up 
+   
+|
+
+*twolog.yaml pod spec - maually set to write into 2 files*
+
+.. code-block:: yaml
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: counter
+   spec:
+     containers:
+     - name: count
+       image: busybox
+       args:
+       - /bin/sh
+       - -c
+       - >
+         i=0;
+         while true;
+         do
+           echo "$i: $(date)" >> /var/log/1.log;
+           echo "$(date) INFO $i" >> /var/log/2.log;
+           i=$((i+1));
+           sleep 1;
+         done
+       volumeMounts:
+       - name: varlog
+         mountPath: /var/log
+     volumes:
+     - name: varlog
+       emptyDir: {}
+
+apply it ``kubectl apply -f twolog.yaml``
+
+verify container log directory ``kubectl exec counter -- ls /var/log``
+
+|
+
+side car logs approach
+   content
+
+|
+
+*The YAML for a sidecar container that will tail the logs for each type°
+
+.. code-block:: yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counter
+spec:
+  containers:
+  - name: count
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - >
+      i=0;
+      while true;
+      do
+        echo "$i: $(date)" >> /var/log/1.log;
+        echo "$(date) INFO $i" >> /var/log/2.log;
+        i=$((i+1));
+        sleep 1;
+      done
+    volumeMounts:
+    - name: varlog
+      mountPath: /var/log
+  - name: count-log-1
+    image: busybox
+    args: [/bin/sh, -c, 'tail -n+1 -f /var/log/1.log']
+    volumeMounts:
+    - name: varlog
+      mountPath: /var/log
+  - name: count-log-2
+    image: busybox
+    args: [/bin/sh, -c, 'tail -n+1 -f /var/log/2.log']
+    volumeMounts:
+    - name: varlog
+      mountPath: /var/log
+  volumes:
+  - name: varlog
+    emptyDir: {}
+
+|
+
+check 1st logs type separately
+
+``kubectl logs counter count-log-1``
+
+check second logss type
+
+``kubectl logs counter count-log-2``
+
+|
+
 cli
 ---
 
