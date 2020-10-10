@@ -5186,6 +5186,24 @@ check 2nd logs type within its own container
 
 |
 
+contents_
+
+|
+
+applications
+============
+
+|
+
+monitoring applications
+   applications usually write their logs to ``stdout`` and ``stderr`` 
+   
+   content
+
+contents_
+
+|
+
 cli
 ---
 
