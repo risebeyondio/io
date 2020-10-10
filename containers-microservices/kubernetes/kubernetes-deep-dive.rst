@@ -5115,7 +5115,9 @@ multiple logs in a single location
 
 apply it ``kubectl apply -f twolog.yaml``
 
-verify container log directory ``kubectl exec counter -- ls /var/log``
+check single log directory fo all logs
+
+``kubectl exec counter -- ls /var/log``
 
 |
 
@@ -5174,11 +5176,11 @@ sidecar logs approach
 
 |
 
-check 1st logs type separately
+check 1st logs type within its own container
 
 ``kubectl logs counter count-log-1``
 
-check second logss type
+check 2nd logs type within its own container
 
 ``kubectl logs counter count-log-2``
 
