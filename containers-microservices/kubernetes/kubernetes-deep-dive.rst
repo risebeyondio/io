@@ -5063,7 +5063,7 @@ component logs
 logs
    container logs location ``/var/log/containers``
 
-   kubelet (which runs as process) logs location ``/var/log``
+   kubelet (runing as process) logs into location ``/var/log``
    
    no kubernetes native log rotation solution
    
@@ -5075,8 +5075,10 @@ logs
 
 |   
 
-manual logs approch
-   below spec file represent manual set up 
+multiple logs in a single location
+   below spec file sample represent manual set up where two types of logs are saved into one location
+   
+   this approach may introduce complexity and readbility problems once more and larger log streams output into single location  
    
 |
 
@@ -5117,53 +5119,58 @@ verify container log directory ``kubectl exec counter -- ls /var/log``
 
 |
 
-side car logs approach
-   content
+sidecar logs approach
+   tails logs to their own ``stdout``
+   
+   two or more differnt logs do not go into single ``/var/log`` directory
+   
+   instead, each log stream is tailed by separate container and redirected to individual ``/var/log`` of a particular container - one that performs the tail
 
 |
 
-*The YAML for a sidecar container that will tail the logs for each type°
+*sidecar pod spec file - tailing logs for each type°
 
+|
 .. code-block:: yaml
 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: counter
-spec:
-  containers:
-  - name: count
-    image: busybox
-    args:
-    - /bin/sh
-    - -c
-    - >
-      i=0;
-      while true;
-      do
-        echo "$i: $(date)" >> /var/log/1.log;
-        echo "$(date) INFO $i" >> /var/log/2.log;
-        i=$((i+1));
-        sleep 1;
-      done
-    volumeMounts:
-    - name: varlog
-      mountPath: /var/log
-  - name: count-log-1
-    image: busybox
-    args: [/bin/sh, -c, 'tail -n+1 -f /var/log/1.log']
-    volumeMounts:
-    - name: varlog
-      mountPath: /var/log
-  - name: count-log-2
-    image: busybox
-    args: [/bin/sh, -c, 'tail -n+1 -f /var/log/2.log']
-    volumeMounts:
-    - name: varlog
-      mountPath: /var/log
-  volumes:
-  - name: varlog
-    emptyDir: {}
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: counter
+   spec:
+     containers:
+     - name: count
+       image: busybox
+       args:
+       - /bin/sh
+       - -c
+       - >
+         i=0;
+         while true;
+         do
+           echo "$i: $(date)" >> /var/log/1.log;
+           echo "$(date) INFO $i" >> /var/log/2.log;
+           i=$((i+1));
+           sleep 1;
+         done
+       volumeMounts:
+       - name: varlog
+         mountPath: /var/log
+     - name: count-log-1
+       image: busybox
+       args: [/bin/sh, -c, 'tail -n+1 -f /var/log/1.log']
+       volumeMounts:
+       - name: varlog
+         mountPath: /var/log
+     - name: count-log-2
+       image: busybox
+       args: [/bin/sh, -c, 'tail -n+1 -f /var/log/2.log']
+       volumeMounts:
+       - name: varlog
+         mountPath: /var/log
+     volumes:
+     - name: varlog
+       emptyDir: {}
 
 |
 
