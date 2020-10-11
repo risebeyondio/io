@@ -5391,17 +5391,13 @@ if pod is down, under ``Last State`` a reason and message should provide initial
 |
 
 
-View the logs for additional detail:
+to get more logging information, run ``kubectl logs my-pod-name``
 
-kubectl logs pod-with-defaults
+to export spec file of an existing pod to a new spec file that could be used to recreate a copy, use 
 
-Export the YAML of a running pod, in the case that you are unable to edit it directly:
+``kubectl get pod pod-name -o yaml --export > defaults-pod.yaml``
 
-kubectl get po pod-with-defaults -o yaml --export > defaults-pod.yaml
-
-Edit a pod directly (i.e., changing the image):
-
-kubectl edit po nginx
+to edit a pod directly, run ``kubectl edit po nginx``
 
 |
 
