@@ -5299,24 +5299,6 @@ if pod is down, under ``Last State`` a reason and message should provide initial
 
 |
 
-*The YAML for a liveness probe that checks for pod health*
-
-|
-
-.. code-block:: yaml 
-
-   apiVersion: v1
-   kind: Pod
-   metadata:
-     name: liveness
-   spec:
-     containers:
-     - image: linuxacademycontent/candy-service:2
-       name: kubeserve
-       livenessProbe:
-         httpGet:
-           path: /healthz
-           port: 8081
 
 View the logs for additional detail:
 
