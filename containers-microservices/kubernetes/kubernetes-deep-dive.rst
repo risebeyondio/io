@@ -4893,9 +4893,11 @@ application monitoring
    
    probe specifics need to be added to a pod's spec file
 
----------------
+|
+
+***************
 liveness probes
----------------
+***************
 
 |
 
@@ -5036,9 +5038,9 @@ after that, the handler returns a status of 500
 
 |
 
-----------------
+****************
 readiness probes
-----------------
+****************
 
 |
 
