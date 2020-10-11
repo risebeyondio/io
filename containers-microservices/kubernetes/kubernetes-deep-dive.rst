@@ -5422,45 +5422,51 @@ control plane failures
    
    preventetive measures ensuring no single point of failure may include
    
+   - high availibility infrustructure design
    
+   - periodic storage snapshots
    
+   - utilisation of deployments and load balancer service to redirect load to a new node automatically
+   
+   - federation - that is multiple kubernetes cllusters joined together
+   
+|
 
-Check the events in the kube-system namespace for errors:
+when noticed unexpected / not desired / non even scheduling or balancing of pods among the nodes, verify events in the kube-system namespace for errors
 
-kubectl get events -n kube-system
+``kubectl get events -n kube-system``
 
-Get the logs from the individual pods in your kube-system namespace and check for errors:
+view logs from individual pods in kube-system namespace, check for errors
 
-kubectl logs [kube_scheduler_pod_name] -n kube-system
+``kubectl logs $kube-scheduler-pod-name -n kube-system``
 
-Check the status of the Docker service:
+in case of master node unexpected restart it is a good ide to check if services are enabeld
 
-sudo systemctl status docker
+``sudo systemctl status docker``
 
-Start up and enable the Docker service, so it starts upon bootup:
+in case of the docker not running, start and enable it, so it starts after each boot
 
-sudo systemctl enable docker && systemctl start docker
+``sudo systemctl enable docker && systemctl start docker``
 
-Check the status of the kubelet service:
+verify kubelet service ``sudo systemctl status kubelet``
 
-sudo systemctl status kubelet
+in case of the kublet not running, start and enable it, so it starts after each rebooting
 
-Start up and enable the kubelet service, so it starts up when the machine is rebooted:
+``sudo systemctl enable kubelet && systemctl start kubelet``
 
-sudo systemctl enable kubelet && systemctl start kubelet
+it is not possible to run kublet while the swap is enabled 
 
-Turn off swap on your machine:
+to turn off swap on the node run
 
-sudo su -
-swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab
+``sudo su -``
 
-Check if you have a firewall running:
+``swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab``
 
-sudo systemctl status firewalld
+in case of firewall issues, check if it is running ``sudo systemctl status firewalld``
 
-Disable the firewall and stop the firewalld service:
+disable it and stop the firewalld service
 
-sudo systemctl disable firewalld && systemctl stop firewalld
+``sudo systemctl disable firewalld && systemctl stop firewalld``
 
 |
 
