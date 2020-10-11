@@ -5394,7 +5394,7 @@ to get more logging information, run ``kubectl logs my-pod-name``
 
 to export spec file of an existing pod to a new spec file that could be used to recreate a copy, use 
 
-``kubectl get pod pod-name -o yaml --export > defaults-pod.yaml``
+``kubectl get pod pod-name -o yaml --export > new-pod-name.yaml``
 
 to edit a pod directly, run ``kubectl edit pod nginx``
 
@@ -5491,35 +5491,51 @@ worker node failures
 
 |
 
-it is best practice to have mutiple worker nodes running in a cluster
+worker node failures
+   it is best practice to have mutiple worker nodes working as a part of deployment,  where the pods can be scheduled to nodes automatically
 
-in case of failure of one of them, pods can be scheduled to another worker node automatically
+   in case of a node failure, pods that are not part of deployment - managed by replica set, will terminate, even if a new node gets created 
+   
+   in such case two options are available
+   
+   - replace the node and add it back manually to the cluster
+   
+   - use --export flag ``kubectl get pod pod-name -o yaml --export > new-pod-name.yaml``, recreate the pods and schedule them to a fresh node
 
-if a node goes down and it is not a part of replica set, a new nod will not 
+|
 
-as first step it is recommended to check nodes ``kubectl get nodes``
+troubleshooting and rebuilding new server 
+   as first step in node failures, it is recommended to check nodes ``kubectl get nodes``
 
-check nodes with kubectl describe 
+   check nodes with kubectl describe
 
-``kubectl describe nodes chadcrowell2c.mylabserver.com``
+   ``kubectl describe nodes $my-node-name``
 
-attempt log in to your server via SSH ``ssh chadcrowell2c.mylabserver.com``
+   attempt to SSH via server name``ssh $server-name.com``
 
-recover IP address of the nodes ``kubectl get nodes -o wide``
+   recover IP address of the nodes ``kubectl get nodes -o wide``
 
-apply ip address to further investigate the server ``ssh cloud_user@172.31.29.182``
+   attempt to SSH via ip address ``ssh cloud_user@x.x.x.x``
+   
+   attempt to ping the address ``ping x.x.x.x``
+   
+   if the case proves that server is down or accidentally deleted, rebuild has to be initiated
 
-when creating new server, generate a new token
+   1. run new virtual  server / node in the chosen enviroment
+   
+   2. once up, instal docker, kubeadm, kublet and give it same hostname
+   
+   3. switch back to master node to generate a new token ``sudo kubeadm token generate``
 
-``sudo kubeadm token generate``
+   4. assemble kubeadm join command for the new worker node
 
-assemble kubeadm join command for the new worker node
+   ``sudo kubeadm token create $token-name --ttl 2h --print-join-command``
+   
+   5. copy, paste, run the ``kubectl join`` command 
 
-``sudo kubeadm token create [token_name] --ttl 2h --print-join-command``
+   verify journalctl logs ``sudo journalctl -u kubelet``
 
-verify journalctl logs ``sudo journalctl -u kubelet``
-
-examin syslogs ``sudo more syslog | tail -120 | grep kubelet``
+   examin syslogs ``sudo more syslog | tail -120 | grep kubelet``
 
 |
 
