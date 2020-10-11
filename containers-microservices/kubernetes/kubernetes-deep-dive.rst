@@ -5340,8 +5340,8 @@ troubleshooting
 
 |
 
-application Failure
-===================
+application Failures
+====================
 
 |
 
@@ -5404,8 +5404,8 @@ contents_
 
 |
 
-control plane failure
-=====================
+control plane failures
+======================
 
 |
 
@@ -5486,6 +5486,46 @@ contents_
 
 |
 
+worker node failures
+====================
+
+|
+
+it is best practice to have mutiple worker nodes running in a cluster
+
+in case of failure of one of them, pods can be scheduled to another worker node automatically
+
+if a node goes down and it is not a part of replica set, a new nod will not 
+
+as first step it is recommended to check nodes ``kubectl get nodes``
+
+check nodes with kubectl describe 
+
+``kubectl describe nodes chadcrowell2c.mylabserver.com``
+
+attempt log in to your server via SSH ``ssh chadcrowell2c.mylabserver.com``
+
+recover IP address of the nodes ``kubectl get nodes -o wide``
+
+apply ip address to further investigate the server ``ssh cloud_user@172.31.29.182``
+
+when creating new server, generate a new token
+
+``sudo kubeadm token generate``
+
+assemble kubeadm join command for the new worker node
+
+``sudo kubeadm token create [token_name] --ttl 2h --print-join-command``
+
+verify journalctl logs ``sudo journalctl -u kubelet``
+
+examin syslogs ``sudo more syslog | tail -120 | grep kubelet``
+
+|
+
+contents_
+
+|
 
 cli
 ---
