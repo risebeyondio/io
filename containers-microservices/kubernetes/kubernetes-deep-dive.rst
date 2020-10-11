@@ -5254,7 +5254,22 @@ application Failure
 
 |
 
-The YAML for a pod with a termination reason:
+troubleshhoting applications
+   this may include areas such as
+   
+   - core dns - verification of dns operation
+   
+   - scheduler  - checking a list of pod events
+   
+   - security - kubectl describe pod commands to get more insights into image pulls errors
+   
+   kubernetes has a mechanism to simplify troubleshooting by including a reason message of container terminantion and pod status
+   
+   the termination message gets written to a speciffic file on the container ``/var/termination-reason``  
+
+|
+
+*my-pod.yaml spec file with termination message configured*
 
 |
 
@@ -5263,7 +5278,7 @@ The YAML for a pod with a termination reason:
    apiVersion: v1
    kind: Pod
    metadata:
-     name: pod2
+     name: my-pod
    spec:
      containers:
      - image: busybox
@@ -5271,14 +5286,24 @@ The YAML for a pod with a termination reason:
        command:
        - sh
        - -c
-       - 'echo "I''ve had enough" > /var/termination-reason ; exit 1'
+       - 'echo "I just needed a litle break :)" > /var/termination-reason ; exit 1'
        terminationMessagePath: /var/termination-reason
 
-One of the first steps in troubleshooting is usually to describe the pod:
+|
 
-kubectl describe po pod2
+good practice in troubleshooting is to describe the pod first
 
-The YAML for a liveness probe that checks for pod health:
+``kubectl describe pod my-pod``
+
+if pod is down, under ``Last State`` a reason and message should provide initial information
+
+|
+
+*The YAML for a liveness probe that checks for pod health*
+
+|
+
+.. code-block:: yaml 
 
    apiVersion: v1
    kind: Pod
