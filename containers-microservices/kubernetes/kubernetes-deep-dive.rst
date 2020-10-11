@@ -5468,6 +5468,18 @@ disable it and stop the firewalld service
 
 ``sudo systemctl disable firewalld && systemctl stop firewalld``
 
+special care needs to be taken if the public ip addresses are used in configuration files
+
+whenever server reboots and changes public ip it can lead to problems
+
+to avoid such issues it is a good practice to bind server private ip to an end that won`t change
+
+if cluster was initialised via kubeadm, the kubeadm automatically generated a config file
+
+``kubectl configview``
+
+to make api server highly available, it is possible to replicate it and use load balancing to avoid single api server serving entire cluster
+
 |
 
 contents_
