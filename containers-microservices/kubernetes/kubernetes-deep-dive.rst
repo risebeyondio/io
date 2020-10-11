@@ -5390,20 +5390,84 @@ if pod is down, under ``Last State`` a reason and message should provide initial
 
 |
 
-
 to get more logging information, run ``kubectl logs my-pod-name``
 
 to export spec file of an existing pod to a new spec file that could be used to recreate a copy, use 
 
 ``kubectl get pod pod-name -o yaml --export > defaults-pod.yaml``
 
-to edit a pod directly, run ``kubectl edit po nginx``
+to edit a pod directly, run ``kubectl edit pod nginx``
 
 |
 
 contents_
 
 |
+
+control plane failure
+=====================
+
+|
+
+control plane failures
+   problems with the control plabe may include
+   
+   - api server not responsive - unplanned shut down
+   
+   - lost connectivity to attached storage 
+   
+   - crashed kublet service
+   
+   - other kubernetes software issue
+   
+   preventetive measures ensuring no single point of failure may include
+   
+   
+   
+
+Check the events in the kube-system namespace for errors:
+
+kubectl get events -n kube-system
+
+Get the logs from the individual pods in your kube-system namespace and check for errors:
+
+kubectl logs [kube_scheduler_pod_name] -n kube-system
+
+Check the status of the Docker service:
+
+sudo systemctl status docker
+
+Start up and enable the Docker service, so it starts upon bootup:
+
+sudo systemctl enable docker && systemctl start docker
+
+Check the status of the kubelet service:
+
+sudo systemctl status kubelet
+
+Start up and enable the kubelet service, so it starts up when the machine is rebooted:
+
+sudo systemctl enable kubelet && systemctl start kubelet
+
+Turn off swap on your machine:
+
+sudo su -
+swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab
+
+Check if you have a firewall running:
+
+sudo systemctl status firewalld
+
+Disable the firewall and stop the firewalld service:
+
+sudo systemctl disable firewalld && systemctl stop firewalld
+
+|
+
+contents_
+
+|
+
 
 cli
 ---
