@@ -4893,7 +4893,12 @@ application monitoring
    
    probe specifics need to be added to a pod's spec file
 
-   
+---------------
+liveness probes
+---------------
+
+|
+
 liveness probes
    vrifies if a pod is alive - usefull when problems occur with memory leaks, deadlocks, infinite loops
    
@@ -4950,6 +4955,90 @@ run the service and a pods with livness probe:
 verify wether liveness check passed or failed
 
 ``kubectl get pods``
+
+|
+
+healthz - liveness probe modyfications
+   in below pod sample 
+   
+   - ``periodSeconds`` sets frequency of liveness probe to  every 3 seconds
+   
+   - ``initialDelaySeconds`` sets 3 seconds as initial probe dalay 
+   
+   to perform a probe, kubelet sends an HTTP GET request to the server that is running in the container and listening on port 8080
+   
+   if the handler for the server's /healthz path returns a success code, the kubelet considers the container to be alive and healthy
+   
+   if the handler returns a failure code, the kubelet kills the container and restarts it
+
+   any code ≥ 200 and < 400 indicates success
+   
+   any other code indicates failure
+
+|
+
+*pod spec file including healthz liveness probe*
+
+|
+
+.. code-block:: yaml 
+
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     labels:
+       test: liveness
+     name: liveness-http
+   spec:
+     containers:
+     - name: liveness
+       image: k8s.gcr.io/liveness
+       args:
+       - /server
+       livenessProbe:
+         httpGet:
+           path: /healthz
+           port: 8080
+           httpHeaders:
+           - name: Custom-Header
+             value: Awesome
+         initialDelaySeconds: 3
+         periodSeconds: 3
+
+|
+
+first 10 seconds that the container is alive, the /healthz handler returns a status of 200
+
+after that, the handler returns a status of 500.
+
+|
+
+*smaple go server set to work with liveness probe*
+
+in first 10 seconds that the container is alive, the /healthz handler returns a status of 200
+
+after that, the handler returns a status of 500
+
+|
+
+.. code-block:: go
+
+   http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+       duration := time.Now().Sub(started)
+       if duration.Seconds() > 10 {
+           w.WriteHeader(500)
+           w.Write([]byte(fmt.Sprintf("error: %v", duration.Seconds())))
+       } else {
+           w.WriteHeader(200)
+           w.Write([]byte("ok"))
+       }
+   })
+
+|
+
+----------------
+readiness probes
+----------------
 
 |
 
