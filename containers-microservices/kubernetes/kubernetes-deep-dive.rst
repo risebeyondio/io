@@ -5340,7 +5340,7 @@ troubleshooting
 
 |
 
-application Failures
+application failures
 ====================
 
 |
@@ -5504,7 +5504,7 @@ worker node failures
 
 |
 
-troubleshooting and rebuilding new server 
+failed node, rebuilding new server 
    as first step in node failures, it is recommended to check nodes ``kubectl get nodes``
 
    check nodes with kubectl describe
@@ -5531,11 +5531,110 @@ troubleshooting and rebuilding new server
 
    ``sudo kubeadm token create $token-name --ttl 2h --print-join-command``
    
-   5. copy, paste, run the ``kubectl join`` command 
+   5. copy, (remove line break from the command) paste, run the ``kubectl join`` command 
 
    verify journalctl logs ``sudo journalctl -u kubelet``
+   
+   6. verify nodes and pods ``kubectl get nodes`` ``kubectl get pods``
 
-   examin syslogs ``sudo more syslog | tail -120 | grep kubelet``
+   
+
+|
+
+running node troubleshooting - sample kubelet issues
+   from master server run ``kubectl get nodes`` to get all nodes status
+   
+   from master server run ``kubectl describe nodes $node-name`` to check the node's events that was in ``notReady`` state
+   
+   from the node itself, get logs ``sudo journalctl -u kubelet``
+   
+   from the node itself, get syslog data ``sudo more syslog | tail -120 | grep kubelet``
+   
+   check kubelet status ``sudo systemctl status kubelet``
+   
+   if it proves stopped, re run it ``sudo systemctl start kubelet``
+   
+   confirm it ``sudo systemctl status kubelet``
+     
+|
+
+contents_
+
+|
+
+network failures
+================
+
+|
+network debugging
+   network problems in kubernetes may affect internal cluster communication or services
+   
+   to demonstrate debugging techniqe, below deployment is commenced 
+   
+|
+
+*initiate a deployment called hostnames, utilising container port 9376 and three replicas*
+
+.. code-block:: shell
+
+   kubectl run hostnames --image=k8s.gcr.io/serve_hostname \
+                           --labels=app=hostnames \
+                           --port=9376 \
+                           --replicas=3
+
+*generate a service by exposing a port on the deployment*
+
+``kubectl expose deployment hostnames --port=80 --target-port=9376``
+
+verify services
+
+``kubectl get svc``
+
+attempt to access the service from other pod, utilise interactive busybox pod
+
+``kubectl run -it --rm --restart=Never busybox --image=busybox:1.28 sh``
+
+from the pod, test if DNS is resolving deployment service name *hostnames* to an underlying hostname
+
+``# nslookup hostnames``
+
+from the pod, read /etc/resolv.conf file ``# cat /etc/resolv.conf``
+
+from the pod, test kubernetes dns service operation ``# nslookup kubernetes.default``
+
+verify json output of the service ``kubectl get svc hostnames -o json``
+
+see endpoints (here three for threee pods) for the service: ``kubectl get ep``
+
+bypass service and communicate with each infividual pod directly
+
+``wget -qO- $ip-address:port``
+
+ensure kube-proxy is running on the nodes
+
+``ps auxw | grep kube-proxy``
+
+check and copy kube proxy name ``kubectl get pods -n kube-system``
+
+run shell from the proxy ``kubectl exec it $kube-proxy-name -- sh``
+
+from kube proxy shell, ensure kube-proxy is writing iptables rules
+
+``# iptables-save | grep hostnames``
+
+
+
+Connect to your kube-proxy pod in the kube-system namespace:
+
+``kubectl exec -it kube-proxy-cqptg -n kube-system -- sh``
+
+cni issues - delete the existing flannel plugin
+
+``kubectl delete -f https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml``
+
+change cni to Weave Net plugin
+
+``kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | ``base64 | tr -d '\n')"``
 
 |
 
