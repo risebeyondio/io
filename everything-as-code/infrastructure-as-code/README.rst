@@ -7,7 +7,7 @@ infrastructure as code
 
 |
 
-- `ansible <https://github.com/risebeyondio/io/tree/master/everything-as-code/infrastructure-as-code/ansible>`_
+- `ansible <https://github.com/risebeyondio/io/tree/master/everything-as-code/infrastructure-as-code/ansible/ansible.rst>`_
 
 |
 
