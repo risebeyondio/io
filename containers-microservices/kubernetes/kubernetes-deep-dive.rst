@@ -1,6 +1,6 @@
 |
 
-**kubernetes deep dive**
+**Kubernetes deep dive**
 
 ------------------------
 
@@ -32,22 +32,22 @@ master / worker architecture
    
    abstraction from infrastructure - the difference can not be seen if application deployment is involving a single node or few thousand nodes cluster - to the user, it seems that all is run one single giant machine
    
-   kubernetes takes care of
+   Kubernetes takes care of
    
    - service discovery
    - scaling
    - load balancing
    - self healing
-   - leader election 
+   - leader election
 
 |
 
-master node - control plane 
+master node - control plane
    four components
    
    - api server - communication hub for all cluster components
    
-   - scheduler - assigns an application to a worker node, decides which node is to run a pod, based on resource requirements, hardware constraints, etc 
+   - scheduler - assigns an application to a worker node, decides which node is to run a pod, based on resource requirements, hardware constraints, etc
    
    - controller manager - maintenance and handling of a cluster, failed nodes, replication, desired state
    
@@ -68,11 +68,11 @@ worker node(s)
    
    - kube-proxy / service proxy - traffic load balancing among application components
    
-   - container runtime - program running containers (docker, rkt, containerd) 
+   - container runtime - program running containers (docker, rkt, containerd)
    
 |
 
-*application runing on kubernetes [source linuxacademy.com]*
+*application running on Kubernetes [source linuxacademy.com]*
 
 |
 
@@ -93,7 +93,7 @@ api
 |
 
 kubectl
-   is a tool that translates cli commands to api calls being send to api server
+   is a tool that translates cli commands to api calls being sent to the api server
 
 |
 
@@ -104,32 +104,32 @@ api server
    
    provides create, read, update, delete CRUD interface for querying and modifying the cluster state over a restful api
    
-   ``kebectl`` command can be used to create, updtate, delete and get / read api objects - CRUD
+   ``kubectl`` command can be used to create, update, delete and get/read api objects - CRUD
 
-   all objects like pods or services are persistent enteties being represented by declarative intent - desired state
+   all objects like pods or services are persistent entities being represented by declarative intent- the desired state
    
    api version and software version are not directly related
    
 |
 
 spec - desired state - declarative intent - yaml
-   all indentation in yaml is achieved by 2 spaces not tabs
+   all indentation in yaml is achieved by 2 spaces, not tabs
    
-   if at any time specific object status does not match the object's spec, the cluster master / control plane will work on corrections to make the match
+   if at any time specific object status does not match the object's spec, the cluster master/control plane will work on corrections to make the match
    
-   to create object based on existing spec yaml file run ``kubectl create -f nginx-spec-file.yaml``
+   to create an object based on existing spec yaml file run ``kubectl create -f nginx-spec-file.yaml``
    
-   ``kubectl`` command converts any yaml format into json as api request body must contain json 
+   ``kubectl`` command converts any yaml format into JSON as api request body must contain JSON
    
    show specific deployment in yaml ``kubectl get deployment myDeployment -o yaml``
    
-   objects always have a matadata, at minimum name and uid
+   objects always have metadata, at minimum name and uid
    
-   object name - user given and uid - cluster given, must be unique for a particular kind of objects, no two pods named identically 
+   object name - user given and uid - cluster given, must be unique for a particular kind of objects, no two pods named identically
    
    name - up to 253 characters, can contain dashes and periods `- .`
    
-   spec's conteiner value specifies
+   spec's container value specifies
    
    - container image
    
@@ -137,9 +137,9 @@ spec - desired state - declarative intent - yaml
    
    - exposed ports
    
-   labels - to be applied to better orginize objects, key-value pairs that can be attached to objects during creation or after,  if multiple - no keys duplication on a single object, 
+   labels - to be applied to better organize objects, key-value pairs that can be attached to objects during creation or after,  if multiple - no keys duplication on a single object,
    
-   to apply new label (here env) to specific pod use ``kubectl label pods $podName env=prod`` 
+   to apply a new label (here env) to specific pod use ``kubectl label pods $podName env=prod``
    
    label selector can be used to filter through the cluster objects ``kubectl get pods --show-labels``
    
@@ -172,7 +172,7 @@ service
    
    service IP address is virtual - not associated with physical NIC
    
-   if an old pod failes, gets destroyed, the service decides how to route traffic to a new pod
+   if an old pod fails, gets destroyed, the service decides how to route traffic to a new pod
    
    to start service from existing spec file run ``kubectl create -f $myService.yaml``
    
@@ -220,7 +220,7 @@ kube-proxy
 |
 
 kube-proxy
-   handles traffic associated witha service or other cluster component / object by creating iptables rules
+   handles traffic associated with a service or other cluster component/object by creating iptables rules
    
 |
 
@@ -248,7 +248,7 @@ build
    
    - physical / bare metal
    
-   or 
+   or
    
    - cloud server
 
@@ -257,13 +257,13 @@ build
 custom solution
    - from scratch - manually
    
-   - own network fabric configuration without flannel or other network overlay
+   - own network fabric configuration without flannel or another network overlay
    
-   - build own images in private registry
+   - build own images in a private registry
    
    - secure cluster communication - https
    
-   - kubelet is the only component that has to run on the system not as a pod as it is responsible to run everything else as pods 
+   - kubelet is the only component that has to run on the system not as a pod as it is responsible to run everything else as pods
 
 |
 
@@ -290,7 +290,7 @@ cluster configuration
 
 |
 
-*master and 2 worker nodes - OS - ubuntu* 
+*master and 2 worker nodes - OS - ubuntu*
 
 |
 
@@ -483,9 +483,9 @@ raft consensus algorithm
 
    to have a majority, number of etcd instances must be odd (with onlly 2 etcd instances, no transition can happen as majority is not possible)
 
-   having exactly 2 etcd instances is worse than having a single one - no consensus and state transition possible 
+   having exactly 2 etcd instances is worse than having a single one - no consensus and state transition possible
    
-   even in large entrprise deployments maximum of 7 etcd instances is enough 
+   even in large entrprise deployments maximum of 7 etcd instances is enough
       
 |
 
@@ -521,7 +521,7 @@ secure cluster api communications
 all requests origin from either
    - a client / user
    
-   or 
+   or
    
    - a pod
 
@@ -530,11 +530,11 @@ all requests origin from either
 api communication break down
    - request issued via ``kubectl`` command or a pod itself gets translated into api POST request that hits api server
    
-   - the request goes through 3 stages, each contains number of plugins that are called by the api server one by one 
+   - the request goes through 3 stages, each contains number of plugins that are called by the api server one by one
       - authentication - who
          - api server calls plugins until it determins who is sending the request
       
-         - authentication method is to be determined by http header or the certificate 
+         - authentication method is to be determined by http header or the certificate
          
          - once found, the request feeds user id and groups the user / client belongs to back to api server
       
@@ -546,7 +546,7 @@ api communication break down
          
          - admission is bypassed if the request is read only
       
-   - resource validation 
+   - resource validation
 
    - new state gets stored in etcd
    
@@ -554,7 +554,7 @@ api communication break down
 
 |
 
-self signed certificates can be used to pass authentication phase and seen by running ``cat .kube/config | more`` 
+self signed certificates can be used to pass authentication phase and seen by running ``cat .kube/config | more``
 
 |
 
@@ -645,14 +645,14 @@ manual end-to-end testing - e2e checklist
    6. services can provide accesss
          - create a service by exposing port 80 of the nginx deployment ``kubectl expose deployment nginx --port 80 --type NodePort``
       
-         - list the services in the cluster ``kubectl get services`` and copy teh service external / exposed port number 
+         - list the services in the cluster ``kubectl get services`` and copy teh service external / exposed port number
       
          - swith to one of the worker nodes and run ``curl -I localhost:$nodeExposedPort``
    
    7. nodes are healthy
-         - ``kubectl get nodes`` and ``kubectl describe nodes`` 
+         - ``kubectl get nodes`` and ``kubectl describe nodes``
 
-   8. pods are healthy 
+   8. pods are healthy
          - ``kubectl get pods`` and ``kubectl describe pods``
 
 |
@@ -712,7 +712,7 @@ steps
       - lock back ``sudo apt-mark hold kubelet``
    
    - verify all nodes versions
-      ``kubectl get nodes`` 
+      ``kubectl get nodes``
 
 |
 
@@ -747,7 +747,7 @@ node maintainance steps
    
    4. check if the drained node , one to be under maintanance has changed state to *Ready, SchedulingDisabled* by running ``kubectl get nodes -w``
    
-   5. at this stages the node / server can be maintenance, reboot, etc. 
+   5. at this stages the node / server can be maintenance, reboot, etc.
    
    6. once maintenance is done run ``kubectl uncordon $nodeName`` to start scheduling pods to the node again
    
@@ -838,12 +838,12 @@ etcdctl cluster restore from snapshot
    
    if a node is lost or decommissioned, the new node has to have identical ip address as the original one to be successfully restored
    
-   restoring process involves 
+   restoring process involves
       - new etcd data directories for each mode in the cluster
       
       - specyfing initial cluster ip addresses, token and peer urls
       
-      - starting etcd with new data directories set up correctly 
+      - starting etcd with new data directories set up correctly
 
 |
 
@@ -871,25 +871,25 @@ single node communication
 
 |
 
-networking within nodes 
+networking within nodes
    kubernetes uses linux network namespaces concepts
    
    inside a node each pod has own ip address
-  
+ 
    pod ip comes from virtual ethernet interface pair and is handed out by linux ethernet bridge
    
    one of the virtual interfaces pair gets associated with a pod and renamed ``eth0``
 
 |
 
-node's ethernet pipe to a pod - node to pod interface mapping 
+node's ethernet pipe to a pod - node to pod interface mapping
    to verify the mapping take following steps
 
    1. check node's virtual interfaces, login to one of nodes and run ``ifconfig`` - in output ``vethXXXXXX`` interface represents one of node`s virtual interfaces that is than paired with specific pod's interface renamed to eth0
 
    2. inspect docker containers running in a pod ``sudo su -`` ``docker ps``
 
-   apart from an application containers such as nginx thare are containers running command ``/pause`` - their purpose is to hold pod network namespace 
+   apart from an application containers such as nginx thare are containers running command ``/pause`` - their purpose is to hold pod network namespace
 
    3. copy one of containers id and use it in the following ``docker inspect --format '{{ .State.Pid }}' $conteinerId`` to get container process id
 
@@ -899,8 +899,8 @@ node's ethernet pipe to a pod - node to pod interface mapping
 
    the output shows interface ``eth0@if6`` (or ``eth0@ifDifferentNumber``) representing mapping of pod's eth0 interface to for example node's inteface 6 - if6 - that is the 6th interface counted top to bottom shown in node ``ifconfig``that was run in first step - ``vethXXXXX``
 
-   the output under eth0 also exposes private IP address of the pod 
-  
+   the output under eth0 also exposes private IP address of the pod
+ 
 |
 
 communictaion between pods on same node   
@@ -930,7 +930,7 @@ multiple nodes communication
 
 |
 
-communication among pods on different nodes 
+communication among pods on different nodes
    when packet traverse from one node to another following occurs
    
    - pod's private IP address changes to node's eth0 address (10.244.1.2 -> 172.31.43.91)
@@ -962,7 +962,7 @@ container network interface - cni
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/|kubernetes-network-overlay.png
 
    :align: center
-   :alt: network overlay 
+   :alt: network overlay
 
 |
 
@@ -1039,7 +1039,7 @@ service
    
    service interface gets evenly distributed and automatically assigned to pods behid that interface
    
-   behind the service single virtual inteface pods can change all ip addresses, move etc, but externally / from the outside the service will still have single / same doorway - the virtual interface 
+   behind the service single virtual inteface pods can change all ip addresses, move etc, but externally / from the outside the service will still have single / same doorway - the virtual interface
 
 |
 
@@ -1069,7 +1069,7 @@ nodeport service
        nodePort: 30080
      selector:
        app: nginx
-  
+ 
 |
 
 *****************
@@ -1143,7 +1143,7 @@ load balancer
    
    when listing services ``kubectl get services`` some services have *none* in external ip address field
    
-   such services are only accessible internally via 
+   such services are only accessible internally via
    
    - their private ip address and port number
    
@@ -1155,7 +1155,7 @@ load balancer
    
    load balancers are not seeing pods or containers, that is why if one node contains 2 pods and other node just one pod, there would be no even distribution
    
-   not even distribution is addressed by ip tables, discused further below 
+   not even distribution is addressed by ip tables, discused further below
    
 |
 
@@ -1234,7 +1234,7 @@ ingress rules
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-ingress.png
 
    :align: center
-   :alt: ingress operation 
+   :alt: ingress operation
 
 |
 
@@ -1315,7 +1315,7 @@ dns
 .. figure:: https://github.com/risebeyondio/rise/blob/master/media/kubernetes-dns-namespace.png
 
    :align: center
-   :alt: ingress operation 
+   :alt: ingress operation
 
 |
 
@@ -1417,7 +1417,7 @@ spec file  for a headless service
 |
 
 dns policies
-   can be set on a per pod basis 
+   can be set on a per pod basis
    
    by default it is cluster first, which will inherit name resolution config from the node that pod is on
    
@@ -1587,13 +1587,13 @@ use of multiple schedulers
 |
 
 configuration    
-   detailed information can be found at 
+   detailed information can be found at
    
    https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/
    
-   configuration involves 
+   configuration involves
    
-   1. package the scheduler 
+   1. package the scheduler
    
    2. define pod deployment of the scheduler (my-scheduler.yaml)
    
@@ -1604,19 +1604,19 @@ configuration
    
    cluster role and cluster crole binding has to be defined in order to have a secret mounted to a pod in kube-system namespace
    
-   the cluster role binding will link service account of my-scheduler with the cluster role 
+   the cluster role binding will link service account of my-scheduler with the cluster role
    
-   4. apply both the role and the binding 
+   4. apply both the role and the binding
    
    ``kubectl create -f ClusterRole.yaml``
 
    ``kubectl create -f ClusterRoleBinding.yaml``
 
    5. to enable scheduler to communicate to a pod and an to ba able to schedule the pod to nodes role and role binding needs to be created
-  
-   the role binding will link user - kubernetes-admin with the role 
+ 
+   the role binding will link user - kubernetes-admin with the role
 
-   6. apply both the role and the binding 
+   6. apply both the role and the binding
 
    ``kubectl create -f Role.yaml``
 
@@ -1630,7 +1630,7 @@ configuration
         - ""
         resourceNames:
         - kube-scheduler
-        - my-scheduler # <-- add my scheduler along with kube-scheduler 
+        - my-scheduler # <-- add my scheduler along with kube-scheduler
         resources:
         - endpoints
         verbs:
@@ -1647,7 +1647,7 @@ configuration
         - list
         - get
    
-   8. deployment of the new custom scheduler as pod in kube-system namespace 
+   8. deployment of the new custom scheduler as pod in kube-system namespace
    
    ``kubectl create -f my-scheduler.yaml``
    
@@ -1728,7 +1728,7 @@ my-scheduler.yaml template
            - --address=0.0.0.0
            - --leader-elect=false
            - --scheduler-name=my-scheduler
-           image: gcr.io/my-gcp-project/my-kube-scheduler:1.0 # <-- replace it with own scheduler package name 
+           image: gcr.io/my-gcp-project/my-kube-scheduler:1.0 # <-- replace it with own scheduler package name
            livenessProbe:
              httpGet:
                path: /healthz
@@ -1828,14 +1828,14 @@ RoleBinding.yaml
      name: kubernetes-admin
      apiGroup: rbac.authorization.k8s.io
    roleRef:
-     kind: Role 
+     kind: Role
      name: system:serviceaccount:kube-system:my-scheduler
      apiGroup: rbac.authorization.k8s.io
 
 |
 
 scheduling pods to multiple schedulers
-   for sample purposes 3 pods are defined and deployed below, where 
+   for sample purposes 3 pods are defined and deployed below, where
 
    - pod1 - no specific annotation - hence it will use default scheduler
 
@@ -1918,19 +1918,19 @@ taints
 |
 
 tolerations
-   allow to tollarate a taint 
+   allow to tollarate a taint
    
-   toleration can be added to pod's yaml 
+   toleration can be added to pod's yaml
    
    if the toleration of new schedule is included, potantially a pod  can be sceduled to run on the node - even if it is a master
    
-   example - kube-proxy 
+   example - kube-proxy
    
    copy full kube-proxy name from ``kubectl get pods -n kube-system``
    
    ``kubectl get pods $kube-proxy-name -n kube-system -o yaml``
    
-   on top of the output check ``tolerations`` section and the coresponding values 
+   on top of the output check ``tolerations`` section and the coresponding values
       
         effect: NoSchedule
       
@@ -1938,7 +1938,7 @@ tolerations
         
         operator: Exists
    
-   this means that this pod (kube-proxy) is to tolerate a node that is unschedulable - necessary tolaration for kube-proxy as it ia a deamon set pod that needs to run on every single node 
+   this means that this pod (kube-proxy) is to tolerate a node that is unschedulable - necessary tolaration for kube-proxy as it ia a deamon set pod that needs to run on every single node
    
    with no further consideration, a pod will not be scheduled to a node that is tainted, unless it has a tolaration for that node
 
@@ -1951,7 +1951,7 @@ cpu and memory requests
    
    once default scheduler checks the 8 criteria points to check best node suitability to host a particular pod, it then moves to prioritisation
    
-   prioritisation may involve 
+   prioritisation may involve
    
    - least requested priority function
       choses nodes that have least amount of resources requested to more evenly distribute pods to the nodes
@@ -1971,11 +1971,11 @@ cpu and memory requests
    
    ``capacity`` - describing entire node's capacity
    
-   ``allocatable`` - stating what is available to allocate 
+   ``allocatable`` - stating what is available to allocate
    
    if a pod is scheduled but it remains in pending state run ``kubectl describe pods $name-of-pod``
    
-   if it reqested excessive resources from node, in events section of the output warning may be found ``FailedScheduling`` and reason such as insufficient cpu or memory, etc. 
+   if it reqested excessive resources from node, in events section of the output warning may be found ``FailedScheduling`` and reason such as insufficient cpu or memory, etc.
    
    to verify current utilization of a node, run ``kubectl describe nodes $node-name` and check output's bottom section ``non terminated pods`` that list currently running pods on this node and their use of resources
    
@@ -2043,7 +2043,7 @@ resource limits
    
    as in the exmple, limits are set to one cpu and memory to 20 MB, the request is not explicitely defined but it is automatically set to the same values as limits
    
-   pods limits can go beyond total utilization of cpu and memory on a node and still be allowed to be deployed, 
+   pods limits can go beyond total utilization of cpu and memory on a node and still be allowed to be deployed,
    
    once kubernetes sens that more resources are being used compared to what is available, the pod that requested excessive resources will get killed
    
@@ -2091,7 +2091,7 @@ daemonsets
    
    - automatically and instatntly initialize the pod on any new node in the cluster (this can not be done with scheduler)
    
-   - instantly re-initialize deamonset pod if it gets deleted on any of the existing pods 
+   - instantly re-initialize deamonset pod if it gets deleted on any of the existing pods
    
    when deamonset pod gets created it applies pod template created within itself as in replica sets
    
@@ -2120,11 +2120,11 @@ custom deamonset sample
    
    if a new node or existing one gets labeled *disk=ssd*, the demonset will instantly run on it as well - with no requirelment to changy anything within a deamonset
    
-   if existing label is changed to one that is not matching the deamonset node selector, the deamonste pod will automatically get removed / terminated from the node 
+   if existing label is changed to one that is not matching the deamonset node selector, the deamonste pod will automatically get removed / terminated from the node
    
    sample lable override ``kubectl label node $node-name disk=hdd --overwrite ``
    
-   above override will lead to deamonser termination on the node the label was updated 
+   above override will lead to deamonser termination on the node the label was updated
    
 |
 
@@ -2212,25 +2212,25 @@ application deployment
 
    verify status of the deployment ``kubectl rollout status deployments kubeserve``
 
-   deployment add a string of numbers to the end of each pod's name - hash value of 
+   deployment add a string of numbers to the end of each pod's name - hash value of
    
    - pod template
    
-   - deployment 
+   - deployment
    
-   and 
+   and
    
    - replica set that manages the pot
    
    deployment automatically generates replica set, cluster set can be checked by ``kubectl get replicasets``
    
-   replica set name contains hash value of its pod template as well 
+   replica set name contains hash value of its pod template as well
    
    to sclae deployment run ``kubectl scale deployment kubeserve --replicas=5``
    
    to simulate app, sertvice may be created ``kubectl expose deployment kubeserve --port 80 --target-port 80 --type NodePort``
    
-   verify it ``kubectl get services`` 
+   verify it ``kubectl get services``
 
 |
 
@@ -2289,14 +2289,14 @@ application deployment updates
       may involve downtime
 
    - rolling update
-      this method involves no downtime / interraption to service 
+      this method involves no downtime / interraption to service
 
       behind scenes the rolling update
       - creates new replica set and spins within it new pods based on new container image
 
       - as the new pods in new replica set got created, the roling update starts to terminate pods in old replica set
 
-      - all this happen in gradual manner, transitioning from 
+      - all this happen in gradual manner, transitioning from
 
          - old replica - v1
 
@@ -2310,7 +2310,7 @@ application deployment updates
 
       to observe real time changes during the update of the service curl loop command ,ight be used ``while true; do sleep 1; curl $service-ip-or-url; done``
 
-      rolling update command 
+      rolling update command
 
       ``kubectl set image deployments/kubeserve app=mu-app-images/kubeserve:v2 --v 6``
 
@@ -2329,13 +2329,13 @@ application rollbacks from bugged updates
    
    quck rollout can be performed to recover to the very previous version (v2)
    
-   ``kubectl rollout undo`` is possible because the deployments keep revisions history and the history is stored in previous copies of replicasets 
+   ``kubectl rollout undo`` is possible because the deployments keep revisions history and the history is stored in previous copies of replicasets
    
    ``kubectl rollout undo deployments kubeserve``
    
    see rollout history ``kubectl rollout history deployment kubeserve``
    
-   rollout history contains column ``change-casue`` that displays information about the command used to perform a change - important detail in troubleshooting 
+   rollout history contains column ``change-casue`` that displays information about the command used to perform a change - important detail in troubleshooting
    
    change-casue stores information thanks to --record flag set in ``kubectl create -f kubeserve-deployment.yaml --record``
    
@@ -2345,7 +2345,7 @@ application rollbacks from bugged updates
 
    ``kubectl rollout undo deployment kubeserve --to-revision=2``
    
-   pause rollout in the middle of a rolling update - canary release - so part of application will run on old replicaset and parto on new replicaset 
+   pause rollout in the middle of a rolling update - canary release - so part of application will run on old replicaset and parto on new replicaset
 
    ``kubectl rollout pause deployment kubeserve``
 
@@ -2360,7 +2360,7 @@ contents_
 |
 
 
-high availibility 
+high availibility
 =================
 
 |
@@ -2468,9 +2468,9 @@ passing configuration options to an application
    in kubernetes the configuration data may be stored in ``configmap`` and pass it to a container through environment variable
    
    if sensitive data needs to be passed, a secret can be created and passed as environmental variable
-  
+ 
    once configmap and secrets are created, they can be modified with no need to rebuild an image
-  
+ 
    single configmap and secret can be referenced by multiple containers
 
 |
@@ -2516,7 +2516,7 @@ configmap set up
       
       ``kubectl exec configmap-volume-pod -- ls /etc/config``
       
-      and values 
+      and values
       
       ``kubectl exec configmap-volume-pod -- cat /etc/config/key1``
       
@@ -2709,7 +2709,7 @@ replica sets
    
    if a lebel of pod within replicaset is changed it will get removed from replicaset
    
-   removing a pod from replicaset in such way is not recommended as management of replicaset should be done via deployments 
+   removing a pod from replicaset in such way is not recommended as management of replicaset should be done via deployments
    
 |
 
@@ -2769,7 +2769,7 @@ statefulsets
    
    a service in statefulsets must be headless, as every single pod will be unique
    
-   specific traffic has to go to specific pods 
+   specific traffic has to go to specific pods
    
    sets' spec files contains volume claim template
    
@@ -2878,7 +2878,7 @@ persistent volume configuration - manual steps
 
    mongodb-shell> ``db.foo.find()``
 
-   mongodb-shell> ``exit`` 
+   mongodb-shell> ``exit``
 
    to test if volume is persistent, delete the pod to verify later if data would be accessible from persistent disk
 
@@ -2896,7 +2896,7 @@ persistent volume configuration - manual steps
 
    access mongodb shell (once pod is on a different node) ``kubectl exec -it mongodb mongo``
 
-   switch to mystore db 
+   switch to mystore db
 
    mongodb-shell> ``use mystore``
 
@@ -2915,7 +2915,7 @@ persistent volume configuration - manual steps
    apiVersion: v1
    kind: Pod
    metadata:
-     name: mongodb 
+     name: mongodb
    spec:
      volumes:
      - name: mongodb-data
@@ -2956,7 +2956,7 @@ persinstent volumes object - pv resource
    metadata:
      name: mongodb-pv
    spec:
-     capacity: 
+     capacity:
        storage: 1Gi
      accessModes:
        - ReadWriteOnce
@@ -3044,9 +3044,9 @@ persistent volume claims - pvc
    set up pvc
       create pvc spec file and run it ``kubectl apply -f mongodb-pvc.yaml``
    
-      before the pvc is created, system checks if requested size and access mode matches to what is available 
+      before the pvc is created, system checks if requested size and access mode matches to what is available
 
-      if both conditions are matched - requested size and access mode are available, then the volume is to be bound to the claim 
+      if both conditions are matched - requested size and access mode are available, then the volume is to be bound to the claim
 
       to list cluster's pvc run ``kubectl get pvc``
 
@@ -3075,7 +3075,7 @@ persistent volume claims - pvc
 
       verify it ``kubectl get pv`` status should now show ``released``
       
-      ``released`` status is caused by the reclaim policy set to ``retain`` 
+      ``released`` status is caused by the reclaim policy set to ``retain``
       
       reclaim policy can was specified in the original pv spec file (mongodb-persistentvolume.yaml)
       
@@ -3098,7 +3098,7 @@ persistent volume claims - pvc
    apiVersion: v1
    kind: PersistentVolumeClaim
    metadata:
-     name: mongodb-pvc 
+     name: mongodb-pvc
    spec:
      resources:
        requests:
@@ -3118,7 +3118,7 @@ persistent volume claims - pvc
    apiVersion: v1
    kind: Pod
    metadata:
-     name: mongodb 
+     name: mongodb
    spec:
      containers:
      - image: mongo
@@ -3147,7 +3147,7 @@ persistent volume claims - pvc
    metadata:
      name: mongodb-pv
    spec:
-     capacity: 
+     capacity:
        storage: 1Gi
      accessModes:
        - ReadWriteOnce
@@ -3182,7 +3182,7 @@ storage object in use protection
       
       delete the pv claim - pvc ``kubectl delete pvc mongodb-pvc``
       
-      verify ``kubectl get pvc`` - pvc got terminated, but the volume is still attached to pod 
+      verify ``kubectl get pvc`` - pvc got terminated, but the volume is still attached to pod
 
       with just deleted pvc, attempt to access to data ``kubectl exec -it mongodb mongo``
       
@@ -3203,7 +3203,7 @@ storage object in use protection
 |
 
 storage class
-  automatically provision storage with no need to create storage, configuring it, etc. 
+  automatically provision storage with no need to create storage, configuring it, etc.
    
   storage class is an object
 
@@ -3218,7 +3218,7 @@ storage class
 
     update previously created pv claim with storage class name : fast
 
-    this update makes storageclass object included in the pvc 
+    this update makes storageclass object included in the pvc
 
     apply the change to automatically provision the storage
 
@@ -3280,7 +3280,7 @@ storage class
    apiVersion: v1
    kind: PersistentVolumeClaim
    metadata:
-     name: mongodb-pvc 
+     name: mongodb-pvc
    spec:
      storageClassName: fast
      resources:
@@ -3376,7 +3376,7 @@ it will automatically provision a volume
   apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    name: kubeserve-pvc 
+    name: kubeserve-pvc
   spec:
     storageClassName: fast
     resources:
@@ -3393,13 +3393,13 @@ it will automatically provision a volume
 
 ``kubectl apply -f kubeserve-pvc.yaml`` ``kubectl get pvc``
 
-verificartion output should confirm ``bound`` status 
+verificartion output should confirm ``bound`` status
 
 5. verify automatically provisioned storage - pv
 
 ``kubectl get pv``
 
-verificartion output should confirm ``bound`` status 
+verificartion output should confirm ``bound`` status
 
 6. create kubeserve-deployment.yaml deployment spec file
 
@@ -3483,14 +3483,14 @@ basics
    
   api server checks first if the requests originates from
  
-  user 
-    this might be trough private key, user store or file containg a list of user names and passwords 
+  user
+    this might be trough private key, user store or file containg a list of user names and passwords
  
     user accounts are not represented by an object in kubernetes
  
     users can not be added to a cluster via api request
 
-  or 
+  or
 
   service account
     identity of pods
@@ -3501,11 +3501,11 @@ basics
 
     create service account - jenkins ``kubectl create serviceaccount jenkins``
     
-    when new service account is generated coresponding secret is atomatically created 
+    when new service account is generated coresponding secret is atomatically created
 
     verify it - abbrieviated ``kubectl get sa``
     
-    a secret contains 
+    a secret contains
       
     - public certificate authority of the api server
     
@@ -3549,47 +3549,47 @@ basics
 
 |
 
-apply the pod and verify it 
+apply the pod and verify it
 
 ``kubectl apply -f busybox.yaml`` verify the pod ``kubectl get pods busybox -o wide``
 
 verification sholud confirm that service account is set to use jenkins
 
-to finish the set up of jenkins pod, two things would need to be completed on jenkins node to allow the jenkins server control other pods using jenkins service account 
+to finish the set up of jenkins pod, two things would need to be completed on jenkins node to allow the jenkins server control other pods using jenkins service account
 
-- add kubernetes cli 
+- add kubernetes cli
 
-- enter the token 
+- enter the token
 
 |
 
-cluster, kubectl, user name, context 
+cluster, kubectl, user name, context
   to be able to use kubectl, it is required to know where the cluster is and have credentials to access it
-  
-  to verify kubectl cluster location (ip address) and credentials that kubectl is using, run ``kubectl config view`` 
-  
+ 
+  to verify kubectl cluster location (ip address) and credentials that kubectl is using, run ``kubectl config view``
+ 
   or
-  
+ 
   acceess configuration file directly ``cat ~/.kube/config``
-  
+ 
   each cluster user and context have the same name
-  
+ 
   the name is applied to reffer to the contex, user or cluster
 
 |
 
-cluster remote access 
+cluster remote access
   to access any cluster node from external server the following has to be passed
-  
+ 
   - cluster location - ip address
-  
+ 
   - user
-  
+ 
   - context
-  
-  to allow remote user (pogo) to access cluster, master node the steps below needs to be followed 
-  
-  - on the master server configure the user new credentials 
+ 
+  to allow remote user (pogo) to access cluster, master node the steps below needs to be followed
+ 
+  - on the master server configure the user new credentials
 
   ``kubectl config set-credentials pogo --username=pogo --password=password``
 
@@ -3598,25 +3598,25 @@ cluster remote access
   ``kubectl create clusterrolebinding cluster-system-anonymous --clusterrole=cluster-admin --user=system:anonymous``
 
   - in a non production environment certificate authority can be send to remote workstation via scp
-  
+ 
   in production environments it would be recommended to generate public cerificate using ``cfssl`` instead of copying and sending the ca certificate itself
 
   change directory to where the ca is
-  
+ 
   ``cd /etc/kubernetes/pki``
-  
+ 
   ``scp ca.crt $use-namer@$remote-server-ip:~/``
-  
+ 
   - login to remote server and isntall all requirements to instal kubctl client
-  
+ 
     - get gpg key
 
     - add it to packages and apt update
 
     - ``sudo apt install kubectl``and veryfi it ``kubctl version``
-  
+ 
   - on remote server, the cluster location, credentials and context can be configured trough kubectl
-  
+ 
   all master node information needed to run this command can be found on master node from the output of ````kubectl config view````  
 
   ``kubectl config set-cluster kubernetes --server=https://172.x.x.x:6443 --certificate-authority=ca.crt --embed-certs=true``
@@ -3633,9 +3633,9 @@ cluster remote access
   swith to the created context ``kubectl config use-context kubernetes``
 
   from this moment, remote user from a remote server can run same kubectl commands as if on master node
-  
+ 
   verify it by running sample command on the re,ote server ``kubectl get nodes``
-  
+ 
 |
 
 contents_
@@ -3658,42 +3658,42 @@ cluster authentication and authorization
 
 cluster api calls access
   - 1st step - authentication - who is the requestor and is it a human user or a pod
-  
+ 
   - 2nd step - authorization - what human user or a pod is allowed to do
-  
+ 
   authorization is managed by authorization rules configured in ``rbac`` - role based access control
-  
+ 
 |
 
 role based access control - rbac
   rbac authorisation rules are configured by through four resources divided in two gropups
-  
+ 
   - roles and cluster roles
-  
+ 
   define ``what`` actions can be performed on ``which`` resource
-  
+ 
   cluster roles help to define actions for resources that are not namespaced, such as
   nodes, persistent volumes, namespaces themselves
-  
+ 
   - role bindings and cluster role bindings
-  
+ 
   define ``who``can do it
-  
+ 
   role binding will always reference a single role
-  
+ 
   the binding can bind the role to multiple service account, user, group
-  
-  role and role bindings are namespaced 
-  
+ 
+  role and role bindings are namespaced
+ 
   cluster role and cluster role bindings are cluster level
-  
+ 
 |
-  
+ 
 sample role configuration  
   1. create a namespace ``kubectl create ns web``
-  
+ 
   2. create service role and apply it ``kubectl apply -f role.yaml``
-  
+ 
   this role will allow to list services within namespace *web*
 
 |
@@ -3714,9 +3714,9 @@ sample role configuration
     verbs: ["get", "list"]
     resources: ["services"]
     
-| 
+|
 
-at this stage it is specified by the role, ``what`` actions on what resource can be performed 
+at this stage it is specified by the role, ``what`` actions on what resource can be performed
 
 3. to specify ``who`` can performed these actions role binding has to be applied
 
@@ -3734,18 +3734,18 @@ while being in default namespace, verify access to services in the web namespace
 
 ``kubectl create clusterrole pv-reader --verb=get,list --resource=persistentvolumes``
 
-many cluster level resources are not namespaced - node, persistent volumes, namespaces themselves, other 
+many cluster level resources are not namespaced - node, persistent volumes, namespaces themselves, other
 
 
 6. Create a cluster role binding for the cluster role
 
 ``kubectl create clusterrolebinding pv-test --clusterrole=pv-reader --serviceaccount=web:default``
 
-7. create, run and verify a pod that includes 2 containers 
+7. create, run and verify a pod that includes 2 containers
 
 - 1st curl capable - allowing to curl directly from the container
 
-- 2nd proxy - enable intra-cluster communication 
+- 2nd proxy - enable intra-cluster communication
 
 ``kubectl apply -f curl-pod.yaml``
 
@@ -3778,7 +3778,7 @@ many cluster level resources are not namespaced - node, persistent volumes, name
 
 9. attempt to access persistent volumes from the pod
 
-confirm acceess to cluster level resources - persistent volumes 
+confirm acceess to cluster level resources - persistent volumes
 
 ``curl localhost:8001/api/v1/persistentvolumes``
 
@@ -3797,46 +3797,46 @@ network policies
 
 network policies
   by default access to pods in a cluster is open, anyone can access them
-  
+ 
   it is crucial to restrcict their access to the operational minimum - only for pods and services that need to access them
-  
+ 
   network policies define which pods can talk to other pods
-  
+ 
   between pods communication security
-  
-  policies can produce 
-  
+ 
+  policies can produce
+ 
   - ingress rules - who can access pods
-  
+ 
   - egress rules - what destinations are allowed
-  
+ 
   network policy can be applicable to a pod by
-  
+ 
   - pod label selector
-  
+ 
   - namespace label selectors
-  
+ 
   - cidr block ip ranges
-  
+ 
   network policies require a plugin called canal
-  
+ 
   to check current network policies run ``kubectl get networkpolicies`` or ``kubectl get netpol``
 
 |
 
 network policies sample configurations
   1. download and apply canal plugin  
-  
+ 
   ``wget -O canal.yaml https://docs.projectcalico.org/v3.5/getting-started/kubernetes/installation/hosted/canal/canal.yaml``
 
   ``kubectl apply -f canal.yaml``
-  
+ 
   2. ingress - pod selector deny-all policy
-  
-  all pods are open by default - enabled communication, to improve security, this has to be reversed with deny-all policy, 
-  
+ 
+  all pods are open by default - enabled communication, to improve security, this has to be reversed with deny-all policy,
+ 
   within the policy pod selector is left blank ``{}`` to apply it / inherit to all pods within the namespace
-  
+ 
   ``kubectl apply -f deny-all-net-policy.yaml``
 
 |
@@ -3862,7 +3862,7 @@ network policies sample configurations
 
 ``kubectl run nginx --image=nginx --replicas=2``
 
-to build a service, expose the deployment 
+to build a service, expose the deployment
 
 ``kubectl expose deployment nginx --port=80``
 
@@ -3872,7 +3872,7 @@ test access to the service via busybox pod
 
 interactive pod flags
 
---rm - delet pod once finished, -it - maintain open session 
+--rm - delet pod once finished, -it - maintain open session
 
 from inside the busy box run
 
@@ -3998,23 +3998,23 @@ tls certificates
 |
 
 tls certificates
-  tls / ssl - transport layer security,  secure sockets layer 
-  
+  tls / ssl - transport layer security,  secure sockets layer
+ 
   certificate authority - ca - is utilised to generate TLS certificates and authenticate with the requested API servers
-  
+ 
   ca certificate bundle is automatically mounted into pods using default path presented below
-  
+ 
   ``kubectl exec busybox -- ls /var/run/secrets/kubernetes.io/serviceaccount``
-  
+ 
 |
 
 generating custom certificates
   kubernetes has a build in api to generate and use own / custom certificates
-  
-  1. install prereqs ``cfssl`` and ``cfssljson`` 
-  
+ 
+  1. install prereqs ``cfssl`` and ``cfssljson``
+ 
   cfssl tools need to be installed to generate certificate signing request - csr
-  
+ 
 .. code-block:: shell
 
   wget -q --show-progress --https-only --timestamping \
@@ -4079,13 +4079,13 @@ below spec file refernces server.csr file created in previous step
     - server auth
   EOF
 
-view all csr in the cluster ``kubectl get csr`` - new csr object should be now ``pending`` condition 
+view all csr in the cluster ``kubectl get csr`` - new csr object should be now ``pending`` condition
 
 get more in depth csr view ``kubectl describe csr pod-csr.web``
 
 4. approve the csr
 
-without the administrator'r approval the csr would remain in pending state 
+without the administrator'r approval the csr would remain in pending state
 
 ``kubectl certificate approve pod-csr.web``
 
@@ -4113,36 +4113,36 @@ secure images
 
 docker images security
   check where docker credentials are kept
-  
+ 
   ``sudo vim /home/$user-name/.docker/config.json``
-  
+ 
   config file freequently contains credential information
-  
+ 
   log in to docker hub ``sudo docker login``
 
-  verify what images are currently stored locally on workstation being used 
-  
+  verify what images are currently stored locally on workstation being used
+ 
   ``sudo docker images``
 
   pull a new image for later use
 
   ``sudo docker pull busybox:1.28.4``
-  
+ 
   locally stored images ``sudo docker images`` should show now the busybox as well
 
   it is a good sercurity practice not to leave docker images on local machine
-  
+ 
   even if images are pulled from private registry, while other users do not have the image secrets, as it is on local disk, they can still use it
-  
+ 
   to prevent it, set image pull policy to always - never keep images on the disk for unauthorised individuals to use
-  
-  ``imagePullPolicy: Always`` setting means that whenever pull is made it will be always pull it from registry even if the image is trorad on local disk 
-  
+ 
+  ``imagePullPolicy: Always`` setting means that whenever pull is made it will be always pull it from registry even if the image is trorad on local disk
+ 
   if containers are pulled from public registry, the risk of pulling faulty images that could crash all pods on a node is more significant as compared with privare registry
-  
+ 
   additionally some containers are more prone to vulnerabilities
-  
-  open source tools such as ``CoreOs Clair`` and ``Aqua Microscanner`` are good security practice to prevent deployments of vulnerable container to include the tools in a deployment pipline 
+ 
+  open source tools such as ``CoreOs Clair`` and ``Aqua Microscanner`` are good security practice to prevent deployments of vulnerable container to include the tools in a deployment pipline
 
 |
 
@@ -4323,7 +4323,7 @@ run it ``kubectl apply -f alpine-nonroot.yaml``
 container run in privilleged mode
    it is a good solution in scenarios when pod has to use node`s kernel features
 
-   create spec file and run it 
+   create spec file and run it
 |
 
 *privileged-pod.yaml spec file*
@@ -4364,7 +4364,7 @@ listing devices on the privileged pod container will list pod's and node's devic
 kernel level access to container
    kubernetes allow to control access to kernel features through the use of securityContext.capabilities property
    
-   to verify if container has access to kernel features try to mofify system time 
+   to verify if container has access to kernel features try to mofify system time
    
    ``kubectl exec -it pod-with-defaults -- date +%T -s "12:00:00"``
 
@@ -4420,7 +4420,7 @@ multiple capabilities can be definied via list
 |
 
 revoking capabilities
-   below spec file removes ability to ammend file's ownership 
+   below spec file removes ability to ammend file's ownership
 
 |
 
@@ -4571,9 +4571,9 @@ ensure test file ownership on local file system (not on the volume)
 
 ``echo file > /tmp/file``
 
-``ls -l /tmp`` 
+``ls -l /tmp``
 
-the output should prove 
+the output should prove
 
 ``uid 1111 gid 0 (root)``
 
@@ -4598,7 +4598,7 @@ securing persistent key value store
 persistent key value store
    used to permanently store configuration data that may include sensitive information that needs to be passed to containers within a pod, cluster
    
-  to keep the store data secure ``secrets`` are used 
+  to keep the store data secure ``secrets`` are used
    
 |
 
@@ -4627,7 +4627,7 @@ secrets
    
    by default, each pod has automatically attached secret volume - the default
    
-   when secrets are exposed to a container through secret volume, secret entry value is decoded 
+   when secrets are exposed to a container through secret volume, secret entry value is decoded
    
    once decoded, it gets written to the file in its actual form
    
@@ -4641,7 +4641,7 @@ secrets
 
    ``kubectl describe pods pod-with-defaults``
    
-   the mounted secret information could be seen in similar format 
+   the mounted secret information could be seen in similar format
    
    ``/var/run/secrets/kubernets.io/service account from default-token-...(hash value)``
 
@@ -4672,7 +4672,7 @@ sample use case - https server
 
    ``kubectl create secret generic sample-https-secret --from-file=https.key --from-file=https.cert --from-file=file``
 
-   6. verify it 
+   6. verify it
    
    ``kubectl get secrets``
    
@@ -4862,7 +4862,7 @@ metrics server installation and usage
 
    ``kubectl top pod $pod-name``
 
-  check the metrics of containers inside a pod 
+  check the metrics of containers inside a pod
 
    ``kubectl top pods $pod-name --containers``
 
@@ -4912,20 +4912,20 @@ liveness probes
 
    the get requests sent to container ip address, port and path
 
-   in case of no response, it attempts to restart container 
+   in case of no response, it attempts to restart container
 
    - tcp socket probe
 
    attempts to open tcp connetction to a specified containe's port
 
-   in case of no response, it attempts to restart container 
+   in case of no response, it attempts to restart container
 
 
    - exec probe
 
    executes a specified command inside a container and verifies the exit code
 
-   in case of non zero return code response, it attempts to restart container 
+   in case of non zero return code response, it attempts to restart container
 
 |
 
@@ -4961,11 +4961,11 @@ verify wether liveness check passed or failed
 |
 
 healthz - liveness probe modyfications
-   in below pod sample 
+   in below pod sample
    
    - ``periodSeconds`` sets frequency of liveness probe to  every 3 seconds
    
-   - ``initialDelaySeconds`` sets 3 seconds as initial probe dalay 
+   - ``initialDelaySeconds`` sets 3 seconds as initial probe dalay
    
    to perform a probe, kubelet sends an HTTP GET request to the server that is running in the container and listening on port 8080
    
@@ -4983,7 +4983,7 @@ healthz - liveness probe modyfications
 
 |
 
-.. code-block:: yaml 
+.. code-block:: yaml
 
    apiVersion: v1
    kind: Pod
@@ -5087,7 +5087,7 @@ readiness probes
            port: 80
          initialDelaySeconds: 5
          periodSeconds: 5
-  
+ 
   ---
    
    apiVersion: v1
@@ -5345,18 +5345,18 @@ application failures
 
 |
 
-troubleshhoting applications
+troubleshooting applications
    this may include areas such as
    
-   - core dns - verification of dns operation
+   - core DNS - verification of DNS operation
    
    - scheduler  - checking a list of pod events
    
    - security - kubectl describe pod commands to get more insights into image pulls errors
    
-   kubernetes has a mechanism to simplify troubleshooting by including a reason message of container terminantion and pod status
+   Kubernetes has a mechanism to simplify troubleshooting by including reason message of container termination and pod status
    
-   the termination message gets written to a speciffic file on the container ``/var/termination-reason``  
+   the termination message gets written to a specific file on the container ``/var/termination-reason``  
 
 |
 
@@ -5392,7 +5392,7 @@ if pod is down, under ``Last State`` a reason and message should provide initial
 
 to get more logging information, run ``kubectl logs my-pod-name``
 
-to export spec file of an existing pod to a new spec file that could be used to recreate a copy, use 
+to export spec file of an existing pod to a new spec file that could be used to recreate a copy, use
 
 ``kubectl get pod pod-name -o yaml --export > new-pod-name.yaml``
 
@@ -5404,31 +5404,31 @@ contents_
 
 |
 
-control plane failures
+control-plane failures
 ======================
 
 |
 
-control plane failures
-   problems with the control plabe may include
+control-plane failures
+   problems with the control plane may include
    
    - api server not responsive - unplanned shut down
    
-   - lost connectivity to attached storage 
+   - lost connectivity to attached storage
    
    - crashed kublet service
    
    - other kubernetes software issue
    
-   preventetive measures ensuring no single point of failure may include
+   preventative measures ensuring no single point of failure may include
    
-   - high availibility infrustructure design
+   - high availability infrastructure design
    
    - periodic storage snapshots
    
    - utilisation of deployments and load balancer service to redirect load to a new node automatically
    
-   - federation - that is multiple kubernetes cllusters joined together
+   - federation - that is multiple Kubernetes clusters joined together
    
 |
 
@@ -5440,7 +5440,7 @@ view logs from individual pods in kube-system namespace, check for errors
 
 ``kubectl logs $kube-scheduler-pod-name -n kube-system``
 
-in case of master node unexpected restart it is a good ide to check if services are enabeld
+in case of master node unexpected restart, it is a good idea to check if services are enabled
 
 ``sudo systemctl status docker``
 
@@ -5450,11 +5450,11 @@ in case of the docker not running, start and enable it, so it starts after each 
 
 verify kubelet service ``sudo systemctl status kubelet``
 
-in case of the kublet not running, start and enable it, so it starts after each rebooting
+in case of the kubelet not running, start and enable it, so it starts after each rebooting
 
 ``sudo systemctl enable kubelet && systemctl start kubelet``
 
-it is not possible to run kublet while the swap is enabled 
+it is not possible to run kubelet while the swap is enabled
 
 to turn off swap on the node run
 
@@ -5468,13 +5468,13 @@ disable it and stop the firewalld service
 
 ``sudo systemctl disable firewalld && systemctl stop firewalld``
 
-special care needs to be taken if the public ip addresses are used in configuration files
+special care needs to be taken if the public IP addresses are used in configuration files
 
-whenever server reboots and changes public ip it can lead to problems
+whenever server reboots and changes public IP it can lead to problems
 
-to avoid such issues it is a good practice to bind server private ip to an end that won`t change
+to avoid such issues it is a good practice to bind server private IP to an end that won`t change
 
-if cluster was initialised via kubeadm, the kubeadm automatically generated a config file
+if a cluster was initialised via kubeadm, the kubeadm automatically generated a config file
 
 ``kubectl configview``
 
@@ -5492,9 +5492,9 @@ worker node failures
 |
 
 worker node failures
-   it is best practice to have mutiple worker nodes working as a part of deployment,  where the pods can be scheduled to nodes automatically
+   it is best practice to have multiple worker nodes working as a part of the deployment,  where the pods can be scheduled to nodes automatically
 
-   in case of a node failure, pods that are not part of deployment - managed by replica set, will terminate, even if a new node gets created 
+   in case of a node failure, pods that are not part of deployment - managed by replica set, will terminate, even if a new node gets created
    
    in such case two options are available
    
@@ -5504,34 +5504,34 @@ worker node failures
 
 |
 
-failed node, rebuilding new server 
-   as first step in node failures, it is recommended to check nodes ``kubectl get nodes``
+failed node, rebuilding the new server
+   as the first step in node failures, it is recommended to check nodes ``kubectl get nodes``
 
    check nodes with kubectl describe
 
    ``kubectl describe nodes $my-node-name``
 
-   attempt to SSH via server name``ssh $server-name.com``
+   attempt to SSH via server name ``ssh $server-name.com``
 
    recover IP address of the nodes ``kubectl get nodes -o wide``
 
-   attempt to SSH via ip address ``ssh cloud_user@x.x.x.x``
+   attempt to SSH via IP address ``ssh cloud_user@x.x.x.x``
    
    attempt to ping the address ``ping x.x.x.x``
    
    if the case proves that server is down or accidentally deleted, rebuild has to be initiated
 
-   1. run new virtual  server / node in the chosen enviroment
+   1. run a new virtual server/node in the chosen environment
    
-   2. once up, instal docker, kubeadm, kublet and give it same hostname
+   2. once up, instal docker, kubeadm, kubelet and give it the same hostname
    
-   3. switch back to master node to generate a new token ``sudo kubeadm token generate``
+   3. switch back to the master node to generate a new token ``sudo kubeadm token generate``
 
    4. assemble kubeadm join command for the new worker node
 
    ``sudo kubeadm token create $token-name --ttl 2h --print-join-command``
    
-   5. copy, (remove line break from the command) paste, run the ``kubectl join`` command 
+   5. copy, (remove the line break from the command) paste, run the ``kubectl join`` command
 
    verify journalctl logs ``sudo journalctl -u kubelet``
    
@@ -5544,15 +5544,15 @@ failed node, rebuilding new server
 running node troubleshooting - sample kubelet issues
    from master server run ``kubectl get nodes`` to get all nodes status
    
-   from master server run ``kubectl describe nodes $node-name`` to check the node's events that was in ``notReady`` state
+   from master server run ``kubectl describe nodes $node-name`` to check the node's events that were in``notReady`` state
    
    from the node itself, get logs ``sudo journalctl -u kubelet``
    
-   from the node itself, get syslog data ``sudo more syslog | tail -120 | grep kubelet``
+   from the node itself, get Syslog data ``sudo more Syslog | tail -120 | grep kubelet``
    
    check kubelet status ``sudo systemctl status kubelet``
    
-   if it proves stopped, re run it ``sudo systemctl start kubelet``
+   if it proves stopped, re-run it ``sudo systemctl start kubelet``
    
    confirm it ``sudo systemctl status kubelet``
      
@@ -5567,9 +5567,9 @@ network failures
 
 |
 network debugging
-   network problems in kubernetes may affect internal cluster communication or services
+   network problems in Kubernetes may affect internal cluster communication or services
    
-   to demonstrate debugging techniqe, below deployment is commenced 
+   to demonstrate debugging technique, below deployment is commenced
    
 |
 
@@ -5590,7 +5590,7 @@ verify services
 
 ``kubectl get svc``
 
-attempt to access the service from other pod, utilise interactive busybox pod
+attempt to access the service from another pod, utilise interactive busybox pod
 
 ``kubectl run -it --rm --restart=Never busybox --image=busybox:1.28 sh``
 
@@ -5600,13 +5600,13 @@ from the pod, test if DNS is resolving deployment service name *hostnames* to an
 
 from the pod, read /etc/resolv.conf file ``# cat /etc/resolv.conf``
 
-from the pod, test kubernetes dns service operation ``# nslookup kubernetes.default``
+from the pod, test Kubernetes DNS service operation ``# nslookup kubernetes.default``
 
-verify json output of the service ``kubectl get svc hostnames -o json``
+verify JSON output of the service ``kubectl get svc hostnames -o json``
 
-see endpoints (here three for threee pods) for the service: ``kubectl get ep``
+see endpoints (here three for three pods) for the service: ``kubectl get ep``
 
-bypass service and communicate with each infividual pod directly
+bypass service and communicate with each individual pod directly
 
 ``wget -qO- $ip-address:port``
 
@@ -5618,7 +5618,7 @@ check and copy kube proxy name ``kubectl get pods -n kube-system``
 
 run shell from the proxy ``kubectl exec it $kube-proxy-name -- sh``
 
-from kube proxy shell, ensure kube-proxy is writing iptables rules
+from Kube proxy shell, ensure Kube-proxy is writing iptables rules
 
 ``# iptables-save | grep hostnames``
 
@@ -5651,7 +5651,7 @@ cli
 
 |
 
-next 
+next
 ----
 
 |
@@ -5673,3 +5673,5 @@ references
 `references <https://github.com/risebeyondio/rise/tree/master/references>`_
 
 |
+
+
