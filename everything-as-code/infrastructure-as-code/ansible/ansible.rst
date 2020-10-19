@@ -25,7 +25,7 @@ contents_
 |
 
 references
-==========
+----------
 
 |
 
