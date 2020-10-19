@@ -1,4 +1,5 @@
-dummy
+infrastructure as code
+
 -----
 
 |
@@ -7,16 +8,7 @@ dummy
 
 |
 
-.. comment --> depth describes headings level inclusion
-.. contents:: contents
-   :depth: 10
-
-|
-
-dummy
-======
-
-|
+ansible
 
 content
 
