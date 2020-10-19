@@ -3,7 +3,7 @@ ansible
 -------
 
 
-- `ansible <https://linuxacademy.com/cp/modules/view/id/327>`_
+- `ansible <https://github.com/risebeyondio/io/blob/master/everything-as-code/infrastructure-as-code/ansible/ansible.rst>`_
 
 |
 
