@@ -1,6 +1,5 @@
 infrastructure as code
-
------
+----------------------
 
 |
 
@@ -8,10 +7,14 @@ infrastructure as code
 
 |
 
-ansible
-
-content
+- `ansible <https://github.com/risebeyondio/io/tree/master/everything-as-code/infrastructure-as-code/ansible>`_
 
 |
 
-contents_
+references
+==========
+
+|
+
+`references <https://github.com/risebeyondio/rise/tree/master/references>`_
+
