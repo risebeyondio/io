@@ -1,5 +1,6 @@
-io 
-==
+**io**
+
+--
 
 |
 
@@ -7,7 +8,6 @@ io
 
 |
 
-----------------------------
 containers and microservices
 ----------------------------
 
@@ -27,7 +27,18 @@ containers and microservices
 
 |
 
-----------
+infrastructure as code
+----------------------
+
+|
+
+- `ansible <>`_
+
+- `terraform <>`_
+
+|
+
+
 references
 ----------
 
