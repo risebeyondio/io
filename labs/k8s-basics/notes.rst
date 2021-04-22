@@ -1,4 +1,4 @@
-**labs - k8s basics**
+**labs - k8s basics - notes**
 
 ------
 
