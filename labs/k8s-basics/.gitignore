@@ -1,1 +1,5 @@
-secrets
+.vault_pwd
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+.vscode/
