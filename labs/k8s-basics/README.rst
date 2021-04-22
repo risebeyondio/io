@@ -1,10 +1,10 @@
-**io**
+**labs - k8s basics**
 
 ------
 
 |
 
-`home <https://github.com/risebeyondio>`_
+`home <https://github.com/risebeyondio/io>`_
 
 |
 
