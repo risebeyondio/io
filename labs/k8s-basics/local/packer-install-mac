@@ -1,0 +1,4 @@
+brew tap hashicorp/tap
+brew install hashicorp/tap/packer
+brew upgrade hashicorp/tap/packer
+
