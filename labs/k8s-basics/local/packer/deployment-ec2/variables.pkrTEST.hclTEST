@@ -1,0 +1,29 @@
+locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
+
+// variable "aws_access_key" {
+//   type    = string
+//   default = "environment_variable"
+// }
+// variable "aws_secret_key" {
+//   type    = string
+//   default = "environment_variable"
+// }
+variable "aws_ami_name" {
+  type    = string
+  default = "packer example ${local.timestamp}"
+}
+variable "aws_image_id" {
+  type = string
+}
+variable "aws_availability_zone_names" {
+  type    = list(string)
+  default = ["eu-west-3a"]
+}
+variable "aws_region" {
+  type    = string
+  default = "eu-west-3"
+}
+variable "aws_instance_type" {
+  type    = string
+  default = "t2.micro"
+}

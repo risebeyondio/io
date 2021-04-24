@@ -1,3 +1,7 @@
+# If you don't set a default, then you will need to provide the variable
+# at run time using the command line, or set it in the environment. For more
+# information about the various options for setting variables, see the template
+# [reference documentation](https://www.packer.io/docs/templates)
 variable "ami_name" {
   type    = string
   default = "my-custom-ami"
@@ -9,11 +13,11 @@ locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 # build blocks to create resources. A build block runs provisioners and
 # post-processors on an instance created by the source.
 source "amazon-ebs" "example" {
-  access_key    = "${var.aws_access_key}"
+  access_key    = ""
   ami_name      = "packer example ${local.timestamp}"
   instance_type = "t2.micro"
-  region        = "us-east-1"
-  secret_key    = "${var.aws_secret_key}"
+  region        = "eu-west-3"
+  secret_key    = ""
   source_ami_filter {
     filters = {
       name                = "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*"
@@ -31,4 +35,3 @@ build {
   sources = ["source.amazon-ebs.example"]
 
 }
-
