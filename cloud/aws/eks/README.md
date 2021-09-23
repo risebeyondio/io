@@ -1,4 +1,46 @@
-Practice, study and refreshment on AWS with focus on Elastic Kubernetes Service  
+Practice and refreshment on Elastic Kubernetes Service 
+======================================================
+
+**********
+pre-reqs 
 
 
-* pre-reqs 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# with overline, for parts
+
+* with overline, for chapters
+
+= , for sections
+
+- , for subsections
+
+^ , for subsubsections
+
+" , for paragraphs
