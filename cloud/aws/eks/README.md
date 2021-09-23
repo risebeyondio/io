@@ -1,6 +1,15 @@
 Practice and refreshment on Elastic Kubernetes Service 
 ======================================================
 
+intro
+*****
+
+AWS EKS on high level consists of:
+
+- EKS Control Plane 
+- EKS NOde Group
+
+both elements require separate IAM roles 
 
 pre-reqs
 *********
@@ -21,12 +30,22 @@ vi ~/.aws/config
 [profile terraform_user]
 region=eu-central-1
 
-**verify cli** 
+**verify cli**
+
 aws s3 ls --profile terraform_user
 
 
+**create EKS Control Plane IAM role**
 
+- to include AmazonEKSClusterPolicy
 
+**create EKS Node Group IAM role**
+
+this role requires 3 policies:
+
+- AmazonEKSWorkerNodePolicy
+- AmazonEKS_CNI_Policy
+- AmazonEC2ContainerRegistryReadOnlyPolicy
 
 
 
