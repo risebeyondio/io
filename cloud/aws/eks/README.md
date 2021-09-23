@@ -47,9 +47,23 @@ this role requires 3 policies:
 - AmazonEKS_CNI_Policy
 - AmazonEC2ContainerRegistryReadOnlyPolicy
 
+**create SSH key pair / pem key (if not existing)**
+
+- to ssh to EC2 instances / worker nodes if needed
+
+**define VPC and subnets**
+
+**define security group(s)**
 
 
 
+cluster creation
+*****************
+
+- define cluster endpoint from availabel:
+  - public
+  - public and private
+  - privite
 
 
 
