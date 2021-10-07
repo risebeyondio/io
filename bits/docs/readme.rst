@@ -1,6 +1,6 @@
 |
 
-**tech bits**
+**bits**
 
 ----
 
@@ -21,8 +21,15 @@
 AWS
 ----
 
-System Manager Service
-======================
+System Manager 
+===============
+
+unified user interface so you can track and resolve operational issues across your AWS applications and resources from a central place. 
+
+With Systems Manager, you can automate operational tasks for Amazon EC2 instances or Amazon RDS instances
+
+You can also group resources by application, view operational data for monitoring and troubleshooting, implement pre-approved change work flows, and audit operational changes for your groups of resources
+Systems Manager simplifies resource and application management, shortens the time to detect and resolve operational problems, and makes it easier to operate and manage your infrastructure at scale.
 
 EFS 
 ====
@@ -66,6 +73,18 @@ EKS
   - Cluster rbac based on aws iam roles 
   - Protocole SAML et protocole OIDC with EKS
 
+EKS Control Plane IAM role
+
+   to include AmazonEKSClusterPolicy
+
+EKS Node Group IAM role
+
+this role requires 3 policies:
+
+   AmazonEKSWorkerNodePolicy
+   AmazonEKS_CNI_Policy
+   AmazonEC2ContainerRegistryReadOnlyPolicy
+
 Network fondamentals
 ======================
  
@@ -76,7 +95,7 @@ Network fondamentals
 
 EC2 
 ====
-   - ALB vs NLB 
+  - ALB vs NLB 
   - ALB + regional WAF 
   - Cloufront + WAF 
   - Launch configuration vs launch template for ASG 
@@ -126,6 +145,41 @@ Jenkins / CloudBees
 GitHub Actions
 ---------------
 
+
+Questions
+----------
+
+- terraform backend (not to be variabilized) Vs terragrunt, workspaces 
+- best practices for working with multi environment AWS - workspaces, directory trees 
+- recommended AWS course / course provider for AWS enterprise scope with focus on terraform and labs / workshops,  but not basics as many other,  (not dry theory like Solution Pro cert prep courses) 
+
+
+- https://www.udemy.com/course/learn-aws-eks-kubernetes-cluster-and-devops-in-aws-part-1/learn/lecture/20550408?start=138#content
+- https://www.udemy.com/course/aws-certified-solutions-architect-professional-training/learn/lecture/25343904?start=13#overview
+
+
+
+
+notes
+------
+
+
+7 October
+=========
+
+
+
+
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
 
 
 H1
