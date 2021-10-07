@@ -21,49 +21,62 @@
 AWS
 ----
 
-- System Manager Service
+System Manager Service
+======================
 
-- EFS 
+EFS 
+====
 
-- LAMBDA
-  - API Gateway service overview
+LAMBDA
+======
+
+- API Gateway service overview
   - Consume lambda using / triggering by:
     - SDK/CLI
     - API Gateway
     - Application Load Balancer
     - Target Group
 
-- Back UP
+Back UP
+=======
    - EC2
    - RDS
    - EFS
    
+endpoints
+=========
+
 - AWS endpoints 
 - AWS custom endpoints
 
-- Architecture de VPC communicating with AWS transit gateway
+Architecture de VPC communicating with AWS transit gateway
+===========================================================
 
-- Route53 :
+Route53
+=========
   - private zone
   - public zones délégation
   - Architecture split view DNS
 
 
-- EKS 
-  
+EKS 
+====  
   - Managed EC2 nodes vs nodes group
   - Assume role on pod using OpenID connect (oidc) 
   - Cluster rbac based on aws iam roles 
   - Protocole SAML et protocole OIDC with EKS
 
-- Network fondamentals :
-  - VPC basics (NACL, route tables ...)
+Network fondamentals
+======================
+ 
+ - VPC basics (NACL, route tables ...)
   - VPC peering
   - VPC transit gateway
   - VPC endpoints (private links) build on NLB and expose to other accounts
 
-- EC2 fondamentals :
-  - ALB vs NLB 
+EC2 
+====
+   - ALB vs NLB 
   - ALB + regional WAF 
   - Cloufront + WAF 
   - Launch configuration vs launch template for ASG 
@@ -75,12 +88,14 @@ AWS
   - Use Ansible on EC2 through SSM agent without SSH
   - Secret Manager overview
 
-- S3
+S3
+===
   - Static website on s3 exposed trough cloudfront
   - Realtime replication on buckets between regions (can be tricky with terraform) 
 
-- IAM 
-  - Cross accounts IAM roles 
+IAM 
+====
+- Cross accounts IAM roles 
   
 
 
