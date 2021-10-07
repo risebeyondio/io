@@ -18,40 +18,19 @@
 |
 |
 
-OKTA Authentication
-
-Python
-------
-- boto3
-
-DB
-- DynamoDB
-- PostgreSQL
-
-HashiCorp Vault
-- 2 instance in 2 AZs, front ELB, backend RDS (POstgreSQL),   
-- RBAC solution to be developed
-
-Jenkins CloudBees 
-- run inn EKS CloudBees
-- Groovy
-
-GitHub Actions
-
 AWS
 ----
 
 - System Manager Service
 
-- Parameter Store
-
 - EFS 
 
 - LAMBDA
   - API Gateway service overview
-  - Consume lambda using
+  - Consume lambda using / triggering by:
     - SDK/CLI
     - API Gateway
+    - Application Load Balancer
     - Target Group
 
 - Back UP
@@ -59,21 +38,23 @@ AWS
    - RDS
    - EFS
    
-- AWS endpoints et AWS custom endpoints services
-- Architecture de VPC discutent via AWS transit gateway
+- AWS endpoints 
+- AWS custom endpoints
+
+- Architecture de VPC communicating with AWS transit gateway
+
 - Route53 :
   - private zone
   - public zones délégation
   - Architecture split view DNS
 
-- AWS Lambdas triggering by
-  - SDK/CLI
-  - API Gateway
-  - Application Load Balancer
 
--EKS
-
-- Protocole SAML et protocole OIDC with EKS
+- EKS 
+  
+  - Managed EC2 nodes vs nodes group
+  - Assume role on pod using OpenID connect (oidc) 
+  - Cluster rbac based on aws iam roles 
+  - Protocole SAML et protocole OIDC with EKS
 
 - Network fondamentals :
   - VPC basics (NACL, route tables ...)
@@ -98,20 +79,39 @@ AWS
   - Static website on s3 exposed trough cloudfront
   - Realtime replication on buckets between regions (can be tricky with terraform) 
 
-- EKS 
-  - Managed EC2 nodes vs nodes group
-  - Assume role on pod using OpenID connect (oidc) 
-  - Cluster rbac based on aws iam roles
-
 - IAM 
   - Cross accounts IAM roles 
   
-- API/Lambda
-  - API Gateway service overview
-  - Consume lambda using
-    - SDK/CLI
-    - API Gateway
-    - Target Group
+
+
+OKTA Authentication
+--------------------
+
+Python
+------
+- boto3
+
+DB
+----
+
+- DynamoDB
+- PostgreSQL
+
+HashiCorp Vault
+----------------
+- 2 instance in 2 AZs, front ELB, backend RDS (POstgreSQL),   
+- RBAC solution to be developed
+
+
+Jenkins / CloudBees
+-------------------
+- run inn EKS CloudBees
+- Groovy
+
+GitHub Actions
+---------------
+
+
 
 H1
 --
