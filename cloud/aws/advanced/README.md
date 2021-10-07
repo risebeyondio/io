@@ -1,5 +1,6 @@
 - AWS endpoints et AWS custom endpoints services
 - Architecture de VPC discutent via AWS transit gateway
+
 - Route53 :
   - private zone
   - public zones délégation
@@ -8,8 +9,9 @@
 - AWS Lambdas trigger par
   - SDK/CLI
   - API Gateway
+  - Target Group
+  - Application Load Balancer
 
-- Application Load Balancer
 -EKS
 
 - Protocole SAML et protocole OIDC with EKS
