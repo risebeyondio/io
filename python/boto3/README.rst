@@ -20,10 +20,12 @@ core concepts
 
 - session
 - resource
+
     output - object
     higher level object oriented service access
     available for some services only
 - client
+    
     output - dictionary 
     lower level service access
     availabale for all services
