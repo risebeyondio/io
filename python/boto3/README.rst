@@ -20,7 +20,7 @@ core concepts
 
 - session
 - resource
-    - output - object
+    - output - object (collection)
     - higher level object oriented service access
     - available for some services only
 - client
@@ -28,6 +28,7 @@ core concepts
     - lower level service access
     - availabale for all services
 - meta
+   - enables getting into to a client mode from resource type
 - collections
 - waiters
 - paginators
